@@ -156,7 +156,7 @@
                 to: to.value
             })
             loading.value = false
-            file.value = `http://localhost:8000${response.data.file}`
+            file.value = axios.defaults.baseURL + response.data.file
             fileName.value = response.data.title
         }
         

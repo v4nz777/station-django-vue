@@ -4,6 +4,7 @@ import axios from "axios";
 import { userStore } from "./user";
 import moment from "moment";
 
+
 export const activityStore = defineStore({
     id: "activitystore",
     state: () => ({
@@ -55,7 +56,8 @@ export const activityStore = defineStore({
         },
         setAvatar(avatar){
             if(avatar === "" | avatar === null) return "/src/assets/avatar.png"
-            return "http://localhost:8000" + avatar
+     
+            return axios.defaults.baseURL + avatar
         },
 
 

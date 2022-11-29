@@ -52,8 +52,8 @@ const load = async ()=> {
         const response = await axios.get(`/audiofile/${props.id}`)
         url.value = response.data.file
         name.value = response.data.filename
-
-        audio.value = new Audio(`http://localhost:8000${url.value}`)
+        
+        audio.value = new Audio(axios.defaults.baseURL + url.value)
 
         // Add event listeners for audio
         audio.value.onended = ()=> {

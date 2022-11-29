@@ -13,7 +13,13 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 import os
+import socket
 
+
+HOST_NAME = socket.gethostname()
+IPV4_ADDRESS = socket.gethostbyname(HOST_NAME)
+
+print(IPV4_ADDRESS)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -28,7 +34,7 @@ SECRET_KEY = 'django-insecure-oc_8+t6feg(gd8-v2c_!=sov-l##1_#bayiu8okd#orrq3%1ta
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [IPV4_ADDRESS, "localhost"]
 
 
 # Application definition
@@ -65,6 +71,8 @@ CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:3000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+    'http://' + IPV4_ADDRESS + ':8000',
+    'http://' + IPV4_ADDRESS + ':3000',
 ]
 
 

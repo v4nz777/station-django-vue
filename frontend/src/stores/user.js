@@ -75,7 +75,8 @@ export const userStore = defineStore({
                         const dtrIsLogged = JSON.parse(localStorage.getItem("dtrIsLogged"))
                         this.dtrIsLogged = dtrIsLogged
                         if(response.data.avatar){
-                            localStorage.setItem("avatar", "http://localhost:8000" + response.data.avatar)
+                            
+                            localStorage.setItem("avatar", axios.defaults.baseURL + response.data.avatar)
                             this.avatar = localStorage.getItem("avatar")
                         }
                } else {
@@ -91,7 +92,8 @@ export const userStore = defineStore({
             const fd = new FormData()
             fd.append("avatar", file, file.name)
             const response = await axios.post(`/change/avatar/${this.user}/`,fd)
-            localStorage.setItem("avatar", "http://localhost:8000" + response.data.new_avatar)
+
+            localStorage.setItem("avatar", axios.defaults.baseURL + response.data.new_avatar)
             setTimeout(() => {
                 this.avatar = localStorage.getItem("avatar")  
             }, 500);

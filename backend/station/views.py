@@ -7,8 +7,7 @@ import json
 import PIL
 from PIL import Image
 
-from .dtr import worklogger, worklogger_out
-from .dtr2 import generate_workbook
+from .dtr import generate_workbook
 from datetime import datetime, tzinfo, date
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -136,17 +135,15 @@ def inDTR(request):
             if current in _all:
                 activity = Activity()
                 activity.new_activity(username.lower(), "relogged in", type="relogin")
-                print("relogin")
+
 
         except ObjectDoesNotExist:
             create_instance = History(user=user, time_in_datetime=now)
             create_instance.save()
             activity = Activity()
             activity.new_activity(username.lower(), "logged in", type="login")
-            print("login FIREDDDDDDD")
+   
         
-
-        worklogger(username)
         context = {
             "message": f"{user} successfully logged",
             "is_logged": user.is_logged
@@ -192,7 +189,6 @@ def outDTR(request):
 
         instance.save()
 
-        worklogger_out(username)
         activity = Activity()
         activity.new_activity(username.lower(), "logged out", type="logout")
         return Response({"message": f"{user} successfully logged out"})

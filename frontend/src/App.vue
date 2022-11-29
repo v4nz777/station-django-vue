@@ -34,6 +34,7 @@
       userstore.initUser()
     }
     userstore.loadUser()
+    
   })
 
   // Need to use arrow fucntions for watching Pinia states

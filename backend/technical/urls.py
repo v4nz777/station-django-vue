@@ -18,10 +18,8 @@ urlpatterns = [
     path("group_to/<int:group_id>",views.groupEquipment, name="groupEquipment"),
     path("delete_items",views.deleteEquipments, name="deleteEquipments"),
     path("change_item_status",views.newStatus, name="newStatus"),
-
     path("new_power_interruption",views.newPowerInterruption, name="newPowerInterruption"),
     path("new_power_reading",views.newPowerConsumption, name="newPowerConsumption"),
-
     path("get_power_readings",views.getPowerConsumptions, name="getPowerConsumptions"),
 
 
