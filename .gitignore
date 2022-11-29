@@ -1,0 +1,16 @@
+.vscode/
+backend/env/
+backend/backend/__pycache__/
+backend/dtr/output/*
+backend/office/migrations/
+backend/office/__pycache__/
+backend/office/migrations/
+backend/office/invoice/generated/*
+backend/station/__pycache__/
+backend/station/migrations/
+backend/technical/__pycache__/
+backend/technical/migrations/
+backend/Todo
+backend/db.sqlite3
+frontend/.vscode/
+uploads/
