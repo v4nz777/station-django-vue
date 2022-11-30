@@ -1,9 +1,9 @@
 <template>
   
-    <Header class="flex justify-between px-3 bg-red-500 flex-wrap text-white font-medium b-border shadow-lg"
+    <Header class="flex justify-between px-3 bg-primary flex-wrap text-white font-medium b-border shadow-lg"
             v-if="userstore.user"/>
 
-    <div class="flex flex-row h-screen w-screen fixed bg-red-50">
+    <div class="flex flex-row h-screen w-screen fixed bg-secondary">
       <Sidebar class="flex-shrink md:flex hidden" 
               v-if="userstore.user"/>
 

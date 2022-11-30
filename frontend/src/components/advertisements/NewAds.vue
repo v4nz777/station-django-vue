@@ -1,8 +1,8 @@
 <template>
     <div class="mx-auto my-3">
         <button @click="open = true" @mouseover="parentIsHovered = true" @mouseout=" parentIsHovered = false"
-                class="w-32 rounded-md hover:shadow-md flex items-center justify-start px-2 h-9 hover:bg-blue-500 hover:text-white">
-        <i class="h-6 w-6" :class="parentIsHovered ? 'text-white':'text-blue-500'"><MegaphoneIcon/></i>
+                class="w-32 rounded-md hover:shadow-md flex items-center justify-start px-2 h-9 hover:bg-primary hover:text-white">
+        <i class="h-6 w-6" :class="parentIsHovered ? 'text-white':'text-primary'"><MegaphoneIcon/></i>
         <h3 class="text-sm font-light">{{buttonTitle}}</h3>
         </button>
         <teleport to='body'>
@@ -11,7 +11,7 @@
                 v-if="open"
                 ref="outer"
                 @click.self="open = false">
-                <div class="w-ads bg-white rounded-md text-start justify-center items-center flex flex-col">
+                <div class="w-max bg-white rounded-md text-start justify-center items-center flex flex-col">
                     <div class="flex flex-col justify-center text-center pt-4 w-full">
                         <h1 class="font-bold text-gray-500 text-xl">Add New Advertisement</h1>
                         <hr class="mt-4 w-full">
@@ -22,13 +22,13 @@
                         <div class="my-3 w-96 text-right px-11">
                             <label for="adTitle" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="adTitle? 'bg-blue-500':'bg-blue-300' ">Title: </label>
-                            <input type="text" v-model="adTitle" class="bg-blue-300 focus-visible:outline-2 
-                                focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                text-blue-900 focus-within:bg-blue-100"
+                                :class="adTitle? 'bg-primary text-white':'bg-secondary text-primary'">Title: </label>
+                            <input type="text" v-model="adTitle" class="bg-secondary focus-visible:outline-2 
+                                focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                text-primary focus-within:bg-secondary"
                                 @change="titleCheck">
                             <div class="inline-block ml-1" v-if="isTitleDecided">
-                                <i class="inline-block w-4 h-4 text-blue-500" v-if="isTitleValid"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary" v-if="isTitleValid"><CheckCircleIcon/></i>
                                 <i class="inline-block w-4 h-4 text-red-500" v-if="!isTitleValid"><XCircleIcon/></i>
                             </div>
                             <div class="text-xs text-red-500 text-left mx-5">
@@ -41,11 +41,11 @@
                         <div class="my-3 w-96 text-right px-11">
                             <label for="adAdvertiser" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="adAdvertiser? 'bg-blue-500':'bg-blue-300' ">Advertiser: </label>
+                                :class="adAdvertiser? 'bg-primary text-white':'bg-secondary text-primary' ">Advertiser: </label>
                             <div class="inline-block relative">
-                                <input type="text" v-model="adAdvertiser" class="bg-blue-300 focus-visible:outline-2 
-                                    focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                    text-blue-900 focus-within:bg-blue-100"
+                                <input type="text" v-model="adAdvertiser" class="bg-secondary focus-visible:outline-2 
+                                    focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                    text-primary focus-within:bg-secondary"
                                     list="advertiserlist"
                                     @change="advertiserCheck"
                                     @keyup="advertiserSearch(adAdvertiser)"
@@ -54,14 +54,14 @@
                                 <ul id="advertiserlist" class="bg-white absolute w-full h-max"
                                     v-if="searchedAdvertisers.length && !isAdvertiserDecided">
                                     <li v-for="i in searchedAdvertisers" class="text-sm text-left font-light
-                                    hover:text-white hover:bg-blue-500 w-full p-1 z-50"
+                                    hover:text-white hover:bg-primary w-full p-1 z-50"
                                     @click="selectAdvertiser(i.name)">
                                         {{i.name}}
                                     </li>
                                 </ul>  
                             </div>
                             <div class="inline-block ml-1" v-if="isAdvertiserDecided">
-                                <i class="inline-block w-4 h-4 text-blue-500" v-if="isAdvertiserValid"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary" v-if="isAdvertiserValid"><CheckCircleIcon/></i>
                                 <i class="inline-block w-4 h-4 text-red-500" v-if="!isAdvertiserValid"><XCircleIcon/></i>
                             </div>
                             <div class="text-xs text-red-500 text-left mx-5">
@@ -72,15 +72,15 @@
                         <div class="my-3 w-96 text-right px-11">
                             <label for="adType" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="adType? 'bg-blue-500':'bg-blue-300' ">Type: </label>
-                            <select name="" id="adType" v-model="adType" class="bg-blue-300 focus-visible:outline-2 
-                                focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                text-blue-900 focus-within:bg-blue-100">
+                                :class="adType? 'bg-primary text-white':'bg-secondary text-primary' ">Type: </label>
+                            <select name="" id="adType" v-model="adType" class="bg-secondary focus-visible:outline-2 
+                                focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                text-primary focus-within:bg-secondary">
                                 <option value="local">Local</option>
                                 <option value="national">National</option>
                             </select>
                             <div class="inline-block ml-1" v-if="adType">
-                                <i class="inline-block w-4 h-4 text-blue-500"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary"><CheckCircleIcon/></i>
                             </div>
                         </div>
                         
@@ -88,13 +88,13 @@
                         <div class="my-3 w-96 text-right px-11">
                             <label for="adContract" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="adContract? 'bg-blue-500':'bg-blue-300' ">{{adType === 'local'?'Contract:':'IM:'}}</label>
-                            <input type="text" v-model="adContract" class="bg-blue-300 focus-visible:outline-2 
-                                focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                text-blue-900 focus-within:bg-blue-100"
+                                :class="adContract? 'bg-primary text-white':'bg-secondary text-primary' ">{{adType === 'local'?'Contract:':'IM:'}}</label>
+                            <input type="text" v-model="adContract" class="bg-secondary focus-visible:outline-2 
+                                focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                text-primary focus-within:bg-secondary"
                                 @keyup="contractCheck">
                             <div class="inline-block ml-1" v-if="isContractDecided">
-                                <i class="inline-block w-4 h-4 text-blue-500" v-if="isContractValid"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary" v-if="isContractValid"><CheckCircleIcon/></i>
                                 <i class="inline-block w-4 h-4 text-red-500" v-else><XCircleIcon/></i>
                             </div>
                             <div class="text-xs text-red-500 text-center mx-5">
@@ -106,13 +106,13 @@
                         <div class="my-3 w-96 text-right px-11" v-if="adType == 'national'">
                             <label for="adBONum" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="adBONum? 'bg-blue-500':'bg-blue-300' ">B.O. Number: </label>
-                            <input type="text" v-model="adBONum" class="bg-blue-300 focus-visible:outline-2 
-                                focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                text-blue-900 focus-within:bg-blue-100"
+                                :class="adBONum? 'bg-primary text-white':'bg-secondary text-primary' ">B.O. Number: </label>
+                            <input type="text" v-model="adBONum" class="bg-secondary focus-visible:outline-2 
+                                focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                text-primary focus-within:bg-secondary"
                                 @change="boCheck">
                             <div class="inline-block ml-1" v-if="isBODecided">
-                                <i class="inline-block w-4 h-4 text-blue-500" v-if="isBOValid"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary" v-if="isBOValid"><CheckCircleIcon/></i>
                                 <i class="inline-block w-4 h-4 text-red-500" v-if="!isBOValid"><XCircleIcon/></i>
                             </div>
                             <div class="text-xs text-red-500 text-left mx-5">
@@ -122,24 +122,24 @@
                         </div>
                         <!-- :Ex Deal: -->
                         <div class="my-3 w-96 text-right px-11">
-                            <label for="exDeal" class="text-blue-500 px-2 py-1 w-full text-sm mr-1">This is an ex-deal </label>
-                            <input id="exDeal" type="checkbox" v-model="exDeal" class="w-4 h-4 border-blue align-bottom">
+                            <label for="exDeal" class="text-primary px-2 py-1 w-full text-sm mr-1">This is an ex-deal </label>
+                            <input id="exDeal" type="checkbox" v-model="exDeal" class="w-4 h-4 border-primary align-bottom">
                         </div>
                         <!-- :Pricing: -->
                         <div class="my-3 w-96 text-right px-11">
                             <label for="adPricing" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="adPricing? 'bg-blue-500':'bg-blue-300' ">Pricing: </label>
-                            <select name="" id="adPricing" v-model="adPricing" class="bg-blue-300 focus-visible:outline-2 
-                                focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                text-blue-900 focus-within:bg-blue-100"
+                                :class="adPricing? 'bg-primary text-white':'bg-secondary text-primary' ">Pricing: </label>
+                            <select name="" id="adPricing" v-model="adPricing" class="bg-secondary focus-visible:outline-2 
+                                focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                text-primary focus-within:bg-secondary"
                                 @change="summarizeBroadcast">
                                 <option value="monthly">Monthly</option>
                                 <option value="daily">Daily</option>
                                 <option value="fixed">Fixed</option>
                             </select>
                             <div class="inline-block ml-1" v-if="adPricing">
-                                <i class="inline-block w-4 h-4 text-blue-500"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary"><CheckCircleIcon/></i>
                             </div>
                         </div>
                         <!-- :Amount: -->
@@ -147,22 +147,22 @@
                             <label for="adAmount" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
                                 v-if="adPricing === 'monthly'"
-                                :class="adAmount? 'bg-blue-500':'bg-blue-300' ">₱ per month: </label>
+                                :class="adAmount? 'bg-primary text-white':'bg-secondary text-primary' ">₱ per month: </label>
                             <label for="adAmount" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
                                 v-else-if="adPricing === 'daily'"
-                                :class="adAmount? 'bg-blue-500':'bg-blue-300' ">₱ per day: </label>
+                                :class="adAmount? 'bg-primary text-white':'bg-secondary text-primary' ">₱ per day: </label>
                             <label for="adAmount" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
                                 v-else-if="adPricing === 'fixed'"
-                                :class="adAmount? 'bg-blue-500':'bg-blue-300' ">₱ in total: </label>
-                            <input type="text" v-model="adAmount" class="bg-blue-300 focus-visible:outline-2 
-                                focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                text-blue-900 focus-within:bg-blue-100"
+                                :class="adAmount? 'bg-primary text-white':'bg-secondary text-primary' ">₱ in total: </label>
+                            <input type="text" v-model="adAmount" class="bg-secondary focus-visible:outline-2 
+                                focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                text-primary focus-within:bg-secondary"
                                 @keyup="summarizeBroadcast"
                                 @change="amountCheck">
                             <div class="inline-block ml-1" v-if="isAmountDecided">
-                                <i class="inline-block w-4 h-4 text-blue-500" v-if="isAmountValid"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary" v-if="isAmountValid"><CheckCircleIcon/></i>
                                 <i class="inline-block w-4 h-4 text-red-500" v-if="!isAmountValid"><XCircleIcon/></i>
                             </div>
                             <div class="text-xs text-red-500 text-left mx-5">
@@ -173,13 +173,13 @@
                         <div class="my-3 w-96 text-right px-11">
                             <label for="adStart" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="adStart? 'bg-blue-500':'bg-blue-300' ">Broadcast Start: </label>
-                            <input type="date" v-model="adStart" class="bg-blue-300 focus-visible:outline-2 
-                                focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                text-blue-900 focus-within:bg-blue-100"
+                                :class="adStart? 'bg-primary text-white':'bg-secondary text-primary' ">Broadcast Start: </label>
+                            <input type="date" v-model="adStart" class="bg-secondary focus-visible:outline-2 
+                                focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                text-primary focus-within:bg-secondary"
                                 @change="startCheck">
                             <div class="inline-block ml-1" v-if="isStartDecided">
-                                <i class="inline-block w-4 h-4 text-blue-500" v-if="isStartValid"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary" v-if="isStartValid"><CheckCircleIcon/></i>
                                 <i class="inline-block w-4 h-4 text-red-500" v-if="!isStartValid"><XCircleIcon/></i>
                             </div>
                             <div class="text-xs text-red-500 text-left mx-5">
@@ -190,20 +190,20 @@
                         <div class="my-3 w-96 text-right px-11">
                             <label for="adEnd" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="adEnd? 'bg-blue-500':'bg-blue-300' ">Broadcast End: </label>
-                            <input type="date" v-model="adEnd" class="bg-blue-300 focus-visible:outline-2 
-                                focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                text-blue-900 focus-within:bg-blue-100"
+                                :class="adEnd? 'bg-primary text-white':'bg-secondary text-primary' ">Broadcast End: </label>
+                            <input type="date" v-model="adEnd" class="bg-secondary focus-visible:outline-2 
+                                focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                text-primary focus-within:bg-secondary"
                                 @change="endCheck">
                             <div class="inline-block ml-1" v-if="isEndDecided">
-                                <i class="inline-block w-4 h-4 text-blue-500" v-if="isEndValid"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary" v-if="isEndValid"><CheckCircleIcon/></i>
                                 <i class="inline-block w-4 h-4 text-red-500" v-if="!isEndValid"><XCircleIcon/></i>
                             </div>
                             <div class="text-xs text-red-500 text-left mx-5">
                                 {{endError}}
                             </div>
                         </div>
-                        <div class="my-3 w-96 text-center px-11 text-blue-500 font-light text-sm"
+                        <div class="my-3 w-96 text-center px-11 text-primary font-light text-sm"
                             v-if="totalPrice">
                             <div><span class="font-bold">₱{{totalPrice}}.00</span> in total</div>
                             <div>will run for <span class="font-bold">{{totalBroadcastRange}}</span></div>
@@ -213,13 +213,13 @@
                         <div class="my-3 w-96 text-right px-11">
                             <label for="adSpot" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="adSpot? 'bg-blue-500':'bg-blue-300' ">Spots/day: </label>
-                            <input type="number" v-model="adSpot" class="bg-blue-300 focus-visible:outline-2 
-                                focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                text-blue-900 focus-within:bg-blue-100"
+                                :class="adSpot? 'bg-primary text-white':'bg-secondary text-primary' ">Spots/day: </label>
+                            <input type="number" v-model="adSpot" class="bg-secondary focus-visible:outline-2 
+                                focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                text-primary focus-within:bg-secondary"
                                 @change="spotCheck">
                             <div class="inline-block ml-1" v-if="isSpotDecided">
-                                <i class="inline-block w-4 h-4 text-blue-500" v-if="isSpotValid"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary" v-if="isSpotValid"><CheckCircleIcon/></i>
                                 <i class="inline-block w-4 h-4 text-red-500" v-if="!isSpotValid"><XCircleIcon/></i>
                             </div>
                             <div class="text-xs text-red-500 text-right mx-5"
@@ -231,25 +231,25 @@
                         <div class="my-3 w-96 text-right px-11">
                             <label for="adSchedule" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="adSchedule? 'bg-blue-500':'bg-blue-300' ">Schedule: </label>
-                            <input type="text" v-model="adSchedule" class="bg-blue-300 focus-visible:outline-2 
-                                focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                text-blue-900 focus-within:bg-blue-100"
+                                :class="adSchedule? 'bg-primary text-white':'bg-secondary text-primary' ">Schedule: </label>
+                            <input type="text" v-model="adSchedule" class="bg-secondary focus-visible:outline-2 
+                                focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                text-primary focus-within:bg-secondary"
                                 placeholder="ex: 6:10am,7:40am"
                                 @keyup="pushToScheduleList">
                             <div class="inline-block ml-1" v-if="adSchedule">
-                                <i class="inline-block w-4 h-4 text-blue-500" v-if="adSpot === adScheduleList.length"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary" v-if="adSpot === adScheduleList.length"><CheckCircleIcon/></i>
                                 <i class="inline-block w-4 h-4 text-red-500" v-else><XCircleIcon/></i>
                             </div>
                             <div class="text-xs text-red-500 text-right mx-5"
                             v-if="adSpot !== adScheduleList.length && adSchedule">
                                 {{adSpot}} is allowed, you provided {{adScheduleList.length}}
                             </div>
-                            <div class="grid grid-cols-4 p-6 my-2 bg-blue-100"
+                            <div class="grid grid-cols-4 p-6 my-2 bg-secondary"
                                 v-if="adSchedule">
 
                                 <div v-for="i in adScheduleList"
-                                class="bg-blue-400 w-full shadow-sm border rounded-xl
+                                class="bg-primary w-full shadow-sm border rounded-xl
                                 text-xs text-center text-white font-extralight py-1">
                                     {{i}}
                                 </div>
@@ -259,29 +259,29 @@
                         <!-- :AudioFile: -->
                         <div class="my-3 w-96 text-right px-11">
                             <div class="mb-5">
-                                <label for="multiplVersions" class="text-blue-500 px-2 py-1 w-full text-sm mr-1">
+                                <label for="multiplVersions" class="text-primary px-2 py-1 w-full text-sm mr-1">
                                     Has multiple versions:
-                                    <input type="checkbox" class="w-4 h-4 border-blue align-bottom" v-model="multiplVersions">
+                                    <input type="checkbox" class="w-4 h-4 border-primary align-bottom" v-model="multiplVersions">
                                 </label>
                             </div>
                             <label for="adAudioFile" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="uploadedFiles.length? 'bg-blue-500':'bg-blue-300' ">Audio FIle: </label>
+                                :class="uploadedFiles.length? 'bg-primary text-white':'bg-secondary text-primary' ">Audio FIle: </label>
                             <input type="file" ref="adAudioFile" accept="audio/*" class="hidden" @change="audioFileCheck" :multiple="multiplVersions">
-                            <button class="bg-blue-300 focus-visible:outline-2 
-                                focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                text-blue-900 focus-within:bg-blue-100"
+                            <button class="bg-secondary focus-visible:outline-2 
+                                focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                text-primary focus-within:bg-secondary"
                                 @click="$refs.adAudioFile.click">Upload</button>
                             <div class="inline-block ml-1" v-if="isAudioFileDecided">
-                                <i class="inline-block w-4 h-4 text-blue-500" v-if="isAudioFileValid"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary" v-if="isAudioFileValid"><CheckCircleIcon/></i>
                                 <i class="inline-block w-4 h-4 text-red-500" v-if="!isAudioFileValid"><XCircleIcon/></i>
                             </div>
-                            <ul class="text-xs text-blue-500 text-right mx-1"
+                            <ul class="text-xs text-primary text-right mx-1"
                             v-if="adAudioFile">
                                 <li v-for="file,index in uploadedFiles">
                                     {{file.name.length > 25? `${file.name.substring(0,25)}...${file.name.substring(file.name.length-3,file.name.length)}`: file.name}}
                                     <button @click="removeFromFiles(file,index)"
-                                    class="text-blue-500 hover:bg-red-500 hover:text-white rounded-full w-4 h-4 font-bold text-center">x</button>
+                                    class="text-primary hover:bg-red-500 hover:text-white rounded-full w-4 h-4 font-bold text-center">x</button>
                                 </li>
                             </ul>
                             <div class="text-xs text-red-500 text-right mx-5">
@@ -292,13 +292,13 @@
                         <div class="my-3 w-96 text-right px-10">
                             <label for="adMaterialDuration" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="adMaterialDuration? 'bg-blue-500':'bg-blue-300' ">Duration(seconds): </label>
-                            <input type="text" v-model="adMaterialDuration" class="bg-blue-300 focus-visible:outline-2 
-                                focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                text-blue-900 focus-within:bg-blue-100 w-20"
+                                :class="adMaterialDuration? 'bg-primary text-white':'bg-secondary text-primary' ">Duration(seconds): </label>
+                            <input type="text" v-model="adMaterialDuration" class="bg-secondary focus-visible:outline-2 
+                                focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                text-primary focus-within:bg-secondary w-20"
                                 @change="materialDurationCheck">
                             <div class="inline-block ml-1" v-if="isMaterialDurationDecided">
-                                <i class="inline-block w-4 h-4 text-blue-500" v-if="isMaterialDurationValid"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary" v-if="isMaterialDurationValid"><CheckCircleIcon/></i>
                                 <i class="inline-block w-4 h-4 text-red-500" v-if="!isMaterialDurationValid"><XCircleIcon/></i>
                             </div>
                             <div class="text-xs text-red-500 text-left mx-5">
@@ -308,44 +308,44 @@
                         </div>
                         <!-- :Taglines: -->
                         <div class="my-3 w-96 text-right px-11">
-                            <label for="adTaglines" class="text-blue-500 px-2 py-1 w-full text-sm mr-1">This ad has taglines? (e.g: aob,ss,tc) </label>
-                            <input id="adTaglines" type="checkbox" v-model="adTaglines" class="w-4 h-4 border-blue align-bottom">
+                            <label for="adTaglines" class="text-primary px-2 py-1 w-full text-sm mr-1">This ad has taglines? (e.g: aob,ss,tc) </label>
+                            <input id="adTaglines" type="checkbox" v-model="adTaglines" class="w-4 h-4 border-primary align-bottom">
                             <div v-if="adTaglines" class="my-2">
                                 <!-- /AOB/ -->
                                 <div class="mt-6">
                                     <label for="adTagAOBspot" class="text-white px-2 py-1 w-full rounded-l-md
                                     shadow-md text-sm mr-1"
-                                    :class="adTagAOBspot? 'bg-blue-500':'bg-blue-300' ">AOB spots/day</label>
+                                    :class="adTagAOBspot? 'bg-primary text-white':'bg-secondary text-primary' ">AOB spots/day</label>
                                     <input type="number" v-model="adTagAOBspot" id="adTagAOBspot"
-                                        class="bg-blue-300 focus-visible:outline-2 
-                                        focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                        text-blue-900 focus-within:bg-blue-100 w-20">
-                                    <div class="text-xs text-blue-500 text-right mx-5">
+                                        class="bg-secondary focus-visible:outline-2 
+                                        focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                        text-primary focus-within:bg-secondary w-20">
+                                    <div class="text-xs text-primary text-right mx-5">
                                         leave blank if none
                                     </div>
                                 </div>
                                 <div v-if="adTagAOBspot" class="mt-2">
                                     <label for="adAOBsched" class="text-white px-2 py-1 w-full rounded-l-md
                                     shadow-md text-sm mr-1"
-                                    :class="adAOBsched? 'bg-blue-500':'bg-blue-300' ">Schedule:</label>
+                                    :class="adAOBsched? 'bg-primary text-white':'bg-secondary text-primary' ">Schedule:</label>
                                     <input type="text" id="adAOBsched" v-model="adAOBsched"
                                         
                                         @keyup="pushToAOBschedList"
-                                        class="bg-blue-300 focus-visible:outline-2 
-                                        focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md 
-                                        rounded-r-md text-blue-900 focus-within:bg-blue-100">
+                                        class="bg-secondary focus-visible:outline-2 
+                                        focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md 
+                                        rounded-r-md text-primary focus-within:bg-secondary">
                                         <div class="inline-block ml-1" v-if="adAOBsched">
-                                            <i class="inline-block w-4 h-4 text-blue-500" v-if="adTagAOBspot === adAOBschedList.length"><CheckCircleIcon/></i>
+                                            <i class="inline-block w-4 h-4 text-primary" v-if="adTagAOBspot === adAOBschedList.length"><CheckCircleIcon/></i>
                                             <i class="inline-block w-4 h-4 text-red-500" v-else><XCircleIcon/></i>
                                         </div>
                                         <div class="text-xs text-red-500 text-right mx-5"
                                         v-if="adTagAOBspot !== adAOBschedList.length && adAOBsched">
                                             {{adTagAOBspot}} is allowed, you provided {{adAOBschedList.length}}
                                         </div>
-                                    <div class="grid grid-cols-4 p-6 my-2 bg-blue-100"
+                                    <div class="grid grid-cols-4 p-6 my-2 bg-secondary"
                                     v-if="adAOBsched">
                                         <div v-for="i in adAOBschedList"
-                                            class="bg-blue-400 w-full shadow-sm border rounded-xl
+                                            class="bg-primary w-full shadow-sm border rounded-xl
                                             text-xs text-center text-white font-extralight py-1">
                                             {{i}}
                                         </div>
@@ -355,37 +355,37 @@
                                 <div class="mt-6">
                                     <label for="adTagTCspot" class="text-white px-2 py-1 w-full rounded-l-md
                                     shadow-md text-sm mr-1"
-                                    :class="adTagTCspot? 'bg-blue-500':'bg-blue-300' ">TC spots/day</label>
+                                    :class="adTagTCspot? 'bg-primary text-white':'bg-secondary text-primary' ">TC spots/day</label>
                                     <input type="number" v-model="adTagTCspot" id="adTagTCspot"
-                                        class="bg-blue-300 focus-visible:outline-2 
-                                        focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                        text-blue-900 focus-within:bg-blue-100 w-20">
-                                    <div class="text-xs text-blue-500 text-right mx-5">
+                                        class="bg-secondary focus-visible:outline-2 
+                                        focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                        text-primary focus-within:bg-secondary w-20">
+                                    <div class="text-xs text-primary text-right mx-5">
                                         leave blank if none
                                     </div>
                                 </div>
                                 <div v-if="adTagTCspot" class="mt-2">
                                     <label for="adTCsched" class="text-white px-2 py-1 w-full rounded-l-md
                                     shadow-md text-sm mr-1"
-                                    :class="adTCsched? 'bg-blue-500':'bg-blue-300' ">Schedule:</label>
+                                    :class="adTCsched? 'bg-primary text-white':'bg-secondary text-primary' ">Schedule:</label>
                                     <input type="text" id="adTCsched" v-model="adTCsched"
                                         placeholder="ex: 6:00am,7:00am"
                                         @keyup="pushToTCschedList"
-                                        class="bg-blue-300 focus-visible:outline-2 
-                                        focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md 
-                                        rounded-r-md text-blue-900 focus-within:bg-blue-100">
+                                        class="bg-secondary focus-visible:outline-2 
+                                        focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md 
+                                        rounded-r-md text-primary focus-within:bg-secondary">
                                     <div class="inline-block ml-1" v-if="adTCsched">
-                                        <i class="inline-block w-4 h-4 text-blue-500" v-if="adTagTCspot === adTCschedList.length"><CheckCircleIcon/></i>
+                                        <i class="inline-block w-4 h-4 text-primary" v-if="adTagTCspot === adTCschedList.length"><CheckCircleIcon/></i>
                                         <i class="inline-block w-4 h-4 text-red-500" v-else><XCircleIcon/></i>
                                     </div>
                                     <div class="text-xs text-red-500 text-right mx-5"
                                     v-if="adTagTCspot !== adTCschedList.length && adTCsched">
                                         {{adTagTCspot}} is allowed, you provided {{adTCschedList.length}}
                                     </div>
-                                    <div class="grid grid-cols-4 p-6 my-2 bg-blue-100"
+                                    <div class="grid grid-cols-4 p-6 my-2 bg-secondary"
                                     v-if="adTCsched">
                                         <div v-for="i in adTCschedList"
-                                            class="bg-blue-400 w-full shadow-sm border rounded-xl
+                                            class="bg-primary w-full shadow-sm border rounded-xl
                                             text-xs text-center text-white font-extralight py-1">
                                             {{i}}
                                         </div>
@@ -395,37 +395,37 @@
                                 <div class="mt-6">
                                     <label for="adTagSSspot" class="text-white px-2 py-1 w-full rounded-l-md
                                     shadow-md text-sm mr-1"
-                                    :class="adTagSSspot? 'bg-blue-500':'bg-blue-300' ">SS spots/day</label>
+                                    :class="adTagSSspot? 'bg-primary text-white':'bg-secondary text-primary' ">SS spots/day</label>
                                     <input type="number" v-model="adTagSSspot" id="adTagSSspot"
-                                        class="bg-blue-300 focus-visible:outline-2 
-                                        focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                        text-blue-900 focus-within:bg-blue-100 w-20">
-                                    <div class="text-xs text-blue-500 text-right mx-5">
+                                        class="bg-secondary focus-visible:outline-2 
+                                        focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                        text-primary focus-within:bg-secondary w-20">
+                                    <div class="text-xs text-primary text-right mx-5">
                                         leave blank if none
                                     </div>
                                 </div>
                                 <div v-if="adTagSSspot" class="mt-2">
                                     <label for="adSSsched" class="text-white px-2 py-1 w-full rounded-l-md
                                     shadow-md text-sm mr-1"
-                                    :class="adSSsched? 'bg-blue-500':'bg-blue-300' ">Schedule:</label>
+                                    :class="adSSsched? 'bg-primary text-white':'bg-secondary text-primary' ">Schedule:</label>
                                     <input type="text" id="adSSsched" v-model="adSSsched"
                                         placeholder="ex: 6:30am,7:30am"
                                         @keyup="pushToSSschedList"
-                                        class="bg-blue-300 focus-visible:outline-2 
-                                        focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md 
-                                        rounded-r-md text-blue-900 focus-within:bg-blue-100">
+                                        class="bg-secondary focus-visible:outline-2 
+                                        focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md 
+                                        rounded-r-md text-primary focus-within:bg-secondary">
                                     <div class="inline-block ml-1" v-if="adSSsched">
-                                        <i class="inline-block w-4 h-4 text-blue-500" v-if="adTagSSspot === adSSschedList.length"><CheckCircleIcon/></i>
+                                        <i class="inline-block w-4 h-4 text-primary" v-if="adTagSSspot === adSSschedList.length"><CheckCircleIcon/></i>
                                         <i class="inline-block w-4 h-4 text-red-500" v-else><XCircleIcon/></i>
                                     </div>
                                     <div class="text-xs text-red-500 text-right mx-5"
                                     v-if="adTagSSspot !== adSSschedList.length && adSSsched">
                                         {{adTagSSspot}} is allowed, you provided {{adSSschedList.length}}
                                     </div>
-                                    <div class="grid grid-cols-4 p-6 my-2 bg-blue-100"
+                                    <div class="grid grid-cols-4 p-6 my-2 bg-secondary"
                                     v-if="adSSsched">
                                         <div v-for="i in adSSschedList"
-                                            class="bg-blue-400 w-full shadow-sm border rounded-xl
+                                            class="bg-primary w-full shadow-sm border rounded-xl
                                             text-xs text-center text-white font-extralight py-1">
                                             {{i}}
                                         </div>
@@ -439,18 +439,18 @@
                         <div class="my-3 w-96 text-right px-11">
                             <label for="adAE" class="text-white px-2 py-1 w-full rounded-l-md
                                 shadow-md text-sm mr-1"
-                                :class="adAE? 'bg-blue-500':'bg-blue-300' ">AE: </label>
+                                :class="adAE? 'bg-primary text-white':'bg-secondary text-primary' ">AE: </label>
                             <div class="inline-block">
-                                <select name="" id="adAE" v-model="adAE" class="bg-blue-300 focus-visible:outline-2 
-                                    focus-within:outline-blue-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                    text-blue-900 focus-within:bg-blue-100">
+                                <select name="" id="adAE" v-model="adAE" class="bg-secondary focus-visible:outline-2 
+                                    focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                    text-primary focus-within:bg-secondary">
                                 <option value="office">Office</option>
                                 <option v-for="user in accountExecutives" :value="user.username">{{user.first_name}} {{user.last_name}}</option>
                                 </select>
  
                             </div>
                             <div class="inline-block ml-1" v-if="adAE">
-                                <i class="inline-block w-4 h-4 text-blue-500"><CheckCircleIcon/></i>
+                                <i class="inline-block w-4 h-4 text-primary"><CheckCircleIcon/></i>
                             </div>
 
                         </div>
@@ -458,7 +458,7 @@
 
                         <div class="mx-10 my-5">
                             <button class=" text-white w-full"
-                            :class="submitEnabled? 'bg-blue-500':'bg-blue-300'"
+                            :class="submitEnabled? 'bg-primary':'bg-disabled'"
                             :disabled="!submitEnabled"
                             @click="display = 'preview'">Submit</button>
                         </div>
@@ -469,28 +469,28 @@
                         <div class="text-left font-normal flex flex-col px-10">
 
                             <span class="mb-5">Review before submission...</span>
-                            <span>Title: <span class="font-light text-blue-500">{{adTitle}}</span></span>
-                            <span>Advertiser: <span class="font-light text-blue-500">{{adAdvertiser}}</span></span>
-                            <span>Type: <span class="font-light text-blue-500">{{adType}}</span></span>
-                            <span>{{adType === 'local'?'Contract: ':'IM: '}}<span class="font-light text-blue-500">{{adContract}}</span></span>
-                            <span v-if="adType === 'national'">B.O: <span class="font-light text-blue-500">{{adBONum}}</span></span>
-                            <span>Ex-deal?: <span class="font-light text-blue-500">{{exDeal? 'yes':'no'}}</span></span>
-                            <span>Pricing type: <span class="font-light text-blue-500">{{adPricing}}</span></span>
-                            <span>Amount: <span class="font-light text-blue-500">₱ {{adAmount}}/month</span></span>
-                            <span>Starts: <span class="font-light text-blue-500">{{adStart}}</span></span>
-                            <span>Ends: <span class="font-light text-blue-500">{{adEnd}}</span></span>
-                            <span>Spots: <span class="font-light text-blue-500">{{adSpot}}/day</span></span>
-                            <span>Schedule: <span class="font-light text-blue-500">{{adSchedule}}</span></span>
-                            <span>Duration: <span class="font-light text-blue-500">{{adMaterialDuration}}</span></span>
-                            <span>Audio File: <span class="font-light text-blue-500 text-xs">{{uploadedFiles[0].name}}</span></span>
-                            <span>Has Taglines?: <span class="font-light text-blue-500">{{adTaglines? 'yes':'no'}}</span></span>
+                            <span>Title: <span class="font-light text-primary">{{adTitle}}</span></span>
+                            <span>Advertiser: <span class="font-light text-primary">{{adAdvertiser}}</span></span>
+                            <span>Type: <span class="font-light text-primary">{{adType}}</span></span>
+                            <span>{{adType === 'local'?'Contract: ':'IM: '}}<span class="font-light text-primary">{{adContract}}</span></span>
+                            <span v-if="adType === 'national'">B.O: <span class="font-light text-primary">{{adBONum}}</span></span>
+                            <span>Ex-deal?: <span class="font-light text-primary">{{exDeal? 'yes':'no'}}</span></span>
+                            <span>Pricing type: <span class="font-light text-primary">{{adPricing}}</span></span>
+                            <span>Amount: <span class="font-light text-primary">₱ {{adAmount}}/month</span></span>
+                            <span>Starts: <span class="font-light text-primary">{{adStart}}</span></span>
+                            <span>Ends: <span class="font-light text-primary">{{adEnd}}</span></span>
+                            <span>Spots: <span class="font-light text-primary">{{adSpot}}/day</span></span>
+                            <span>Schedule: <span class="font-light text-primary">{{adSchedule}}</span></span>
+                            <span>Duration: <span class="font-light text-primary">{{adMaterialDuration}}</span></span>
+                            <span>Audio File: <span class="font-light text-primary text-xs">{{uploadedFiles[0].name}}</span></span>
+                            <span>Has Taglines?: <span class="font-light text-primary">{{adTaglines? 'yes':'no'}}</span></span>
                             <div class="flex flex-col" v-if="adTaglines">
-                                <span>AOB spots: <span class="font-light text-blue-500">{{adTagAOBspot}}</span></span>
-                                <span>AOB schedule: <span class="font-light text-blue-500">{{adAOBsched}}</span></span>
-                                <span>TC spots: <span class="font-light text-blue-500">{{adTagTCspot}}</span></span>
-                                <span>TC schedule: <span class="font-light text-blue-500">{{adTCsched}}</span></span>
-                                <span>SS spots: <span class="font-light text-blue-500">{{adTagSSspot}}</span></span>
-                                <span>SS schedule: <span class="font-light text-blue-500">{{adSSsched}}</span></span>
+                                <span>AOB spots: <span class="font-light text-primary">{{adTagAOBspot}}</span></span>
+                                <span>AOB schedule: <span class="font-light text-primary">{{adAOBsched}}</span></span>
+                                <span>TC spots: <span class="font-light text-primary">{{adTagTCspot}}</span></span>
+                                <span>TC schedule: <span class="font-light text-primary">{{adTCsched}}</span></span>
+                                <span>SS spots: <span class="font-light text-primary">{{adTagSSspot}}</span></span>
+                                <span>SS schedule: <span class="font-light text-primary">{{adSSsched}}</span></span>
                             </div>
                             
                         </div>
@@ -498,9 +498,9 @@
                         <div class="grid grid-cols-2 space-x-5 px-5 py-5">
                             
                             <button @click="display = 'composition'"
-                                class="text-blue-500 hover:bg-blue-100 hover:shadow-md rounded-md">Edit</button>
+                                class="text-primary hover:bg-secondary hover:shadow-md rounded-md">Edit</button>
                             <button @click="submitNewAds"
-                                class="bg-blue-500 shadow-md text-white hover:bg-blue-600 rounded-md">Confirm</button>
+                                class="bg-primary shadow-md text-white hover:bg-primary rounded-md">Confirm</button>
                         </div>
                     </div>
 
@@ -982,11 +982,11 @@
     #newads-scroll::-webkit-scrollbar-track {
         /* background-color: rgba(229, 231, 235, var(--bg-opacity)); */
         cursor: pointer;
-        background: #a0a1c0;
+        background: #c0b5a0;
     }
     #newads-scroll::-webkit-scrollbar-thumb {
         cursor: pointer;
-        background-color: rgb(73, 121, 224);
+        background-color: rgb(109, 79, 4);
         /*outline: 1px solid slategrey;*/
     }
   </style>

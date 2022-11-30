@@ -1,6 +1,9 @@
 <template>
     <header class="h-12">
+      <div class="shadow-3xl overflow-hidden rounded-full object-fill">
         <img class="h-11 self-center" src="../assets/stationlogo.png" alt="StationLogo" />
+      </div>
+
         <nav v-if="userstore.user" class="flex justify-center">
           <Menu class="md:hidden block"/>
           <Logout class="md:block hidden"/>

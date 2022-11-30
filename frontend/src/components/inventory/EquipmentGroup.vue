@@ -1,10 +1,10 @@
 <template>
     
     <div class="bg-white w-full my-2 mb-5">
-        <div class="w-full border-b flex bg-emerald-50 justify-between px-2">
+        <div class="w-full border-b flex bg-gray-50 justify-between px-2">
             <div class="flex py-1 items-center">
-                <input type="checkbox" class="accent-emerald-500 mx-1" v-model="all" @change="selectAll()">
-                <p class="font-bold text-emerald-700">{{group.group_name===""?'UNGROUPED':group.group_name.toUpperCase()}}</p>    
+                <input type="checkbox" class="accent-primary mx-1" v-model="all" @change="selectAll()">
+                <p class="font-bold text-primary">{{group.group_name===""?'UNGROUPED':group.group_name.toUpperCase()}}</p>    
                 <NewInventory :preGroup="group.group_name"/>
     
                 
@@ -12,18 +12,18 @@
            
             </div>
             <div class="w-9 flex flex-col items-center">
-                <span class="bg-emerald-500 text-white px-1 mt-1 rounded relative">
+                <span class="bg-primary text-white px-1 mt-1 rounded relative">
                     <span v-if="notifOn" class="w-2 h-2 bg-red-500 rounded-full absolute c-top-right-n3 animate-ping"></span>
                     <span v-if="notifOn" class="w-2 h-2 bg-red-500 rounded-full absolute c-top-right-n3"></span>
                     {{group.equipments.length}}
                 </span>
                 <button v-if="!viewEquipments"
                     @click="viewEquipments = true">
-                    <i class="block h-4 w-4 text-emerald-500"><ChevronDownIcon/></i>
+                    <i class="block h-4 w-4 text-primary"><ChevronDownIcon/></i>
                 </button>
                 <button v-else
                     @click="viewEquipments = false">
-                    <i class="block h-4 w-4 text-emerald-500"><ChevronUpIcon/></i>
+                    <i class="block h-4 w-4 text-primary"><ChevronUpIcon/></i>
                 </button>
             </div>
             

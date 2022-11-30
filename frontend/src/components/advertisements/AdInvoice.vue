@@ -1,53 +1,53 @@
 <template>
     <div class="w-full h-5/6 overflow-y-scroll none-scroll pt-3">
         
-        <div class="bg-blue-50 w-full h-max text-sm font-thin p-5 grid grid-cols-3">
+        <div class="bg-gray-200 w-full h-max text-sm font-thin p-5 grid grid-cols-3">
             <div class="mb-3 flex flex-col justify-between border-r-2 mr-3">
                 <div class="mb-2">
-                    <p class="font-bold text-blue-500 mr-5">Create invoice for: </p><p class="text-sky-500 font-sm">contract #{{contract}}</p>
+                    <p class="font-bold text-primary mr-5">Create invoice for: </p><p class="text-primary font-sm">contract #{{contract}}</p>
                 </div>
                 <div class="mb-2">
-                    <p class="font-bold text-blue-500 mr-5">Pricing: <span class="bg-green-500 rounded-full px-2 py-1 text-xs text-white">{{pricing}}</span> </p><p class="text-sky-500 font-sm">₱{{amount}} </p>
+                    <p class="font-bold text-primary mr-5">Pricing: <span class="bg-green-500 rounded-full px-2 py-1 text-xs text-white">{{pricing}}</span> </p><p class="text-primary font-sm">₱{{amount}} </p>
                 </div>
 
                 <div class="mb-2">
-                    <p class="font-bold text-blue-500 mr-5">Account Executive: </p><p class="text-sky-500 font-sm">{{ae}}</p>
+                    <p class="font-bold text-primary mr-5">Account Executive: </p><p class="text-primary font-sm">{{ae}}</p>
                 </div>
                 
             </div>
             <div class="mb-3 flex flex-col justify-between">
                 <div class="pb-5 border-b-2">
-                <p class="font-bold text-blue-500 mr-5">From:</p>
+                <p class="font-bold text-primary mr-5">From:</p>
                 <input type="date" class="focus-visible:outline-2 
-                                    focus-within:outline-sky-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                    text-sky-900 focus-within:bg-sky-100"
-                                    :class="(invFrom&&invTo)&&invFrom > invTo?'outline outline-red-500 bg-red-300':'bg-sky-300'"
+                                    focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                    text-primary focus-within:bg-secondary"
+                                    :class="(invFrom&&invTo)&&invFrom > invTo?'outline outline-red-500 bg-red-300':'bg-secondary'"
                                     @change="setTotal"
                                     v-model="invFrom">
                 </div>
                 <div>
-                    <p class="font-bold text-blue-500 mr-5">Invoice:</p>
+                    <p class="font-bold text-primary mr-5">Invoice:</p>
                     <!-- <label for="" class="inline-block">Invoice #</label> -->
                     <input type="text" class="focus-visible:outline-2 w-full
                                         font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                        text-sky-900 focus-within:bg-sky-100 mb-2"
-                                        :class="invoiceExists?'outline outline-red-500 bg-red-300 focus-within:outline-red-500':'bg-sky-300 focus-within:outline-sky-500'"
+                                        text-primary focus-within:bg-secondary mb-2"
+                                        :class="invoiceExists?'outline outline-red-500 bg-red-300 focus-within:outline-red-500':'bg-secondary focus-within:outline-primary'"
                                         v-model="invNum"
                                         @keyup="checkInvoiceNum"
                                         placeholder="Invoice #">
 
                     <!-- <label for="">Invoice Date</label> -->
-                    <input type="date" class="bg-sky-300 focus-visible:outline-2 w-full
-                                        focus-within:outline-sky-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                        text-sky-900 focus-within:bg-sky-100"
+                    <input type="date" class="bg-secondary focus-visible:outline-2 w-full
+                                        focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                        text-primary focus-within:bg-secondary"
                                         placeholder="Invoice Date"
                                         v-model="invDate">
                 </div>
                 <div>
-                    <p class="font-bold text-blue-500 mr-5">Total:</p>
-                    <input type="text" class="bg-sky-300 focus-visible:outline-2 w-full
-                                        focus-within:outline-sky-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                        text-sky-900 focus-within:bg-sky-100"
+                    <p class="font-bold text-primary mr-5">Total:</p>
+                    <input type="text" class="bg-secondary focus-visible:outline-2 w-full
+                                        focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                        text-primary focus-within:bg-secondary"
                                         v-model="total">
                     
                 </div>
@@ -55,11 +55,11 @@
             </div>
             <div class="mb-3">
                 <div class="pb-5 border-b-2">
-                    <p class="font-bold text-blue-500 mr-5">To:</p>
+                    <p class="font-bold text-primary mr-5">To:</p>
                     <input type="date" class="focus-visible:outline-2 
-                                        focus-within:outline-sky-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                        text-sky-900 focus-within:bg-sky-100"
-                                        :class="(invFrom&&invTo)&&invFrom > invTo?'outline outline-red-500 bg-red-300':'bg-sky-300'"
+                                        focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                        text-primary focus-within:bg-secondary"
+                                        :class="(invFrom&&invTo)&&invFrom > invTo?'outline outline-red-500 bg-red-300':'bg-secondary'"
                                         @change="setTotal"
                                         v-model="invTo">
                 </div>
@@ -85,17 +85,17 @@
         
         <div class="w-full flex justify-center my-2">
             <button class="font-bold px-2 py-1 rounded-lg text-white"
-            :class="isValid?'bg-sky-500':'bg-sky-300'"
+            :class="isValid?'bg-primary':'bg-disabled'"
             :disabled="!isValid"
             @click="createInvoice"
             >Create Invoice</button>
         </div>
             
         <div class="border-b mt-10">
-            <p class="text-left text-lg font-bold text-blue-500">Recent</p>
+            <p class="text-left text-lg font-bold text-primary">Recent</p>
         </div>
         <table class="w-full mt-2">
-            <thead class="bg-blue-500 text-white text-sm font-bold">
+            <thead class="bg-primary text-white text-sm font-bold">
                 <tr>
                     <td><i class="block h-4 w-4"><PrinterIcon/></i></td>
                     <td>Invoice</td>
@@ -105,8 +105,8 @@
                     <td>Paid?</td>
                 </tr>
             </thead>
-            <tbody class="text-blue-500 text-sm font-normal">
-                <tr v-if="invoices.length" v-for="invoice in invoices" class="border-b hover:bg-blue-50">
+            <tbody class="text-primary text-sm font-normal">
+                <tr v-if="invoices.length" v-for="invoice in invoices" class="border-b hover:bg-gray-200">
                     <td>
                         <a :href="'http://localhost:8000' + invoice.file"
                             class="hover:text-green-500">

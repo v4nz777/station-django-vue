@@ -20,7 +20,7 @@
 
         <div class="w-inventory">
             <div v-if="loading" class="flex justify-center items-center">
-                <div class="w-9 h-9 border-4 border-x-emerald-500 border-y-emerald-200 rounded-full animate-spin"></div>
+                <div class="w-9 h-9 border-4 border-x-primary border-y-secondary rounded-full animate-spin"></div>
             </div>
             <div v-else class="w-full">
                 <EquipmentGroup  v-if="groups.length"

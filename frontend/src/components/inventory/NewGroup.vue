@@ -26,8 +26,8 @@
                         <div class="w-64 relative">
                             <input type="text" v-model="groupQuery"
                             placeholder="Enter a new group name!"
-                            class="bg-emerald-100 w-full p-1 text-sm shadow"
-                            :class="taken?'focus-within:outline-red-500 text-red-500':'focus-within:outline-emerald-500 text-emerald-500'"
+                            class="bg-secondary w-full p-1 text-sm shadow"
+                            :class="taken?'focus-within:outline-red-500 text-red-500':'focus-within:outline-primary text-primary'"
                             @keyup="checkGroup()">
                         </div>
                         
@@ -36,7 +36,7 @@
 
                 
                 <button @click="createGroup()" class="font-bold text-white px-4"
-                        :class="taken||!groupQuery?'bg-gray-400':'bg-emerald-500'"
+                        :class="taken||!groupQuery?'bg-disabled':'bg-primary'"
                         :disabled="taken||!groupQuery">
                     CREATE
                 </button>
@@ -100,7 +100,7 @@
     }
     #inventory-scroll::-webkit-scrollbar-thumb {
         cursor: pointer;
-        background-color: rgb(39, 112, 51);
+        background-color: rgb(83, 84, 83);
         /*outline: 1px solid slategrey;*/
     }
 </style>

@@ -1,8 +1,8 @@
 <template>
     <div>
         <button @click="open = true" 
-          class="px-4 py-3 md:text-white md:hover:text-white md:hover:bg-red-500
-              text-red-500 hover:text-white hover:bg-red-300">
+          class="px-4 py-3 md:text-white md:hover:text-white md:hover:bg-primary
+              text-primary hover:text-white hover:bg-primary">
           Log out
         </button>
         <teleport to="body">
@@ -12,11 +12,11 @@
                 <div class="bg-white px-16 py-14 rounded-md text-center">
                     <h1 class="text-xl mb-4 font-bold text-slate-500">Are you sure?</h1>
                     <div class="flex">
-                      <button class="bg-red-500 px-7 py-2 ml-2 rounded-md text-md text-white font-semibold"
+                      <button class="bg-primary px-7 py-2 ml-2 rounded-md text-md text-white font-semibold"
                             @click="logoutToDTR">
                             Logout
                       </button>
-                      <button class="bg-white px-7 py-2 ml-2 rounded-md text-md text-red-500 font-semibold border-red-500 border-x-2 border-y-2"
+                      <button class="bg-white px-7 py-2 ml-2 rounded-md text-md text-primary font-semibold border-primary border-x-2 border-y-2"
                               @click="open=false">
                               Cancel
                       </button>
