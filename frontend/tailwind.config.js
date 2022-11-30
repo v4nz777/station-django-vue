@@ -7,8 +7,8 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: "rgba(135,62,0,1)", //red
-        secondary: "rgba(254,242,0,0.1)", //yellow
+        primary: "rgb(48,105,179)", //red
+        secondary: "rgba(254,228,64,0.5)", //yellow
         accent: "rgb(215,0,8)", //orange
         active: "rgba(135,62,0,0.9)",
         passive: "#E9ABAB",
