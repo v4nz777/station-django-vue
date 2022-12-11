@@ -5,11 +5,11 @@
                 Add new equipment
         </span>
         <button v-if="onMain" @click="open = true" @mouseover="parentIsHovered = true" @mouseout=" parentIsHovered = false"
-                    class="w-max rounded-md hover:shadow-md flex items-center justify-start px-2 h-9 hover:bg-emerald-500 hover:text-white">
-            <i class="h-6 w-6" :class="parentIsHovered ? 'text-white':'text-emerald-500'"><ArchiveIcon/></i>
+                    class="w-max rounded-md hover:shadow-md flex items-center justify-start px-2 h-9 hover:bg-primary hover:text-white">
+            <i class="h-6 w-6" :class="parentIsHovered ? 'text-white':'text-primary'"><ArchiveIcon/></i>
         </button>
-        <button v-else class="ml-2 border border-dashed border-emerald-500 text-emerald-500
-                    hover:bg-emerald-500 hover:text-white"
+        <button v-else class="ml-2 border border-dashed border-primary text-primary
+                    hover:bg-primary hover:text-white"
                     @click="open = true">
             <i class="block h-4 w-4"><PlusSmIcon/></i>
         </button>
@@ -24,19 +24,19 @@
                 <!-- start of inside modal -->
        
                 <div id="inventory-scroll" class="w-inventory-add h-96 bg-white overflow-y-scroll pb-8">
-                    <h1 class="font-bold m-5 text-center text-emerald-800">Add New Equipment</h1>
+                    <h1 class="font-bold m-5 text-center text-primary">Add New Equipment</h1>
                     <hr>
                     <!-- Name of equipment -->
                     <div class="flex justify-between px-6 my-3">
                         <div class="w-32 px-4">
-                            <p class="text-left text-xs w-full text-emerald-500 font-bold p-1">
+                            <p class="text-left text-xs w-full text-primary font-bold p-1">
                                 Name of equipment
                             </p>
                         </div>
                         <input type="text" v-model="eqName"
                             @keyup="checkName()"
                             class="w-64 p-1 text-sm shadow"
-                            :class="takenName? 'bg-red-100 text-red-500 outline-red-500 shadow-red-500':'bg-emerald-100 text-emerald-500 focus-within:outline-emerald-500'">
+                            :class="takenName? 'bg-red-100 text-red-500 outline-red-500 shadow-red-500':'bg-secondary text-primary focus-within:outline-primary'">
                     </div>
                     <p class="text-xs text-right text-red-500 px-6 mb-5"
                         v-if="takenName">
@@ -45,17 +45,17 @@
                     <!-- Brand of equipment -->
                     <div class="flex justify-between px-6 my-3">
                         <div class="w-32 px-4">
-                            <p class="text-left text-xs w-full text-emerald-500 font-bold p-1">
+                            <p class="text-left text-xs w-full text-primary font-bold p-1">
                                 Brand
                             </p>
                         </div>
                         <div class="w-64 relative">
                             <input type="text" v-model="eqBrand"
-                            class="bg-emerald-100 w-full focus-within:outline-emerald-500 text-emerald-500 p-1 text-sm shadow"
+                            class="bg-secondary w-full focus-within:outline-primary text-primary p-1 text-sm shadow"
                             @keyup="searchBrand()">
                             <ul class="w-full h-max bg-white absolute top-7">
                                 <li v-for="brand in brands"
-                                    class="hover:bg-emerald-500 hover:text-white text-emerald-500 border-b">
+                                    class="hover:bg-primary hover:text-white text-primary border-b">
                                     <button class="text-xs text-left px-1 w-full h-full" @click.self="eqBrand = brand.brand_name;brands=[]">{{brand.brand_name}}</button>
                                 </li>
                             </ul>
@@ -65,33 +65,33 @@
                     <!-- Model of equipment -->
                     <div class="flex justify-between px-6 my-3">
                         <div class="w-32 px-4">
-                            <p class="text-left text-xs w-full text-emerald-500 font-bold p-1">
+                            <p class="text-left text-xs w-full text-primary font-bold p-1">
                                 Model
                             </p>
                         </div>
                         <input type="text" v-model="eqModel"
-                            class="bg-emerald-100 w-64 focus-within:outline-emerald-500 text-emerald-500 p-1 text-sm shadow">
+                            class="bg-secondary w-64 focus-within:outline-primary text-primary p-1 text-sm shadow">
                     </div>
                     <!-- SerialNo of equipment -->
                     <div class="flex justify-between px-6 my-3">
                         <div class="w-32 px-4">
-                            <p class="text-left text-xs w-full text-emerald-500 font-bold p-1">
+                            <p class="text-left text-xs w-full text-primary font-bold p-1">
                                 Serial #
                             </p>
                         </div>
                         <input type="text" v-model="eqSerialNo"
-                            class="bg-emerald-100 w-64 focus-within:outline-emerald-500 text-emerald-500 p-1 text-sm shadow">
+                            class="bg-secondary w-64 focus-within:outline-primary text-primary p-1 text-sm shadow">
                     </div>
                     <!-- PropertyNo of equipment -->
                     <div class="flex justify-between px-6 my-3">
                         <div class="w-32 px-4">
-                            <p class="text-left text-xs w-full text-emerald-500 font-bold p-1">
+                            <p class="text-left text-xs w-full text-primary font-bold p-1">
                                 Property #
                             </p>
                         </div>
                         
                         <input type="text" v-model="eqPropertyNo"
-                            class="bg-emerald-100 w-64 focus-within:outline-emerald-500 text-emerald-500 p-1 text-sm shadow">
+                            class="bg-secondary w-64 focus-within:outline-primary text-primary p-1 text-sm shadow">
                          
                        
                         
@@ -99,23 +99,23 @@
                     <!-- Purchase Cost of equipment -->
                     <div class="flex justify-between px-6 my-3">
                         <div class="w-32 px-4">
-                            <p class="text-left text-xs w-full text-emerald-500 font-bold p-1">
+                            <p class="text-left text-xs w-full text-primary font-bold p-1">
                                 Purchase cost
                             </p>
                         </div>
                         <input type="number" v-model="eqCost"
-                            class="bg-emerald-100 w-64 focus-within:outline-emerald-500 text-emerald-500 p-1 text-sm shadow">
+                            class="bg-secondary w-64 focus-within:outline-primary text-primary p-1 text-sm shadow">
                     </div>
 
                     <!-- Owner -->
                     <div class="flex justify-between px-6 my-3">
                         <div class="w-32 px-4">
-                            <p class="text-left text-xs w-full text-emerald-500 font-bold p-1">
+                            <p class="text-left text-xs w-full text-primary font-bold p-1">
                                 Owner
                             </p>
                         </div>
                         
-                        <select class="bg-emerald-100 w-64 focus-within:outline-emerald-500 text-emerald-500 p-1 text-sm shadow"
+                        <select class="bg-secondary w-64 focus-within:outline-primary text-primary p-1 text-sm shadow"
                             v-model="eqOwner">
                             <option value="partner">Partner</option>
                             <option value="mbc">MBC</option>
@@ -124,12 +124,12 @@
                     <!-- Status -->
                     <div class="flex justify-between px-6 my-3">
                         <div class="w-32 px-4">
-                            <p class="text-left text-xs w-full text-emerald-500 font-bold p-1">
+                            <p class="text-left text-xs w-full text-primary font-bold p-1">
                                 Status
                             </p>
                         </div>
                         
-                        <select class="bg-emerald-100 w-64 focus-within:outline-emerald-500 text-emerald-500 p-1 text-sm shadow"
+                        <select class="bg-secondary w-64 focus-within:outline-primary text-primary p-1 text-sm shadow"
                             v-model="eqStatus">
                             <option value="active">Active</option>
                             <option value="test">Test</option>
@@ -139,29 +139,29 @@
                     <!-- Date Acquired -->
                     <div class="flex justify-between px-6 my-3">
                         <div class="w-32 px-4">
-                            <p class="text-left text-xs w-full text-emerald-500 font-bold p-1">
+                            <p class="text-left text-xs w-full text-primary font-bold p-1">
                                 Date acquired
                             </p>
                         </div>
                         <input type="date" v-model="eqAcquired"
-                            class="bg-emerald-100 w-64 focus-within:outline-emerald-500 text-emerald-500 p-1 text-sm shadow">
+                            class="bg-secondary w-64 focus-within:outline-primary text-primary p-1 text-sm shadow">
                     </div>
                     <!-- Group -->
                     
                     <div class="flex justify-between px-6 my-3">
                         <div class="w-32 px-4">
-                            <p class="text-left text-xs w-full text-emerald-500 font-bold p-1">
+                            <p class="text-left text-xs w-full text-primary font-bold p-1">
                                 Group
                             </p>
                         </div>
                         <div class="w-64 relative">
                             <input type="text" v-model="eqGroup"
                             placeholder="Add to group or create new"
-                            class="bg-emerald-100 w-full focus-within:outline-emerald-500 text-emerald-500 p-1 text-sm shadow"
+                            class="bg-secondary w-full focus-within:outline-primary text-primary p-1 text-sm shadow"
                             @keyup="searchGroup()">
                             <ul class="w-full h-max bg-white absolute top-7">
                                 <li v-for="group in groups"
-                                    class="hover:bg-emerald-500 hover:text-white text-emerald-500 border-b">
+                                    class="hover:bg-primary hover:text-white text-primary border-b">
                                     <button class="text-xs text-left px-1 w-full h-full" @click.self="eqGroup = group.group_name;groups=[]">{{group.group_name}}</button>
                                 </li>
                             </ul>
@@ -172,13 +172,13 @@
                     <!-- SUBMIT -->
                     <div class="mt-5 w-full flex justify-around border-t">
                         <button class="mt-5 w-32 h-max text-white text-sm py-1"
-                            :class="validForm?'bg-emerald-500 hover:bg-emerald-400':'bg-emerald-100'"
+                            :class="validForm?'bg-primary hover:bg-primary':'bg-disabled'"
                             :disabled="!validForm"
                             @click.once="submitEquipment(true)">
                             Save & Exit
                         </button>
                         <button class="mt-5 w-32 h-max text-white text-sm py-1"
-                            :class="validForm?'bg-emerald-500 hover:bg-emerald-400':'bg-emerald-100'"
+                            :class="validForm?'bg-primary hover:bg-primary':'bg-disabled'"
                             :disabled="!validForm"
                             @click="submitEquipment(false)">
                             Save & Add New
@@ -349,7 +349,7 @@
     }
     #inventory-scroll::-webkit-scrollbar-thumb {
         cursor: pointer;
-        background-color: rgb(39, 112, 51);
+        background-color: rgb(112, 88, 39);
         /*outline: 1px solid slategrey;*/
     }
 </style>

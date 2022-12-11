@@ -1,8 +1,8 @@
 <template>
     <div class="mx-auto my-3">
         <button @click="open = true" @mouseover="parentIsHovered = true" @mouseout=" parentIsHovered = false"
-                class="w-max rounded-md hover:shadow-md flex items-center justify-start px-2 h-9 hover:bg-yellow-500 hover:text-white">
-        <i class="h-6 w-6" :class="parentIsHovered ? 'text-white':'text-yellow-500'"><LightningBoltIcon/></i>
+                class="w-max rounded-md hover:shadow-md flex items-center justify-start px-2 h-9 hover:bg-primary hover:text-white">
+        <i class="h-6 w-6" :class="parentIsHovered ? 'text-white':'text-primary'"><LightningBoltIcon/></i>
         <h3 class="text-sm font-light">Log Meter Reading</h3>
         </button>
         <teleport to='body'>
@@ -17,22 +17,22 @@
                     <hr class="my-4 w-full">
                 </div>
                 <div class="flex flex-col justify-center my-5 w-56 mx-auto mb-8">
-                    <label class="text-yellow-600 font-semibold">🔢 Meter Reading:</label>
+                    <label class="text-primary font-semibold">🔢 Meter Reading:</label>
                     <input type="number" 
                         class="font-thin text-sm px-3 py-1 mt-2 rounded-md mb-5 text-gray-500"
-                        :class="valid?'bg-yellow-500 ':'bg-red-200 border-red-400'"
+                        :class="valid?'bg-secondary ':'bg-red-200 border-red-400'"
                         @keyup="validate()" @change="validate()"
                         v-model="meter">
 
-                    <label class="text-yellow-600 font-semibold">📅 Reading Date:</label>
-                    <input type="datetime-local" class="text-gray-500 font-thin bg-yellow-500 text-sm px-3 py-1 mt-2 rounded-md mb-5"
+                    <label class="text-primary font-semibold">📅 Reading Date:</label>
+                    <input type="datetime-local" class="text-gray-500 font-thin bg-secondary text-sm px-3 py-1 mt-2 rounded-md mb-5"
                     v-model="datetime">
                 </div>
                 <hr>
 
                 <div class="my-5 text-gray-500 text-center flex flex-col justify-center items-center">
                     <button class="border px-5 py-2 text-white my-5 font-bold text-lg"
-                    :class="valid?'bg-yellow-500':'bg-gray-400'"
+                    :class="valid?'bg-primary':'bg-disabled'"
                     :disabled="!valid"
                     @click="submit">Submit</button>
                 </div>

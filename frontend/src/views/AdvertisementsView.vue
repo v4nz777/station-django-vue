@@ -16,7 +16,7 @@
             </div>
         </div>
         <div v-else class="w-full h-screen flex flex-col justify-center items-center">
-                <div class="w-12 h-12 mx-auto border-4 border-red-500 rounded-full" id="loader"></div>
+                <div class="w-12 h-12 mx-auto border-4 border-primary rounded-full" id="loader"></div>
         </div>
     </div>
 </template>

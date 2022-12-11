@@ -39,11 +39,11 @@
                             
                             <div class="absolute top-1 right-2 text-xs font-bold w-max text-white">
                                 <div v-if="settingDisplay"
-                                    class="animate-spin w-5 h-5 border-4 border-x-emerald-500 border-y-emerald-200 rounded-full">
+                                    class="animate-spin w-5 h-5 border-4 border-x-primary border-y-emerald-200 rounded-full">
                                 </div>
                             
-                                <button v-else class="bg-emerald-500 px-2 py-1 rounded-lg w-full
-                                                hover:bg-emerald-700"
+                                <button v-else class="bg-primary px-2 py-1 rounded-lg w-full
+                                                hover:bg-primary"
                                         v-if="avatar.id !== eqPicPreview.id"
                                         @click="setAsDisplay()">
                                     <p>Set as display</p>
@@ -55,7 +55,7 @@
                                 <div v-for="img in eqGallery" 
                                     @click="eqPicPreview=img"
                                     class="overflow-hidden shadow-md w-12 h-9 my-2 mx-auto"
-                                    :class="img.id===eqPicPreview.id?'border-2 border-emerald-500':'hover:border-2 border-yellow-400 hover:shadow-yellow-300'">
+                                    :class="img.id===eqPicPreview.id?'border-2 border-primary':'hover:border-2 border-yellow-400 hover:shadow-yellow-300'">
                                     <img :src="`http://localhost:8000${img.file}`" :alt="img.file_name" class="w-full h-full object-cover">
                                 </div>
                             </div>
@@ -63,12 +63,12 @@
                                 <input type="file" ref="uploadGallery" accept="image/*" class="hidden" @change="galleryPrepareUpload()" multiple>
                                 
                                 <div v-if="uploadTabOpen"
-                                    class="w-7 h-7 my-2 border-4 border-x-emerald-500 border-emerald-300 rounded-full animate-spin mx-auto">
+                                    class="w-7 h-7 my-2 border-4 border-x-primary border-emerald-300 rounded-full animate-spin mx-auto">
                                 </div>
-                                <button v-else-if="!uploadTabOpen&&uploadGalleryList.length" class="my-2 mx-auto text-emerald-500 flex justify-center items-center">
+                                <button v-else-if="!uploadTabOpen&&uploadGalleryList.length" class="my-2 mx-auto text-primary flex justify-center items-center">
                                     <i class="block h-8 w-8"><UploadIcon /></i>
                                 </button>
-                                <button v-else class="my-2 mx-auto text-emerald-500 flex justify-center items-center"
+                                <button v-else class="my-2 mx-auto text-primary flex justify-center items-center"
                                     @click="$refs.uploadGallery.click">
                                     <i class="block h-8 w-8"><UploadIcon /></i>
                                 </button>
@@ -76,8 +76,8 @@
                                 <div class="absolute bg-white w-72 h-52 right-0 shadow-md grid shadow-emerald-100"
                                     v-if="uploadTabOpen">
                                     <div class="p-3 small-grid-auto-cols overflow-scroll none-scroll">
-                                        <button class="shadow-md w-9 h-12 bg-white border-emerald-500 border-2 border-dashed text-emerald-500
-                                            hover:bg-emerald-500 hover:text-white"
+                                        <button class="shadow-md w-9 h-12 bg-white border-primary border-2 border-dashed text-primary
+                                            hover:bg-primary hover:text-white"
                                             @click="$refs.uploadGallery.click">
                                             <i class="block h-6 w-6 mx-auto text-center"><PlusIcon /></i>
                                         </button>
@@ -94,7 +94,7 @@
                                         <button class="my-2 mx-auto flex justify-center items-center text-white w-28 px-5 h-9 font-bold shadow-md"
                                             @click="eqGalleryUpload()"
                                             :disabled="!uploadGalleryList.length"
-                                            :class="uploadGalleryList.length?'bg-emerald-500 hover:bg-emerald-600':'bg-emerald-300'">
+                                            :class="uploadGalleryList.length?'bg-primary hover:bg-emerald-600':'bg-emerald-300'">
                                             <p>save</p>
                                         </button>
                                     </div>
@@ -107,7 +107,7 @@
 
                     <div class="w-full">
                         <div class="w-full my-2 mb-4 bg-emerald-100 px-5" v-if="equipment">
-                            <p class="text-xl font-bold text-left text-emerald-700">{{equipment.name.toUpperCase()}}</p>
+                            <p class="text-xl font-bold text-left text-primary">{{equipment.name.toUpperCase()}}</p>
                         </div>
              
                         <div class="grid grid-cols-2 my-2"

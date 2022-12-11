@@ -3,7 +3,7 @@
     <div :id="'contract-'+ ad.contract" class="bg-white border shadow-md h-full w-full rounded-xl
         hover:shadow-xl overflow-hidden flex flex-col items-center
         py-5 px-5 relative"
-        :class="adVersionView.ex_deal?'hover:shadow-orange-300 shadow-orange-100':'hover:shadow-sky-300 shadow-sky-100'">
+        :class="adVersionView.ex_deal?'hover:shadow-orange-300 shadow-orange-100':'hover:shadow-primary shadow-secondary'">
         <span class="flex h-3 w-3 absolute top-1 right-1"
             v-if="codeOrange">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
@@ -12,11 +12,11 @@
         <span class="flex h-3 w-3 absolute top-1 right-1"
             v-else-if="codeRed">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+            <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
         </span>
         <div class="w-full">
             <p class="text-center font-bold w-full">{{ad.title.toUpperCase()}}</p>
-            <p class="text-xs text-center font-semibold w-full text-sky-400">#{{ad.contract.toUpperCase()}}</p>
+            <p class="text-xs text-center font-semibold w-full text-primary">#{{ad.contract.toUpperCase()}}</p>
             <p class="text-xs text-center text-gray-700">{{advertiser.name}}</p>
         </div>
         
@@ -37,7 +37,7 @@
         </div>
         <div class="border-t-2 w-full flex justify-end">
             <button class="text-xs font-bold text-right mx-5" 
-                :class="adVersionView.ex_deal?'text-orange-500': 'text-sky-500'"
+                :class="adVersionView.ex_deal?'text-orange-500': 'text-primary'"
                 @click="open=true">
                 view details
             </button>
@@ -72,8 +72,8 @@
                 </div>
                 <div class="border-b-2 w-full text-center">
                     <h1 class="text-3xl font-bold">{{ad.title.toUpperCase()}}</h1>
-                    <p class="text-xs font-bold text-sky-500">#{{ad.contract}} <span v-if="adVersionView.ex_deal" class="text-orange-500">#EX-DEAL</span></p>
-                    <p class="text-sm text-blue-500">{{advertiser.name}}</p>
+                    <p class="text-xs font-bold text-primary">#{{ad.contract}} <span v-if="adVersionView.ex_deal" class="text-orange-500">#EX-DEAL</span></p>
+                    <p class="text-sm text-primary">{{advertiser.name}}</p>
                 </div>
                 <!-- MAIN VIEW -->
                 <div class="w-full h-5/6 overflow-y-scroll none-scroll pb-3" v-if="contractView === 'main'">
@@ -91,11 +91,11 @@
                                 CHANGE
                             </button>
                             <input type="file" class="hidden" ref="adAvatarFile" accept="image/*" @change="uploadAndView" capture>
-                            <button v-if="adAvatarUrl" class="absolute top-1 right-1 bg-blue-500 text-white font-bold text-sm px-2 py-1 rounded-md"
+                            <button v-if="adAvatarUrl" class="absolute top-1 right-1 bg-primary text-white font-bold text-sm px-2 py-1 rounded-md"
                             @click.self="changeAdAvatar">
                                 save
                             </button>
-                            <button v-else class="absolute top-0 right-0 text-blue-500 hover:text-sky-500 font-bold text-sm px-2 py-1 rounded-md"
+                            <button v-else class="absolute top-0 right-0 text-primary hover:text-primary font-bold text-sm px-2 py-1 rounded-md"
                             @click="toggleAdAvatarChangeMode">
                                 <i class="block h-6 w-6"><RefreshIcon/></i>
                             </button>
@@ -142,12 +142,12 @@
                     <!-- TAGLINES -->
                     <div class="w-full h-max">
                         <div class="border-b mt-4">
-                            <p class="text-center font-bold text-blue-500">Airing Schedule</p>
+                            <p class="text-center font-bold text-gray-900">Airing Schedule</p>
                         </div>
                         
-                        <div class="sched-grid h-max p-5 bg-blue-50 my-3">
+                        <div class="sched-grid h-max p-5 bg-gray-200 my-3">
                             <div v-for="i in adScheduleList"
-                                class="w-max text-sm text-center bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-full m-2 place-self-center">
+                                class="w-max text-sm text-center bg-primary hover:bg-active text-white px-2 py-1 rounded-full m-2 place-self-center">
                                 {{i}}
                             </div>
                         </div>
@@ -155,23 +155,23 @@
                     <!-- TAGLINES SCHED -->
                     <div class="w-full h-max" v-if="adVersionView.has_tagline">
                         <div class="border-b mt-4">
-                            <p class="text-center font-bold text-blue-500">AOB/SS/TC</p>
+                            <p class="text-center font-bold text-gray-900">AOB/SS/TC</p>
                         </div>
                         
-                        <div class="sched-grid h-max p-5 bg-blue-50 my-3">
+                        <div class="sched-grid h-max p-5 bg-gray-200 my-3">
         
                             <div v-if="adVersionView.aob_sched" v-for="aob in aobScheduleList"
-                                class="relative w-max text-sm text-center bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-full m-2 place-self-center">
-                                <div class="tagline h-max w-max px-1 bg-sky-500 text-white-500 flex items-center text-center justify-center">AOB</div>
+                                class="relative w-max text-sm text-center bg-primary hover:bg-active text-white px-2 py-1 rounded-full m-2 place-self-center">
+                                <div class="tagline h-max w-max px-1 bg-primary text-white-500 flex items-center text-center justify-center">AOB</div>
                                 {{aob}}
                             </div>
                             <div  v-if="adVersionView.tc_sched" v-for="tc in tcScheduleList"
-                                class="relative w-max text-sm text-center bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-full m-2 place-self-center">
+                                class="relative w-max text-sm text-center bg-primary hover:bg-active text-white px-2 py-1 rounded-full m-2 place-self-center">
                                 <div class="tagline h-max w-max px-1 bg-green-500 text-white-500 flex items-center text-center justify-center">TC</div>
                                 {{tc}}
                             </div>
                             <div  v-if="adVersionView.ss_sched" v-for="ss in ssScheduleList"
-                                class="relative w-max text-sm text-center bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded-full m-2 place-self-center">
+                                class="relative w-max text-sm text-center bg-primary hover:bg-active text-white px-2 py-1 rounded-full m-2 place-self-center">
                                 <div class="tagline h-max w-max px-1 bg-orange-500 text-white-500 flex items-center text-center justify-center">SS</div>
                                 {{ss}}
                             </div>
@@ -180,9 +180,9 @@
                     <!-- :Materials: -->
                     <div class="w-full">
                         <div class="border-b mt-4">
-                            <p class="text-center font-bold text-blue-500">Materials</p>
+                            <p class="text-center font-bold text-gray-900">Materials</p>
                         </div>
-                        <div class="h-max p-5 bg-blue-50 my-3">
+                        <div class="h-max p-5 bg-gray-200 my-3">
                             <AudioItem v-for="audioFile in adVersionView.files" :id="audioFile" class="w-11/12 mx-auto my-3"/>
                         </div>
                     </div>

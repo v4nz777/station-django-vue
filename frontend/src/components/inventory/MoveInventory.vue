@@ -39,7 +39,7 @@
 
                 
                 <button @click="moveToGroup()" class="font-bold text-white px-4"
-                        :class="!group?'bg-gray-400':'bg-emerald-500'"
+                        :class="!group?'bg-disabled':'bg-primary'"
                         :disabled="!group">
                     CONFIRM
                 </button>
