@@ -1,5 +1,5 @@
 <template>
-    <div class="flex flex-col w-inventory-controls px-5 items-center">
+    <div class="flex w-inventory-controls px-5">
         
         
         <div class="">
@@ -14,8 +14,8 @@
             <ConsumptionData v-for="datum in data"
             :datum="datum"  
             @send="sendDataToChart"/>
-
         </div>
+
     </div>
 </template>
 
