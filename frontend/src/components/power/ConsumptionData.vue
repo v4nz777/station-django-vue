@@ -36,7 +36,7 @@
  const dt = ref({})
  
  const generateDate = ()=> {
-    const datetime = moment(props.datum.date_time) 
+    const datetime = moment(props.datum.date_time.slice(0,-1)) 
     dt.value = {
     complete_date: datetime.format("MMMM D ,GGGG"),
     complete_time: datetime.format("h:mm a"),

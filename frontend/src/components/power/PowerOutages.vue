@@ -9,6 +9,7 @@
                 <span class="text-gray-500 text-xs italic" v-if="dtRestored.complete_date !== dtInterrupted.complete_date"> ({{dtRestored.complete_date}})</span>
             </p>
 
+
         </div>
         <div class="w-max flex flex-col items-center justify-center">
 
@@ -47,9 +48,11 @@
  const dtInterrupted = ref({})
  const dtRestored = ref({})
 
+
  
  const generateDateTimes = ()=> {
-    const interrupted = moment(props.datum.interrupted) 
+    const interrupted = moment(props.datum.interrupted.slice(0,-1))
+ 
     dtInterrupted.value = {
     complete_date: interrupted.format("MMMM D ,GGGG"),
     complete_time: interrupted.format("h:mm a"),
@@ -61,7 +64,7 @@
     am_pm: interrupted.format("a"),
   }
 
-  const restored = moment(props.datum.restored) 
+  const restored = moment(props.datum.restored.slice(0,-1)) 
     dtRestored.value = {
     complete_date: restored.format("MMMM D ,GGGG"),
     complete_time: restored.format("h:mm a"),
@@ -83,7 +86,7 @@
         // emits("send",{dt:dt.value, kwh_used: newVal.consumed})
     }
     
- })
+ },{deep:true})
 
 
 onMounted( () => {

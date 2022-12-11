@@ -12,8 +12,7 @@
             </div>
 
             <PowerOutages v-for="datum in data"
-            :datum="datum"  
-            @send="sendDataToChart"/>
+            :datum="datum"/>
         </div>
 
     </div>
