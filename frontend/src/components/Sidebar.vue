@@ -79,8 +79,12 @@ const technical = [
         location: "/inventory"
     },
     {
-        name: "Power",
+        name: "Consumption",
         location: "/power"
+    },
+    {
+        name: "Brown Out",
+        location: "/power_outage"
     }
 ]
 

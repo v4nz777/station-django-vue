@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Equipment, EquipmentGroup, Brand, Image, PowerConsumption
+from .models import Equipment, EquipmentGroup, Brand, Image, PowerConsumption, PowerInterruption
 
 class EquipmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,4 +24,9 @@ class ImageSerializer(serializers.ModelSerializer):
 class PowerConsumptionSerializer(serializers.ModelSerializer):
     class Meta:
         model = PowerConsumption
+        fields = "__all__"
+
+class PowerInterruptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PowerInterruption
         fields = "__all__"

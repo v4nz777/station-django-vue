@@ -7,6 +7,7 @@ import LoginView from "@/views/LoginView.vue";
 import ProfileView from "@/views/ProfileView.vue";
 import AdvertisementsView from "@/views/AdvertisementsView.vue";
 import PowerView from "@/views/PowerView.vue"
+import PowerOutageView from "@/views/PowerOutageView.vue"
 
 
 const router = createRouter({
@@ -64,6 +65,14 @@ const router = createRouter({
       path: "/power",
       name: "power",
       component: PowerView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: "/power_outage",
+      name: "power_outage",
+      component: PowerOutageView,
       meta: {
         requiresAuth: true
       }

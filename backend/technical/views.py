@@ -5,8 +5,19 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from datetime import datetime
 
-from .serializers import EquipmentSerializer, EquipmentGroupSerializer, BrandSerializer, ImageSerializer, PowerConsumptionSerializer
-from .models import Equipment, EquipmentGroup, Brand, Image, PowerInterruption, PowerConsumption
+from .serializers import (EquipmentSerializer,
+                            EquipmentGroupSerializer,
+                            BrandSerializer,
+                            ImageSerializer,
+                            PowerConsumptionSerializer,
+                            PowerInterruptionSerializer)
+from .models import (Equipment,
+                    EquipmentGroup,
+                    Brand,
+                    Image,
+                    PowerInterruption,
+                    PowerConsumption)
+
 from station.models import User
 from station.models import Activity
 
@@ -321,7 +332,7 @@ def newPowerInterruption(request):
     interrupted = datetime.strptime(data["interrupted"],"%Y-%m-%dT%H:%M")
     restored = datetime.strptime(data["restored"],"%Y-%m-%dT%H:%M")
 
-    new = PowerInterruption(interrupted=interrupted, restored=restored)
+    new = PowerInterruption(interrupted=interrupted, restored=restored, scheduled=data["scheduled"][0])
     new.save()
     new.set_duration()
     return Response({"message":"PI data encoding success"})
@@ -365,4 +376,10 @@ def newPowerConsumption(request):
 def getPowerConsumptions(request):
     power_consumptions = PowerConsumption.objects.all().order_by("-date_time")
     serializer = PowerConsumptionSerializer(power_consumptions, many=True)
+    return Response(serializer.data)
+
+@api_view(["GET"])
+def getPowerInterruptions(request):
+    power_interruptions = PowerInterruption.objects.all().order_by("-interrupted")
+    serializer = PowerInterruptionSerializer(power_interruptions, many=True)
     return Response(serializer.data)
