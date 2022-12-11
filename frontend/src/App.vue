@@ -11,8 +11,8 @@
         <RouterView />
       </div>
 
-      <Rightbar class="md:block hidden w-56"
-            v-if="userstore.user" />
+      <!-- <Rightbar class="md:block hidden w-56"
+            v-if="userstore.user" /> -->
     </div>
 
   
