@@ -341,7 +341,6 @@ def newPowerInterruption(request):
 """
 POWER CONSUMPTIONS
 """
-
 @api_view(["POST","PUT"])
 def newPowerConsumption(request):
     data = request.data

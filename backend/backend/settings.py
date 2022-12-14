@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'station',
     'office',
-    'technical'
+    'technical',
+    'transmitter'
 ]
 
 MIDDLEWARE = [

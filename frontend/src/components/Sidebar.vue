@@ -85,6 +85,10 @@ const technical = [
     {
         name: "Brown Out",
         location: "/power_outage"
+    },
+    {
+        name: "Transmitter",
+        location: "/transmitter"
     }
 ]
 

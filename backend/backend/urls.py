@@ -29,6 +29,8 @@ urlpatterns = [
     path("",include("station.urls")),
     path("",include("office.urls")),
     path("",include("technical.urls")),
+    path("",include("transmitter.urls")),
+
     path("login/", TokenObtainPairView.as_view(), name="login"),
     path("refresh/", TokenRefreshView.as_view(), name="refresh"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

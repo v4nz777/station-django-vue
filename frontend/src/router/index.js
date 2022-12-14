@@ -8,6 +8,8 @@ import ProfileView from "@/views/ProfileView.vue";
 import AdvertisementsView from "@/views/AdvertisementsView.vue";
 import PowerView from "@/views/PowerView.vue"
 import PowerOutageView from "@/views/PowerOutageView.vue"
+import TransmitterView from "@/views/TransmitterView.vue"
+
 
 
 const router = createRouter({
@@ -73,6 +75,14 @@ const router = createRouter({
       path: "/power_outage",
       name: "power_outage",
       component: PowerOutageView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: "/transmitter",
+      name: "transmitter",
+      component: TransmitterView,
       meta: {
         requiresAuth: true
       }
