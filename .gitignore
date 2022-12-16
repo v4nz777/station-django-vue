@@ -7,6 +7,7 @@ backend/office/migrations/
 backend/office/__pycache__/
 backend/office/migrations/
 backend/office/invoice/generated/*
+!backend/office/invoice/generated/.gitkeep
 backend/station/__pycache__/
 backend/station/migrations/
 backend/technical/__pycache__/

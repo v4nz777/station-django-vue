@@ -9,7 +9,7 @@
                 @new="filterLogs(today)"/>
             </div>
 
-            <div>
+            <div class="w-full px-5">
                 <TransmitterLogTable
                 :logs="logs"
                 :filter="today"
