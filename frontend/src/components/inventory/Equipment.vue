@@ -9,7 +9,7 @@
             <span v-if="equipment.status === 'active'" class="absolute top-1 right-1 text-xs shadow-md bg-emerald-500 text-white font-bold px-1 rounded">Active</span>
             <span v-else-if="equipment.status === 'standby'" class="absolute top-1 right-1 text-xs shadow-md bg-gray-500 text-white font-bold px-1 rounded">Standby</span>
             <span v-else-if="equipment.status === 'test'" class="absolute top-1 right-1 text-xs shadow-md bg-yellow-500 text-white font-bold px-1 rounded">Test</span>
-            <img :src="avatar.file?`http://localhost:8000${avatar.file}`:'/src/assets/equipment.png'" class="w-full h-full object-cover">
+            <img :src="avatar.file?baseURL + avatar.file:'/src/assets/equipment.png'" class="w-full h-full object-cover">
         </div>
         <button class="z-10 absolute bottom-custom w-28 h-12 left-2"
             @click="open = true">
@@ -33,9 +33,9 @@
                     <div class="w-full h-max flex justify-around border-b-2 pb-2">
                         <div class="bg-emerald-100 w-80 h-72 relative">
                             <img v-if="avatar.file"
-                                :src="eqPicPreview.file?`http://localhost:8000${eqPicPreview.file}`:`http://localhost:8000${avatar.file}`" alt="preview image" class="w-full h-full object-contain">
+                                :src="eqPicPreview.file?baseURL + eqPicPreview.file:baseURL + avatar.file" alt="preview image" class="w-full h-full object-contain">
                             <img v-else
-                                :src="eqPicPreview.file?`http://localhost:8000${eqPicPreview.file}`:'/src/assets/equipment.png'" alt="preview image" class="w-full h-full object-contain">
+                                :src="eqPicPreview.file?baseURL + eqPicPreview.file:'/src/assets/equipment.png'" alt="preview image" class="w-full h-full object-contain">
                             
                             <div class="absolute top-1 right-2 text-xs font-bold w-max text-white">
                                 <div v-if="settingDisplay"
@@ -56,7 +56,7 @@
                                     @click="eqPicPreview=img"
                                     class="overflow-hidden shadow-md w-12 h-9 my-2 mx-auto"
                                     :class="img.id===eqPicPreview.id?'border-2 border-primary':'hover:border-2 border-yellow-400 hover:shadow-yellow-300'">
-                                    <img :src="`http://localhost:8000${img.file}`" :alt="img.file_name" class="w-full h-full object-cover">
+                                    <img :src="baseURL + img.file" :alt="img.file_name" class="w-full h-full object-cover">
                                 </div>
                             </div>
                             <div class="bg-emerald-100 w-full h-9 relative">
@@ -179,7 +179,7 @@
     import axios from 'axios';
     import moment from 'moment';
     import { userStore } from "@/stores/user"
-
+    const baseURL = axios.defaults.baseURL
     const userstore = userStore()
     const open = ref(false)
     const props = defineProps({

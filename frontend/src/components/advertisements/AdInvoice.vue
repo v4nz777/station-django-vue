@@ -108,7 +108,7 @@
             <tbody class="text-primary text-sm font-normal">
                 <tr v-if="invoices.length" v-for="invoice in invoices" class="border-b hover:bg-gray-200">
                     <td>
-                        <a :href="'http://localhost:8000' + invoice.file"
+                        <a :href="baseURL + invoice.file"
                             class="hover:text-green-500">
                             <i class="block h-4 w-4"><DownloadIcon/>
                             </i>
@@ -144,6 +144,7 @@
     import { DownloadIcon, PrinterIcon } from '@heroicons/vue/solid';
     import axios from 'axios';
     import moment from 'moment';
+    const baseURL = axios.defaults.baseURL
     const props = defineProps({
         contract:String,
         amount:Number,
