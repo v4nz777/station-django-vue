@@ -1,5 +1,5 @@
 <template>
-    <div class="w-full h-5/6 overflow-y-scroll none-scroll pt-3">
+    <div class="w-full h-5/6 overflow-y-scroll none-scroll pt-3 relative" id="invoice">
         
         <div class="bg-gray-200 w-full h-max text-sm font-thin p-5 grid grid-cols-3">
             <div class="mb-3 flex flex-col justify-between border-r-2 mr-3">
@@ -101,8 +101,9 @@
                     <td>Invoice</td>
                     <td>Applicable</td>
                     <td>Amount</td>
-                    
                     <td>Paid?</td>
+                    <td>Deposit Proof</td>
+
                 </tr>
             </thead>
             <tbody class="text-primary text-sm font-normal">
@@ -133,6 +134,15 @@
                             <AdPayment :invoice="invoice" @submitted="getInvoiceList(contract)"/>
                         </div>
                     </td>
+                    <td>
+                        <InvoiceDepositSlip v-if="invoice.deposited"
+                            :invoice="invoice"/>
+                        <InvoiceDeposit v-else
+                            @done="getInvoiceList(contract)"
+                            :invoice="invoice"/>
+
+                        
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -142,6 +152,9 @@
     import { ref,onMounted,onUnmounted } from 'vue';
     import AdPayment from "@/components/advertisements/AdPayment.vue";
     import { DownloadIcon, PrinterIcon } from '@heroicons/vue/solid';
+    import InvoiceDepositSlip from './InvoiceDepositSlip.vue';
+    import InvoiceDeposit from './InvoiceDeposit.vue';
+
     import axios from 'axios';
     import moment from 'moment';
     const baseURL = axios.defaults.baseURL

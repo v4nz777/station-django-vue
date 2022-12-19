@@ -15,5 +15,7 @@ urlpatterns = [
     path("change_ad_avatar", views.changeAdAvatar, name="changeAdAvatar"),
     path("compare/<str:contract>/<int:x>/<int:y>", views.compareVersions, name="compareVersions"),
     path("change_version", views.changeVersion, name="changeVersion"),
+    path("save_snap/bank_deposit/<str:invoice>", views.bankDeposit, name="bankDeposit"),
+
 
 ]

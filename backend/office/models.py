@@ -103,8 +103,13 @@ class Invoice(models.Model):
 
     file = models.FileField(upload_to="invoices", blank=True, null=True)
 
+    deposited = models.BooleanField(default=False)
+    deposit_slip = models.ImageField(upload_to="bank_deposits", blank=True, null=True)
+
     def __str__(self):
         return f'{self.invoice_date}|{self.from_contract}'
+
+
 
 
 class InvoiceTransmittal(models.Model):

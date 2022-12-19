@@ -284,3 +284,18 @@ def payInvoice(request):
             return Response(serializer.data)
         except ObjectDoesNotExist:
             return Response({"failed":"failed"})
+
+@api_view(["PUT"])
+def bankDeposit(request,invoice):
+    data = request.data
+    image = data["deposit_slip"]
+    print(data)
+    invoice = Invoice.objects.get(invoice_no=invoice)
+
+    invoice.deposit_slip = image
+    invoice.deposited = True
+    invoice.save()
+
+    serializer = InvoiceSerializer(invoice)
+
+    return Response(serializer.data)
