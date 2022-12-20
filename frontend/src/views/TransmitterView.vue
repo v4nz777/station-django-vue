@@ -1,26 +1,26 @@
 <template>
-    <div class="flex w-inventory-controls px-5">
+   
         
         
-        <div class="w-full">
+    <div class="md:w-full md:mx-20 w-screen flex flex-col items-center">
 
-            <div class="w-full h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-xl shadow-yellow-500 flex">
-                <NewTransmitterLog 
-                @new="filterLogs(today)"/>
-            </div>
-
-            <div class="w-full px-5">
-                <TransmitterLogTable
-                :logs="logs"
-                :filter="today"
-                @search="filterLogs"
-                />
-            </div>
-
-            
+        <div class="md:w-full w-screen h-max bg-white rounded-3xl my-5 py-2 shadow-xl shadow-yellow-500 flex">
+            <NewTransmitterLog 
+            @new="filterLogs(today)"/>
         </div>
 
+        <div class="w-full md:flex md:justify-center px-5">
+            <TransmitterLogTable
+            :logs="logs"
+            :filter="today"
+            @search="filterLogs"
+            />
+        </div>
+
+        
     </div>
+
+   
 </template>
 
 <script setup>

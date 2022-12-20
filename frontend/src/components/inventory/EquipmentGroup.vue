@@ -1,7 +1,7 @@
 <template>
     
-    <div class="bg-white w-full my-2 mb-5">
-        <div class="w-full border-b flex bg-gray-50 justify-between px-2">
+    <div class="bg-white md:w-full w-screen my-2 mb-5">
+        <div class="w-full border-b flex bg-gray-50 justify-between px-2 shadow-lg">
             <div class="flex py-1 items-center">
                 <input type="checkbox" class="accent-primary mx-1" v-model="all" @change="selectAll()">
                 <p class="font-bold text-primary">{{group.group_name===""?'UNGROUPED':group.group_name.toUpperCase()}}</p>    
@@ -29,7 +29,7 @@
             
         </div>
 
-        <div class="grid grid-cols-4" v-if="viewEquipments">
+        <div class="grid md:grid-cols-4 grid-cols-2 shadow-xl py-4" v-if="viewEquipments">
             <Equipment v-for="equipment in group.equipments"
                 @mark="sendToBatch"
                 @unmark="removeFromBatch"

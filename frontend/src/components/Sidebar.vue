@@ -1,6 +1,6 @@
 <template>
 
-    <nav class="flex flex-col justify-between w-52">
+    <nav class="flex flex-col justify-between w-52 z-50">
         <div class="flex flex-col py-4">
             <SidebarItem title="General" :links=general
                 @select="setSelected" :selected="selected === 'General'">

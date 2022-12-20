@@ -2,11 +2,11 @@
 <template>
   <main>
     <ModalDTRIn />
-    <div class="flex w-activity-controls h-20 bg-white border shadow-lg rounded-2xl p-2 mb-8 my-6 mx-2">
+    <div class="flex md:w-full w-screen h-20 bg-white border shadow-lg rounded-2xl p-2 mb-8 my-6">
         <!-- <NewAds buttonTitle="Advertisement"/>
         <NewPowerOutage/> -->
     </div>
-    <div class="w-activities h-full mt-4 mb-14 flex flex-col md:px-14 px-32">
+    <div class="md:w-full w-screen mt-4 mb-14 flex flex-col px-4">
       <!--:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::-->
       
       <div class="flex my-6"

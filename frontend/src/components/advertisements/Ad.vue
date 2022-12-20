@@ -81,7 +81,7 @@
                         <p class="text-xs text-gray-500">Version {{ad.current_ver}}.0</p>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <div class="h-64 w-64 overflow-hidden rounded-md relative flex shadow">
+                        <div class="h-full w-auto overflow-hidden rounded-md relative flex shadow">
                             <img v-if="adAvatarUrl" :src="adAvatarUrl" class="w-full h-full object-cover">
                             <img v-else :src="ad.ad_avatar?baseURL+ad.ad_avatar:'/src/assets/ad.png'" class="w-full h-full object-cover">
                             

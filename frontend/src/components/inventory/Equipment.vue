@@ -1,6 +1,6 @@
 <template>
-    <div class="m-2 w-32 h-36 relative">
-        <div class="w-32 h-36 overflow-hidden shadow-md relative"
+    <div class="m-2 w-36 h-36 relative">
+        <div class="w-36 h-36 overflow-hidden shadow-md relative"
             :class="marked?'border-4 border-emerald-500':''"
             @click="toggleMark">
             

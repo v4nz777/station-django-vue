@@ -1,5 +1,5 @@
 <template>
-    <div class="w-96 h-max bg-white p-3 shadow-lg rounded-2xl my-5 mx-auto flex justify-between px-5">
+    <div class="md:w-96 w-screen h-max bg-white p-3 shadow-lg rounded-2xl my-5 flex justify-between px-5">
 
         <div>
             <p class="text-lg font-bold mb-2 text-gray-600">{{dtInterrupted.complete_date}}</p>

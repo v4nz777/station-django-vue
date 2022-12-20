@@ -1,5 +1,5 @@
 <template>
-    <div class="w-96 h-max bg-white p-3 shadow-lg rounded-2xl my-5 mx-auto flex justify-between">
+    <div class="md:w-96 w-full h-max bg-white p-3 shadow-lg rounded-2xl my-5 mx-auto flex justify-between">
         <div>
             <p class="text-lg font-bold mb-2 text-gray-600">{{dt.complete_date}}</p>
             <p class="text-sm">Meter: <span class="text-sky-500 font-bold">{{datum.meter}}</span></p>

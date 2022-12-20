@@ -1,8 +1,8 @@
 <template>
-    <div class="flex w-inventory-controls px-5">
+    <div class="flex md:w-full w-screen px-5">
         
         
-        <div class="">
+        <div class="w-full px-5">
             <ConsumptionChart
             :data_labels="{labels:_labels,data:_data}"/>
 
@@ -20,8 +20,6 @@
 </template>
 
 <script setup>
-    import { Line } from "vue-chartjs";
-    import NewPowerOutage from "@/components/power/NewPowerOutage.vue"
     import NewPowerConsumption from "@/components/power/NewPowerConsumption.vue"
 
     import ConsumptionChart from "@/components/power/ConsumptionChart.vue"

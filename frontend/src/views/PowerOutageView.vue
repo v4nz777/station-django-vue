@@ -1,12 +1,12 @@
 <template>
-    <div class="flex w-inventory-controls px-5">
+    <div class="md:w-full w-screen px-5">
         
         
-        <div class="w-full">
+        <div class="w-full flex flex-col items-center">
             <!-- <ConsumptionChart
             :data_labels="{labels:_labels,data:_data}"/> -->
 
-            <div class="w-full h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-xl shadow-yellow-500 flex">
+            <div class="md:w-3/4 w-full h-max bg-white rounded-3xl my-5 px-1 py-2 shadow-lg shadow-yellow-500 flex">
                 <NewPowerOutage />
                 <!-- @done="loadConsumptionData" /> -->
             </div>
