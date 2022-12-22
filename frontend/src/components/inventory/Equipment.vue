@@ -9,7 +9,7 @@
             <span v-if="equipment.status === 'active'" class="absolute top-1 right-1 text-xs shadow-md bg-emerald-500 text-white font-bold px-1 rounded">Active</span>
             <span v-else-if="equipment.status === 'standby'" class="absolute top-1 right-1 text-xs shadow-md bg-gray-500 text-white font-bold px-1 rounded">Standby</span>
             <span v-else-if="equipment.status === 'test'" class="absolute top-1 right-1 text-xs shadow-md bg-yellow-500 text-white font-bold px-1 rounded">Test</span>
-            <img :src="avatar.file?baseURL + avatar.file:'/src/assets/equipment.png'" class="w-full h-full object-cover">
+            <img :src="avatar.file?baseURL + avatar.file:StaticEquipmentPic" class="w-full h-full object-cover">
         </div>
         <button class="z-10 absolute bottom-custom w-28 h-12 left-2"
             @click="open = true">
@@ -35,7 +35,7 @@
                             <img v-if="avatar.file"
                                 :src="eqPicPreview.file?baseURL + eqPicPreview.file:baseURL + avatar.file" alt="preview image" class="w-full h-full object-contain">
                             <img v-else
-                                :src="eqPicPreview.file?baseURL + eqPicPreview.file:'/src/assets/equipment.png'" alt="preview image" class="w-full h-full object-contain">
+                                :src="eqPicPreview.file?baseURL + eqPicPreview.file:StaticEquipmentPic" alt="preview image" class="w-full h-full object-contain">
                             
                             <div class="absolute top-1 right-2 text-xs font-bold w-max text-white">
                                 <div v-if="settingDisplay"
@@ -179,6 +179,7 @@
     import axios from 'axios';
     import moment from 'moment';
     import { userStore } from "@/stores/user"
+    import StaticEquipmentPic from "@/assets/equipment.png"
     const baseURL = axios.defaults.baseURL
     const userstore = userStore()
     const open = ref(false)

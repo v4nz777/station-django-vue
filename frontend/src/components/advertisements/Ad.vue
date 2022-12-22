@@ -26,7 +26,7 @@
             </div>
             
             <div class="h-24 w-24 overflow-hidden rounded-md">
-                <img :src="ad.ad_avatar?baseURL+ad.ad_avatar:'/src/assets/ad.png'" class="w-full h-full object-cover">
+                <img :src="ad.ad_avatar?baseURL+ad.ad_avatar:StaticAdPhoto" class="w-full h-full object-cover">
             </div>
 
 
@@ -83,7 +83,7 @@
                     <div class="grid grid-cols-2 gap-2">
                         <div class="h-full w-auto overflow-hidden rounded-md relative flex shadow">
                             <img v-if="adAvatarUrl" :src="adAvatarUrl" class="w-full h-full object-cover">
-                            <img v-else :src="ad.ad_avatar?baseURL+ad.ad_avatar:'/src/assets/ad.png'" class="w-full h-full object-cover">
+                            <img v-else :src="ad.ad_avatar?baseURL+ad.ad_avatar:StaticAdPhoto" class="w-full h-full object-cover">
                             
                             <button class="absolute font-sans text-lg font-black text-white bg-black bg-opacity-30 w-full h-full"
                             v-if="adAvatarChangeMode"
@@ -234,6 +234,7 @@
     import { DotsVerticalIcon, ReceiptTaxIcon, ArrowNarrowLeftIcon, CogIcon, RefreshIcon } from '@heroicons/vue/solid';
     import moment from 'moment';
     import StackIcon from '@/components/icons/StackIcon.vue';
+    import StaticAdPhoto from '@/assets/ad.png'
 
     
     const baseURL = axios.defaults.baseURL

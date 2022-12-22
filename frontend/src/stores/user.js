@@ -1,14 +1,14 @@
 import { defineStore } from "pinia";
 import router from "../router";
 import axios from "axios";
-
+import staticAvatar from "@/assets/avatar.png"
 
 export const userStore = defineStore({
     id: "userStore",
 
     state: () => ({
         user: null,
-        avatar: "/src/assets/avatar.png",
+        avatar: "staticAvatar",
         accessToken: null,
         dtrIsLogged: false,
         userLoaded: false,
