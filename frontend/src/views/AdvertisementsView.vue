@@ -39,7 +39,6 @@
         if (currentcount !== response.data.length){
             loaded.value = false
             adsList.value = []
-            console.log('triggered')
         }
         adsList.value = response.data
         loaded.value = true

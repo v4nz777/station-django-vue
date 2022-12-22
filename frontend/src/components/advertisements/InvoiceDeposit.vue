@@ -51,7 +51,7 @@ const snapshot = (data)=> {
 }
 
 const save = async()=> {
-    // console.log(photoURL.value)
+
     const fd = new FormData();
     fd.append("deposit_slip",blob.value,`proof#${props.invoice.invoice_no}.jpg`)
     const response = await axios.put(`save_snap/bank_deposit/${props.invoice.invoice_no}`,fd)

@@ -32,7 +32,6 @@
     const loadConsumptionData = async()=> {
         const response = await axios.get("get_power_readings")
         data.value = response.data
-        console.log("triggered")
     }
     const _labels = ref([])
     const _data = ref([])

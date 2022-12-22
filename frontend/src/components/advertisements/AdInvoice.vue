@@ -187,7 +187,6 @@
         const response = await axios.get(`/invoices/${contract}`)
         if(response.status === 200){
             invoices.value = response.data
-            console.log(response.data)
         }else{
             invoices.value = []
         }

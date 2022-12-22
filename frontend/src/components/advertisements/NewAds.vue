@@ -582,8 +582,7 @@
         if (adContract.value){
             const response = await axios.get('ads/all')
             const contracts = response.data.map(result => result.contract)
-            console.log(adContract.value.toString())
-            
+       
             if (contracts.includes(adContract.value)){
                 isContractDecided.value = true
                 isContractValid.value = false
@@ -823,7 +822,6 @@
     const accountExecutives = ref([])
     const getAccountExecutuves = async () => {
         const response = await axios.get("/users/")
-        console.log(response.data)
         return accountExecutives.value = response.data
     }
  

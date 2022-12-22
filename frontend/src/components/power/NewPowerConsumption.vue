@@ -64,7 +64,6 @@
         fd.append("meter",meter.value)
         fd.append("datetime",datetime.value)
         const response = await axios.post("new_power_reading", fd)
-        console.log(response)
         open.value = false
         emits("done")
     }

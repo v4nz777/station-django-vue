@@ -260,7 +260,6 @@
         if(response.status === 200) {
             setTimeout(() => {
             settingDisplay.value = false;
-            console.log(response.status);
             }, 2000);
         }
     }

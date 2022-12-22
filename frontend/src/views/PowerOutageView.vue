@@ -19,11 +19,8 @@
 </template>
 
 <script setup>
-    import { Line } from "vue-chartjs";
-    import NewPowerOutage from "@/components/power/NewPowerOutage.vue"
-    import NewPowerConsumption from "@/components/power/NewPowerConsumption.vue"
 
-    import ConsumptionChart from "@/components/power/ConsumptionChart.vue"
+    import NewPowerOutage from "@/components/power/NewPowerOutage.vue"
     import PowerOutages from "@/components/power/PowerOutages.vue"
     import { onMounted } from "vue";
     import { ref } from "vue";
@@ -33,15 +30,11 @@
     const loadConsumptionData = async()=> {
         const response = await axios.get("get_power_interruptions")
         data.value = response.data
-        console.log("triggered")
+
     }
     const _labels = ref([])
     const _data = ref([])
-    const sendDataToChart = (data)=> {
-        _labels.value = Array.from([data.dt.month,..._labels.value])
-        _data.value = Array.from([data.kwh_used,..._data.value,])
-      
-    }
+
 
     onMounted(() => {
         loadConsumptionData()

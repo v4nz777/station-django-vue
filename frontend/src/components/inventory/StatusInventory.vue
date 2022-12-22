@@ -92,7 +92,6 @@
     }
    
     const getItems = async()=> {
-        console.log(props.items)
         props.items.forEach(async (itemID)=> {
             const gotten = await getItem(itemID)
             itemsReactive.value.push(gotten)

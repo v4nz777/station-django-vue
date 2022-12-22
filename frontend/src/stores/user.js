@@ -61,7 +61,6 @@ export const userStore = defineStore({
                if (this.user && this.accessToken) {
               
                     const response = await axios.get(`/user/${this.user}`)
-                        console.log(response.status)
             
                         localStorage.setItem("userDetails", JSON.stringify(response.data))
                         const saveUserDetails = localStorage.getItem("userDetails")
@@ -88,7 +87,6 @@ export const userStore = defineStore({
             this.dtrIsLogged = JSON.parse(localStorage.getItem("dtrIsLogged"))
         },
         async changePic(file){
-            console.log(file)
             const fd = new FormData()
             fd.append("avatar", file, file.name)
             const response = await axios.post(`/change/avatar/${this.user}/`,fd)

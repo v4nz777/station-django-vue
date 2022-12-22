@@ -81,7 +81,6 @@
 
  watch(()=>props.datum,(newVal,oldVal)=> {
     if(newVal !== oldVal){
-        console.log(newVal)
         generateDateTimes()
         // emits("send",{dt:dt.value, kwh_used: newVal.consumed})
     }

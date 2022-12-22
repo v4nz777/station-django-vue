@@ -73,8 +73,6 @@ export const dtrStore = defineStore({
                     this.pathForCurrent = localStorage.getItem("dtrCurrent")
                 }
                 const response = await axios.get(this.pathForCurrent)
-                console.log("called")
-                console.log(response)
                 this.year = response.data.year
                 this.month = response.data.month
                 this.date = response.data.date
