@@ -4,7 +4,7 @@
             Date: 
             <input type="date" class="text-primary" v-model="date" @change="search">
         </div>
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto h-max">
             <table class="">
                 <thead>
                     <tr class="border-y-2">

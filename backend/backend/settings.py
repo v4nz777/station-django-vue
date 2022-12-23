@@ -34,7 +34,7 @@ SECRET_KEY = 'django-insecure-oc_8+t6feg(gd8-v2c_!=sov-l##1_#bayiu8okd#orrq3%1ta
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [IPV4_ADDRESS, HOST_NAME, "localhost"]
+ALLOWED_HOSTS = [IPV4_ADDRESS, HOST_NAME, "localhost", "yes.local"]
 
 
 # Application definition
@@ -73,14 +73,14 @@ CORS_ORIGIN_WHITELIST = [
     'http://127.0.0.1:3000',
     'http://localhost:8000',
     'http://127.0.0.1:8000',
+
     'http://' + IPV4_ADDRESS + ':8000',
     'http://' + IPV4_ADDRESS + ':3000',
+    'http://' + IPV4_ADDRESS,
+
     'http://' + HOST_NAME + ':8000',
     'http://' + HOST_NAME + ':3000',
     'http://' + HOST_NAME,
-    
-
-
 ]
 
 
