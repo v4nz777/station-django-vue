@@ -1,6 +1,6 @@
 <template>
     <div class="relative flex items-center justify-center">
-        <button @click="toggle()" id="menu-opener">
+        <button @click="toggle" id="menu-opener">
             <i class="block h-9 w-9">
                 <MenuIcon />
             </i>
@@ -9,20 +9,8 @@
                 flex flex-col"
             v-if="open"
             v-click-away="toggle">
-            <SideBar />
-            <!-- <div class="flex flex-col justify-between">
-            <SidebarItem title="Activities" location="/">
-                <template #icon><HashtagIcon/></template>
-            </SidebarItem>
+            <SideBar @afterset="toggle"/>
 
-            <SidebarItem title="Worktab">
-                <template #icon><HashtagIcon/></template>
-            </SidebarItem>
-
-            <SidebarItem title="About" location="/about/">
-                <template #icon><HashtagIcon/></template>
-            </SidebarItem>
-            </div> -->
             <hr>
             <div class="flex flex-col pt-12 m-4 justify-center items-center">
                 <RouterLink v-if="userstore.user" to="/profile/">
@@ -39,7 +27,6 @@
                 <hr>
                 <Logout />
             </div>
-
     </div>
     </div>
 </template>
@@ -58,6 +45,7 @@
     const toggle = () => {
         // open if closed -> close if opened
         open.value ? open.value=false : open.value=true
+  
     }
 
 </script>

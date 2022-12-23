@@ -29,13 +29,14 @@ import { RouterLink } from "vue-router";
 import { userStore } from "@/stores/user";
 import SidebarItem from "./SidebarItem.vue";
 import { HashtagIcon } from "@heroicons/vue/outline";
-import MegaphoneIconOutline from "@/components/icons/MegaphoneIconOutline.vue"
-import DTRTimer from "@/components/DTRTimer.vue";
 
+const emits = defineEmits(["afterset"])
 
 const selected = ref("")
 const setSelected = (menu)=> {
     selected.value = menu
+    emits("afterset")
+    
 }
 const userstore = userStore()
 const general = [
