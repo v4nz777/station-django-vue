@@ -8,7 +8,7 @@ export const userStore = defineStore({
 
     state: () => ({
         user: null,
-        avatar: "staticAvatar",
+        avatar: staticAvatar,
         accessToken: null,
         dtrIsLogged: false,
         userLoaded: false,
