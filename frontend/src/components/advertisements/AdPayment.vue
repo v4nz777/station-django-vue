@@ -10,7 +10,7 @@
     <div v-if="open"
         v-click-away="togglePayment"
 
-        class="absolute z-20 bottom-0 right-20 w-52 h-max bg-blue-100 shadow-md border p-2">
+        class="absolute z-20 bottom-0 right-10 w-52 h-max bg-blue-100 shadow-md border p-2">
         <div class="flex justify-between mb-3">
             <p class="font-bold">Payment for Invoice#{{invoice.invoice_no}}</p>
         </div>

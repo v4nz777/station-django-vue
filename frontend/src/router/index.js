@@ -9,6 +9,7 @@ import AdvertisementsView from "@/views/AdvertisementsView.vue";
 import PowerView from "@/views/PowerView.vue"
 import PowerOutageView from "@/views/PowerOutageView.vue"
 import TransmitterView from "@/views/TransmitterView.vue"
+import BillingView from "@/views/BillingView.vue"
 
 
 
@@ -83,6 +84,14 @@ const router = createRouter({
       path: "/transmitter",
       name: "transmitter",
       component: TransmitterView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: "/billing",
+      name: "billing",
+      component: BillingView,
       meta: {
         requiresAuth: true
       }

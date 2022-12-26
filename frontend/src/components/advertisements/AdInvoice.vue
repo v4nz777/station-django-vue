@@ -1,7 +1,7 @@
 <template>
     <div class="w-full h-5/6 overflow-y-scroll none-scroll pt-3 relative" id="invoice">
         
-        <div class="bg-gray-200 w-full h-max text-sm font-thin p-5 grid grid-cols-3">
+        <div class="bg-gray-200 h-max text-sm font-thin p-5 grid grid-cols-2">
             <div class="mb-3 flex flex-col justify-between border-r-2 mr-3">
                 <div class="mb-2">
                     <p class="font-bold text-primary mr-5">Create invoice for: </p><p class="text-primary font-sm">contract #{{contract}}</p>
@@ -17,13 +17,22 @@
             </div>
             <div class="mb-3 flex flex-col justify-between">
                 <div class="pb-5 border-b-2">
-                <p class="font-bold text-primary mr-5">From:</p>
-                <input type="date" class="focus-visible:outline-2 
+                    <p class="font-bold text-primary mr-5">From:</p>
+                    <input type="date" class="focus-visible:outline-2 
                                     focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
                                     text-primary focus-within:bg-secondary"
                                     :class="(invFrom&&invTo)&&invFrom > invTo?'outline outline-red-500 bg-red-300':'bg-secondary'"
                                     @change="setTotal"
                                     v-model="invFrom">
+                </div>
+                <div class="pb-5 border-b-2">
+                    <p class="font-bold text-primary mr-5">To:</p>
+                    <input type="date" class="focus-visible:outline-2 
+                                        focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
+                                        text-primary focus-within:bg-secondary"
+                                        :class="(invFrom&&invTo)&&invFrom > invTo?'outline outline-red-500 bg-red-300':'bg-secondary'"
+                                        @change="setTotal"
+                                        v-model="invTo">
                 </div>
                 <div>
                     <p class="font-bold text-primary mr-5">Invoice:</p>
@@ -51,27 +60,20 @@
                                         v-model="total">
                     
                 </div>
-
             </div>
-            <div class="mb-3">
-                <div class="pb-5 border-b-2">
-                    <p class="font-bold text-primary mr-5">To:</p>
-                    <input type="date" class="focus-visible:outline-2 
-                                        focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md
-                                        text-primary focus-within:bg-secondary"
-                                        :class="(invFrom&&invTo)&&invFrom > invTo?'outline outline-red-500 bg-red-300':'bg-secondary'"
-                                        @change="setTotal"
-                                        v-model="invTo">
-                </div>
+            
+
+        </div>
+        <div class="mb-3">
                 <div class="w-full h-min px-4 py-5 bg-yellow-100 m-2"
                 v-if="isValid">
 
-                    <p class="text-sm text-yellow-500 text-justify">You are about to bill <br>
+                    <p class="text-sm text-yellow-500 text-justify">You are about to bill:
                         <span class="font-bold">{{advertiser.name}}</span> <br>
                         total of <span class="font-bold">₱{{total}}.00</span> <br>
                         for ads => <br>
                         from <span class="font-bold">{{humanFrom}}</span> <br>
-                        to <span class="font-bold">{{humanTo}}</span> <br>
+                        to <span class="font-bold">{{humanTo}}</span>
                         <span v-if="pricing === 'monthly'">({{months}} months duration)</span>
                         <span v-else-if="pricing === 'daily'">({{days}} days duration)</span>
                         <span v-else-if="pricing === 'fixed'">({{days}} days duration)</span>
@@ -79,12 +81,9 @@
                 </div>
 
             </div>
-           
-            
-        </div>
         
         <div class="w-full flex justify-center my-2">
-            <button class="font-bold px-2 py-1 rounded-lg text-white"
+            <button class="font-bold px-2 py-1 rounded-lg text-white hover:bg-active"
             :class="isValid?'bg-primary':'bg-disabled'"
             :disabled="!isValid"
             @click="createInvoice"

@@ -11,12 +11,19 @@
                 @select="setSelected" :selected="selected === 'Traffic'">
                 <template #icon><HashtagIcon/></template>
             </SidebarItem>
+            
+            <SidebarItem title="Accounting" :links=accounting
+                @select="setSelected" :selected="selected === 'Accounting'">
+                <template #icon><HashtagIcon/></template>
+            </SidebarItem>
+
 
             <SidebarItem title="Technical" :links=technical
                 @select="setSelected" :selected="selected === 'Technical'">
                 <template #icon><HashtagIcon/></template>
             </SidebarItem>
 
+            
         </div>
 
 
@@ -70,6 +77,13 @@ const technical = [
     }
 ]
 
+const accounting = [
+    {
+        name: "Billing",
+        location: "/billing"
+    },
+]
+
 const extractPropArray = (objArray) => {
     return objArray.map(prop => prop.location);
 }
@@ -78,10 +92,14 @@ onMounted(() => {
     const generalLocations = extractPropArray(general)
     const trafficLocations = extractPropArray(traffic)
     const technicalLocations = extractPropArray(technical)
+    const accountingLocations = extractPropArray(accounting)
+
 
     if(generalLocations.includes(location.pathname)) selected.value = "General"
     else if(trafficLocations.includes(location.pathname)) selected.value = "Traffic"
     else if(technicalLocations.includes(location.pathname)) selected.value = "Technical"
+    else if(accountingLocations.includes(location.pathname)) selected.value = "Acounting"
+
 
    
   
