@@ -56,8 +56,8 @@
                     <div class="bg-white w-full h-max flex flex-col items-start shadow-md border"
                         v-if="adMenu"
                         v-click-away="toggleAdMenu">
-                        <button class="w-full border-b text-start hover:bg-gray-500 hover:text-white px-2 text-sm"
-                                @click="contractView = 'billing'; adMenu=false">Billing</button>
+                        <!-- <button class="w-full border-b text-start hover:bg-gray-500 hover:text-white px-2 text-sm"
+                                @click="contractView = 'billing'; adMenu=false">Billing</button> -->
                         <button class="w-full border-b text-start hover:bg-gray-500 hover:text-white px-2 text-sm"
                                 @click="contractView = 'edit'; adMenu=false">Edit Contract</button>
                         <button class="w-full border-b text-start hover:bg-gray-500 hover:text-white px-2 text-sm"
@@ -190,13 +190,13 @@
                 </div>
                 <!-- MAIN END -->
                 <!-- BILLING VIEW -->
-                <AdInvoice 
+                <!-- <AdInvoice 
                     :contract="ad.contract"
                     :amount="adVersionView.amount"
                     :pricing="adVersionView.pricing"
                     :ae="ae"
                     :advertiser="advertiser"
-                    v-else-if="contractView === 'billing'"/>
+                    v-else-if="contractView === 'billing'"/> -->
                 <!-- BILLING END -->
                 <!--EDIT VIEW-->
                 <Adedit 
