@@ -16,7 +16,7 @@
             <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
         </span>
         <div class="w-full">
-            <p class="text-center font-bold w-full">{{ad.title.toUpperCase()}}</p>
+            <p class="text-center font-bold w-full text-sm">{{ad.title.toUpperCase()}}</p>
             <p class="text-xs text-center font-semibold w-full text-primary">#{{ad.contract.toUpperCase()}}</p>
             <!-- <p class="text-xs text-center text-gray-700">{{advertiser.name}}</p> -->
         </div>
@@ -27,7 +27,7 @@
             </div>
             
             <div class="flex flex-col items-center w-full">
-                <p class="text-3xl text-center font-bold text-gray-500" v-if="adVersionView.amount">₱{{adVersionView.amount.toLocaleString('en-US')}}</p>
+                <p class="text-2xl text-center font-bold text-gray-500" v-if="adVersionView.amount">₱{{adVersionView.amount.toLocaleString('en-US')}}</p>
                 <p class="text-xs text-center italic">{{adVersionView.pricing}}</p>
             </div>
         </div>

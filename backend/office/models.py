@@ -119,3 +119,37 @@ class InvoiceTransmittal(models.Model):
 
     def __str__(self):
         return self.month
+
+
+class Package(models.Model):
+    name = models.CharField(max_length=256, null=False, blank=False)
+    description = models.CharField(max_length=1512, null=True, blank=True)
+    price = models.FloatField(blank=False, null=False)
+    pricing = models.CharField(max_length=256, null=False, blank=False)
+    duration_of_pricing = models.IntegerField(blank=False,null=False)
+    spots_per_day = models.IntegerField(blank=False,null=False)
+    aob_per_day = models.IntegerField(blank=True,null=True)
+    tc_per_day = models.IntegerField(blank=True,null=True)
+    ss_per_day = models.IntegerField(blank=True,null=True)
+    material_duration = models.FloatField(blank=False,null=False)
+    author = models.CharField(max_length=256, null=True, blank=True)
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+    ads = models.ManyToManyField(Ad, blank=True)
+
+    def __str__(self):
+        return self.name
+
+    def verify(self, name, description, price, pricing, duration_of_pricing, spots_per_day, aob_per_day, tc_per_day, ss_per_day,material_duration):
+        _name = name == self.name
+        _description = description == self.description
+        _price = price == self.price
+        _pricing = pricing == self.pricing
+        _duration_of_pricing = duration_of_pricing == self.duration_of_pricing
+        _spots_per_day = spots_per_day == self.spots_per_day
+        _aob_per_day = aob_per_day == self.aob_per_day
+        _tc_per_day = tc_per_day == self.tc_per_day
+        _ss_per_day = ss_per_day == self.ss_per_day
+        _material_duration = material_duration == self.material_duration
+
+        return _name and _description and _price and _pricing and _duration_of_pricing and _spots_per_day and _aob_per_day and _tc_per_day and _ss_per_day and _material_duration

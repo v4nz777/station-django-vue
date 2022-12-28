@@ -56,7 +56,11 @@ const traffic = [
     {
         name: "Ads",
         location: "/ads"
-    }
+    },
+    {
+        name: "Packages",
+        location: "/packages"
+    },
 ]
 const technical = [
     {

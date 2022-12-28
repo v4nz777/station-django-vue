@@ -1,9 +1,24 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import AdVersion, Adcategory, Advertiser, AudioFile, Invoice, Ad
+from .models import (
+    AdVersion,
+    Adcategory,
+    Advertiser,
+    AudioFile,
+    Invoice,
+    Ad,
+    Package
+    )
 from station.models import Activity, User
-from .serializers import AdSerializer, AdVersionSerializer, AdvertiserSerializer,AudioFileSerializer, InvoiceSerializer
+from .serializers import (
+    AdSerializer,
+    AdVersionSerializer,
+    AdvertiserSerializer,
+    AudioFileSerializer,
+    InvoiceSerializer,
+    PackageSerializer,
+    )
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 import json
@@ -299,3 +314,45 @@ def bankDeposit(request,invoice):
     serializer = InvoiceSerializer(invoice)
 
     return Response(serializer.data)
+
+
+
+@api_view(["POST"])
+def newPackage(request):
+    data = request.data
+    print(data)
+    name = str(data["name"]).lower()
+    description = str(data["description"])
+    price = float(data["price"])
+    pricing = str(data["pricing"])
+    duration_of_pricing = int(data["duration_of_pricing"])
+    spots_per_day = int(data["spots_per_day"])
+    aob_per_day = int(data["aob_per_day"])
+    tc_per_day = int(data["tc_per_day"])
+    ss_per_day = int(data["ss_per_day"])
+    material_duration = float(data["material_duration"])
+    author = str(data["author"])
+
+    package = Package(
+        name = name,
+        description = description,
+        price = price,
+        pricing = pricing,
+        duration_of_pricing = duration_of_pricing,
+        spots_per_day = spots_per_day,
+        aob_per_day = aob_per_day,
+        tc_per_day = tc_per_day,
+        ss_per_day = ss_per_day,
+        material_duration = material_duration,
+        author=author
+    )
+    package.save()
+    serializer = PackageSerializer(package)
+    return Response(serializer.data)
+
+@api_view(["GET"])
+def loadPackages(request, filter):
+    if filter == "all":
+        pkg = Package.objects.all()
+        serializer = PackageSerializer(pkg, many=True)
+        return Response(serializer.data)

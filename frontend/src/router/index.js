@@ -10,6 +10,8 @@ import PowerView from "@/views/PowerView.vue"
 import PowerOutageView from "@/views/PowerOutageView.vue"
 import TransmitterView from "@/views/TransmitterView.vue"
 import BillingView from "@/views/BillingView.vue"
+import AdPackageView from "@/views/AdPackageView.vue"
+
 
 
 
@@ -60,6 +62,14 @@ const router = createRouter({
       path: "/ads",
       name: "advertisements",
       component: AdvertisementsView,
+      meta: {
+        requiresAuth: true
+      }
+    },
+    {
+      path: "/packages",
+      name: "packages",
+      component: AdPackageView,
       meta: {
         requiresAuth: true
       }
