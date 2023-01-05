@@ -18,7 +18,6 @@ urlpatterns = [
     path("save_snap/bank_deposit/<str:invoice>", views.bankDeposit, name="bankDeposit"),
     path("add_package", views.newPackage, name="newPackage"),
     path("load_packages/<str:filter>", views.loadPackages, name="loadPackages"),
-
-
+    path("get_package", views.getPackage, name="getPackage"),
 
 ]

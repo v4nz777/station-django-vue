@@ -25,6 +25,7 @@ import json
 from datetime import datetime
 from .invoice import create_invoice
 from django.core.files import File
+from django.db.models import Q
 
 
 """
@@ -57,6 +58,12 @@ def submitAd(request):
     advertiser = None
 
     revision = False
+    package = None
+
+    try:
+        package = Package.objects.get(name=data["ad_package"])
+    except ObjectDoesNotExist:
+        package = None
 
     """ Make new advertiser if not yet existed """
     try:
@@ -88,8 +95,7 @@ def submitAd(request):
         pricing = data["pricing"],
         ex_deal = data["ex_deal"][0],
         amount = float(data["amount"]),
-        
-        # category = data["category"],
+        package = package,
         broadcast_start = data["broadcast_start"],
         broadcast_end = data["broadcast_end"],
         ad_spots = int(data["ad_spots"]),
@@ -212,7 +218,11 @@ def changeAdAvatar(request):
 
 @api_view(["GET"])
 def searchAdvertisers(request,keyword):
-    data = Advertiser.objects.filter(name__icontains=keyword)
+    if keyword == "all":
+        data = Advertiser.objects.all()
+    else:
+        data = Advertiser.objects.filter(name__icontains=keyword)
+    
     serializer = AdvertiserSerializer(data,many=True)
     return Response(serializer.data)
 
@@ -354,5 +364,18 @@ def newPackage(request):
 def loadPackages(request, filter):
     if filter == "all":
         pkg = Package.objects.all()
-        serializer = PackageSerializer(pkg, many=True)
-        return Response(serializer.data)
+    else:
+        pkg = Package.objects.filter(
+            Q(name__icontains=filter) | Q(description__icontains=filter)
+        )
+    serializer = PackageSerializer(pkg, many=True)
+    return Response(serializer.data)
+
+@api_view(["POST"])
+def getPackage(request):
+    data = request.data
+    print(data)
+    package_name = str(data["package"])
+    pkg = Package.objects.get(name=package_name)
+    serializer = PackageSerializer(pkg)
+    return Response(serializer.data)

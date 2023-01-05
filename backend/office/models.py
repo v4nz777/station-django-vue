@@ -33,7 +33,7 @@ class AdVersion(models.Model):
     account_executive = models.CharField(max_length=200)
     pricing = models.CharField(max_length=20)
     ex_deal = models.BooleanField(default=False)
-
+    package = models.ForeignKey('Package',on_delete=models.SET_NULL, null=True, blank=True)
     broadcast_start = models.DateField(null=True, blank=True)
     broadcast_end = models.DateField(null=True, blank=True)
 

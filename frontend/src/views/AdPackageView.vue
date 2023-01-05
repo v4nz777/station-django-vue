@@ -8,7 +8,6 @@
                 :pack="pkg" />
         </div>
     </div>
-
 </template>
 
 <script setup>
