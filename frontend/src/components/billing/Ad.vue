@@ -1,11 +1,11 @@
 <template>
     <!-- component -->
-    <div :id="'contract-'+ ad.contract" class="bg-white border shadow-md h-full w-full rounded-xl
+    <div :id="'contract-'+ ad.contract" class="bg-white border-2 shadow-md h-full w-full rounded-xl
         hover:shadow-xl overflow-hidden flex flex-col items-center
         py-3 px-3 relative cursor-pointer"
         :class="adVersionView.ex_deal?'hover:shadow-orange-300 shadow-orange-100':'hover:shadow-primary shadow-secondary'"
         @click="open=true">
-        <span class="flex h-3 w-3 absolute top-1 right-1"
+        <!-- <span class="flex h-3 w-3 absolute top-1 right-1"
             v-if="codeOrange">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-3 w-3 bg-yellow-500"></span>
@@ -14,23 +14,44 @@
             v-else-if="codeRed">
             <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
             <span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
-        </span>
+        </span> -->
         <div class="w-full">
             <p class="text-center font-bold w-full text-sm">{{ad.title.toUpperCase()}}</p>
             <p class="text-xs text-center font-semibold w-full text-primary">#{{ad.contract.toUpperCase()}}</p>
             <!-- <p class="text-xs text-center text-gray-700">{{advertiser.name}}</p> -->
         </div>
         
-        <div class="w-full h-full relative border-t border-b">
-            <div class="absolute w-full h-full bg-white bg-opacity-80 top-0 bottom-0 left-0 right-0"
-                v-if="daysLeft < 0">
+        <div class="w-full h-full relative border-t border-b mb-1">
+            <div class="absolute w-full h-full bg-white bg-opacity-80 top-0 bottom-0 left-0 right-0 flex justify-center items-center"
+                v-if="!unpaid">
+                
             </div>
             
             <div class="flex flex-col items-center w-full">
                 <p class="text-2xl text-center font-bold text-gray-500" v-if="adVersionView.amount">₱{{adVersionView.amount.toLocaleString('en-US')}}</p>
                 <p class="text-xs text-center italic">{{adVersionView.pricing}}</p>
             </div>
+            
         </div>
+        <div v-if="invoices.length&&!unpaid">
+            <p class="text-green-400 text-xs font-bold">
+                <i class="inline-block w-4 h-4 align-middle"><CheckCircleIcon/></i>
+                Last paid {{lastPaid}}
+            </p>
+        </div>
+        <div v-else-if="invoices.length&&unpaid">
+            <p class="text-red-400 text-xs font-bold">
+                <i class="inline-block w-4 h-4 align-middle"><InformationCircleIcon/></i>
+                {{unpaid}} uncollected payment
+            </p>
+        </div>
+        <div v-else>
+            <p class="text-yellow-400 text-xs font-bold">
+                <i class="inline-block w-4 h-4 align-middle"><ExclamationCircleIcon/></i>
+                No recorded payment
+            </p>
+        </div>
+        
 
     </div>
     <teleport to='body'>
@@ -66,7 +87,7 @@
     import { userStore } from '@/stores/user';
     import AudioItem from '@/components/AudioItem.vue';
     import AdInvoice from "@/components/advertisements/AdInvoice.vue";
-
+    import { CheckCircleIcon, InformationCircleIcon, ExclamationCircleIcon } from '@heroicons/vue/solid';
     import moment from 'moment';
 
 
@@ -75,12 +96,36 @@
     const open = ref(false)
     const adMenu = ref(false)
     const contractView = ref("main")
-
     const userstore = userStore()
+    const invoices = ref([])
+    const unpaid = ref(0)
+    const lastPaid = ref("")
     const props = defineProps({
         ad: Object,
         adscount: Number
     })
+    // Look for invoices in this contract
+
+    const lookForInvoices = async ()=> {
+        const response = await axios.get(`invoices/${props.ad.contract}`)
+        response.data.forEach(data => {
+            if(!data.paid)unpaid.value++
+        })
+        invoices.value = response.data   
+    }
+    const getLatestPaymentDate = async ()=> {
+        const now = moment()
+        const dates = invoices.value.map(inv=> moment(inv.or_date))
+        const latest = moment.max(dates)
+        if(invoices.value.length){
+            if(now.isSame(latest,'day'))lastPaid.value = "Today"
+            else lastPaid.value = latest.fromNow()
+        }
+    }
+
+
+
+
     const adVersionView = ref({})
 
     // Reload version
@@ -92,56 +137,6 @@
 
     const advertiser = ref({})
 
-    const daysLeft = ref(0)
-
-    const hoursLeft = ref(0)
-    const minutesLeft = ref(0)
-    const secondsLeft = ref(0)
-    const expiredWhen = ref("")
-
-    const codeRed = ref(false)
-    const codeOrange = ref(false)
-    const codeBlack = ref(false)
-
-
-    const howManyDaysLeft = (endDate) => {
-        const now = moment()
-        const end = moment(endDate)
-
-        daysLeft.value = end.diff(now,"days")
-        hoursLeft.value = end.diff(now, "hours") % 24
-        minutesLeft.value = end.diff(now, "minutes") % 60
-        secondsLeft.value = end.diff(now, "seconds") % 60
-
-        //setOrange
-        if(daysLeft.value < 3 && daysLeft.value > 0) {
-            codeOrange.value = true
-            codeRed.value = false
-            codeBlack.value = false
-        }
-        //setRed
-        else if(daysLeft.value <= 1 && daysLeft.value >= 0) {
-            codeRed.value = true
-            codeOrange.value = false
-            codeBlack.value = false
-        }
-        //setBlack
-        else if(daysLeft.value < 0) {
-            codeBlack.value = true
-            codeRed.value = false
-            codeOrange.value = false
-        }
-        // set OK
-        else{
-            codeBlack.value = false
-            codeRed.value = false
-            codeOrange.value = false
-        }
-        //set WHen is expired
-        expiredWhen.value = end.from(now)
-
-
-    }
 
     const ae = ref("")
     const getAE = async () => {
@@ -163,8 +158,6 @@
         await getadvertiser()
     
         await getAE()
-        //check days left
-        howManyDaysLeft(adVersionView.value.broadcast_end)
 
         isLoaded.value = true
     }
@@ -173,10 +166,11 @@
     onMounted(async () => {
        // get ad details by version
        await getVersionView()
-       
+       await lookForInvoices()
         setTimeout(async () => {
             await refresh()
         }, 1000);
+        getLatestPaymentDate()
         
     })
 
@@ -194,13 +188,10 @@
         if(newval !== oldval){
             await getVersionView()
             await refresh()
+            
         }
     })
 
-
-    setInterval(() => {
-        howManyDaysLeft(adVersionView.value.broadcast_end)
-    }, 1000);
 </script>
 
 

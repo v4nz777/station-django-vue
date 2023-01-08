@@ -154,3 +154,4 @@ class Package(models.Model):
         _material_duration = material_duration == self.material_duration
 
         return _name and _description and _price and _pricing and _duration_of_pricing and _spots_per_day and _aob_per_day and _tc_per_day and _ss_per_day and _material_duration
+    

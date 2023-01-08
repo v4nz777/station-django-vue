@@ -65,7 +65,7 @@
 
         </div>
         <div class="mb-3">
-                <div class="w-full h-min px-4 py-5 bg-yellow-100 m-2"
+            <div class="w-full h-min px-4 py-5 bg-yellow-100 m-2"
                 v-if="isValid">
 
                     <p class="text-sm text-yellow-500 text-justify">You are about to bill:

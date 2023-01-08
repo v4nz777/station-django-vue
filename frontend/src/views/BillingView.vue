@@ -1,8 +1,31 @@
 <template>
     <div class="flex flex-col md:w-full w-screen px-5 items-center">
-        <div class="w-full h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-md ">
+        <div class="flex justify-center items-center w-full h-max bg-white rounded-3xl p-10 mt-3 mb-6 
+                    shadow-md md:flex-row flex-col gap-10 relative">
+            <div class="absolute top-3 right-5 border-2 shadow-md flex px-1">
+                <p class="font-bold text-primary">Sorting</p>
+                <select name="" id="" class="outline-none">
+                    <option value="">24hr</option>
+                    <option value="" selected>This Month</option>
+                    <option value="">This Year</option>
+                    <option value="">Total</option>
+                </select>
+            </div>
+            <div class=" w-max mt-4">
+                <p class="w-full text-gray-500 text-center text-xs font-bold">Sales</p>
+                <p class="w-full text-green-500 text-center font-bold text-3xl">₱10,000</p>
+            </div>
+            <div class=" w-max mt-4">
+                <p class="w-full text-gray-500 text-center text-xs font-bold">Collection</p>
+                <p class="w-full text-green-500 text-center font-bold text-3xl">₱10,000</p>
+            </div>
+            <!-- <div class=" w-max">
+                <p class="w-full text-center text-xs font-bold">2023 Collection</p>
+                <p class="w-full text-center font-bold text-3xl">₱10,000</p>
+            </div> -->
             
         </div>
+        
         <div v-if="loaded" class="w-full">
             <div class="mb-10 pb-10 h-max w-full gap-4"
                 :class="adsList.length < 4 ? 'md:flex md:justify-center grid grid-cols-2': 'grid-auto-cols'">
