@@ -12,8 +12,7 @@
     <teleport to='body'>
         <div class="bg-slate-800 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0"
             v-if="open"
-            ref="outer"
-            @click.self="open = false">
+            ref="outer">
 
             <!-- start of inside modal -->
             <div class="w-auto h-3/4 bg-white p-5 overflow-y-auto none-scroll">
@@ -95,11 +94,16 @@
                     <p class="text-xs italic text-disabled">Describe the package</p>
                 </div>
 
-                <div class="my-2 flex justify-center border-t">
+                <div class="my-2 flex justify-around border-t w-full">
+                    <button @click="open = false"
+                        class=" bg-disabled text-white px-2 py-1 my-2 hover:bg-disabled">
+                        Close
+                    </button>
                     <button @click="savePackage"
                         class=" bg-primary text-white px-2 py-1 my-2 hover:bg-active">
                         Save
                     </button>
+                    
                 </div>
               
             </div>

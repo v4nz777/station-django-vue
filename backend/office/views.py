@@ -56,7 +56,6 @@ def submitAd(request):
     adtype = data["type"]
     adtitle = data["title"]
     advertiser = None
-
     revision = False
     package = None
 
@@ -147,9 +146,12 @@ def submitAd(request):
 
     """ set current version to use """
     ad.current_ver = version.version
-
     ad.save()
 
+    """Add this ad to version"""
+    if package:
+        package.ads.add(ad)
+        package.save()
 
 
     """Add to activities"""
@@ -374,8 +376,29 @@ def loadPackages(request, filter):
 @api_view(["POST"])
 def getPackage(request):
     data = request.data
-    print(data)
     package_name = str(data["package"])
     pkg = Package.objects.get(name=package_name)
     serializer = PackageSerializer(pkg)
+    return Response(serializer.data)
+
+@api_view(["PUT"])
+def changePackageColor(request,id):
+    data = request.data
+    pkg = Package.objects.get(id=id)
+    pkg.theme = data["color"]
+    pkg.save()
+
+    #for refresh
+    all_pkg = Package.objects.all()
+    serializer = PackageSerializer(all_pkg, many=True)
+    return Response(serializer.data)
+
+@api_view(["DELETE"])
+def deletePackage(request,id):
+    pkg = Package.objects.get(id=id)
+    pkg.delete()
+
+    #for refresh
+    all_pkg = Package.objects.all()
+    serializer = PackageSerializer(all_pkg, many=True)
     return Response(serializer.data)

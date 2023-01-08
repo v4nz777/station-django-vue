@@ -2,7 +2,7 @@
     <!-- component -->
     <div :id="'contract-'+ ad.contract" class="bg-white border shadow-md h-full w-full rounded-xl
         hover:shadow-xl overflow-hidden flex flex-col items-center
-        py-3 px-3 relative"
+        py-3 px-3 relative cursor-pointer"
         :class="adVersionView.ex_deal?'hover:shadow-orange-300 shadow-orange-100':'hover:shadow-primary shadow-secondary'"
         @click="open=true">
         <span class="flex h-3 w-3 absolute top-1 right-1"

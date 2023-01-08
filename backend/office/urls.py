@@ -19,5 +19,9 @@ urlpatterns = [
     path("add_package", views.newPackage, name="newPackage"),
     path("load_packages/<str:filter>", views.loadPackages, name="loadPackages"),
     path("get_package", views.getPackage, name="getPackage"),
+    path("change_pkg_color/<int:id>", views.changePackageColor, name="changePackageColor"),
+    path("delete_pkg/<int:id>", views.deletePackage, name="deletePackage"),
+
+    
 
 ]

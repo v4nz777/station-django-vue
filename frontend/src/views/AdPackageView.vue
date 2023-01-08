@@ -5,6 +5,7 @@
         </div>
         <div class="grid-auto-cols my-5 w-3/4 place-items-center">
             <Package v-for="pkg in packages"
+                @modified="loadPacks()"
                 :pack="pkg" />
         </div>
     </div>
