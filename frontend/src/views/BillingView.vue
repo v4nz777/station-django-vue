@@ -1,29 +1,25 @@
 <template>
     <div class="flex flex-col md:w-full w-screen px-5 items-center">
-        <div class="flex justify-center items-center w-full h-max bg-white rounded-3xl p-10 mt-3 mb-6 
+        <div class="flex justify-around items-center w-full h-max bg-white rounded-3xl p-10 mt-3 mb-6 
                     shadow-md md:flex-row flex-col gap-10 relative">
-            <div class="absolute top-3 right-5 border-2 shadow-md flex px-1">
-                <p class="font-bold text-primary">Sorting</p>
-                <select name="" id="" class="outline-none">
-                    <option value="">24hr</option>
-                    <option value="" selected>This Month</option>
-                    <option value="">This Year</option>
-                    <option value="">Total</option>
+            <div class="absolute top-3 right-5 border-2 shadow-md flex px-1 text-xs">
+                <p class="font-bold text-primary">Filter</p>
+                <select name="" id="" class="outline-none" v-model="filterForTotal">
+                    <option value="today">Today</option>
+                    <option value="month">This Month</option>
+                    <option value="year">This Year</option>
+                    <option value="all">All</option>
                 </select>
             </div>
             <div class=" w-max mt-4">
                 <p class="w-full text-gray-500 text-center text-xs font-bold">Sales</p>
-                <p class="w-full text-green-500 text-center font-bold text-3xl">₱10,000</p>
+                <p class="w-full text-green-500 text-center font-bold text-3xl">{{ totalSales }}</p>
             </div>
             <div class=" w-max mt-4">
                 <p class="w-full text-gray-500 text-center text-xs font-bold">Collection</p>
-                <p class="w-full text-green-500 text-center font-bold text-3xl">₱10,000</p>
+                <p class="w-full text-green-500 text-center font-bold text-3xl">{{ totalCollected }}</p>
             </div>
-            <!-- <div class=" w-max">
-                <p class="w-full text-center text-xs font-bold">2023 Collection</p>
-                <p class="w-full text-center font-bold text-3xl">₱10,000</p>
-            </div> -->
-            
+
         </div>
         
         <div v-if="loaded" class="w-full">
@@ -45,14 +41,17 @@
 </template>
 <script setup>
     import axios from 'axios';
-    import { ref, onMounted,onUnmounted } from 'vue';
+    import { ref, watch, onMounted,onUnmounted } from 'vue';
     import Ad from "@/components/billing/Ad.vue"
     import { dtrStore } from '@/stores/dtr';
     import NewAds from '@/components/advertisements/NewAds.vue';
     const filter = ref("all")
+    const filterForTotal = ref("month")
     const adsList = ref([])
     const loaded = ref(false)
     const dtrstore =  dtrStore()
+    const totalCollected = ref("0")
+    const totalSales = ref("0")
 
 
     const getAds = async (_filter)=> {
@@ -70,9 +69,38 @@
     const watchAds = setInterval(() => {
             getAds(filter.value)
         }, 1000);
-    onMounted(()=>{
+
+    // number to currency formatter
+    const filPeso = new Intl.NumberFormat('en-US',{
+        style: 'currency',
+        currency: 'PHP',
+        maximumFractionDigits:0
+    })
+
+    //Get and calculate collections
+    const getTotalCollections = async()=> {
+        const response = await axios.get(`total_collections/${filterForTotal.value}`)
+        //convert to currency format
+        totalCollected.value = filPeso.format(response.data.total)
+    }
+   
+    //Get and calculate sales
+    const getTotalSales = async()=> {
+        const response = await axios.get(`total_sales/${filterForTotal.value}`)
+        //convert to currency format
+        totalSales.value = filPeso.format(response.data.total)
+    }
+
+    watch(()=>filterForTotal.value,async ()=>{
+        await getTotalCollections()
+        await getTotalSales()
+    })
+
+    onMounted(async ()=>{
         dtrstore.loadDTR()
         watchAds
+        await getTotalCollections()
+        await getTotalSales()
     })
     onUnmounted(() => {
         clearInterval(watchAds)

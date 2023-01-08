@@ -21,4 +21,6 @@ urlpatterns = [
     path("get_package", views.getPackage, name="getPackage"),
     path("change_pkg_color/<int:id>", views.changePackageColor, name="changePackageColor"),
     path("delete_pkg/<int:id>", views.deletePackage, name="deletePackage"),
+    path("total_collections/<str:filter>", views.totalCollection, name="totalCollection"),
+    path("total_sales/<str:filter>", views.totalSales, name="totalSales"),
 ]

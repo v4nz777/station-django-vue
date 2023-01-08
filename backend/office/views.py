@@ -22,7 +22,7 @@ from .serializers import (
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 import json
-from datetime import datetime
+from datetime import datetime,date
 from .invoice import create_invoice
 from django.core.files import File
 from django.db.models import Q
@@ -402,3 +402,84 @@ def deletePackage(request,id):
     all_pkg = Package.objects.all()
     serializer = PackageSerializer(all_pkg, many=True)
     return Response(serializer.data)
+
+"""Get  and calculate total collections based on filter"""
+@api_view(["GET"])
+def totalCollection(request,filter):
+    today = date.today()
+    total = 0
+    items = []
+    if filter.lower() == "today":
+        invoices = Invoice.objects.filter(
+            paid=True,
+            or_date__day__gte=today.day,
+            or_date__month__gte=today.month,
+            or_date__year__gte=today.year
+        )
+    elif filter.lower() == "month":
+        invoices = Invoice.objects.filter(
+            paid=True,
+            or_date__month__gte=today.month,
+            or_date__year__gte=today.year
+        )
+    elif filter.lower() == "year":
+        invoices = Invoice.objects.filter(
+            paid=True,
+            or_date__year__gte=today.year
+        )
+    elif filter.lower() == "all":
+        invoices = Invoice.objects.filter(paid=True)
+    
+    for i in invoices:
+        items.append({
+            "contract": i.from_contract,
+            "invoice": i.invoice_no,
+            "invoice_date": i.invoice_date,
+            "or": i.or_number,
+            "or_date": i.or_date,
+            "amount_received":i.amount_received
+        })
+        total = total+i.amount_received
+    
+    return Response({
+        "total":total,
+        "items": items
+    })
+
+"""Get  and calculate total sales based on filter"""
+@api_view(["GET"])
+def totalSales(request,filter):
+    today = date.today()
+    total = 0
+    items = []
+    if filter.lower() == "today":
+        invoices = Invoice.objects.filter(
+            or_date__day__gte=today.day,
+            or_date__month__gte=today.month,
+            or_date__year__gte=today.year
+        )
+    elif filter.lower() == "month":
+        invoices = Invoice.objects.filter(
+            or_date__month__gte=today.month,
+            or_date__year__gte=today.year
+        )
+    elif filter.lower() == "year":
+        invoices = Invoice.objects.filter(
+            or_date__year__gte=today.year
+        )
+    elif filter.lower() == "all":
+        invoices = Invoice.objects.all()
+    
+    for i in invoices:
+        items.append({
+            "contract": i.from_contract,
+            "invoice": i.invoice_no,
+            "invoice_date": i.invoice_date,
+            "amount":i.amount
+        })
+        total = total+i.amount
+    
+    return Response({
+        "total":total,
+        "items": items
+    })
