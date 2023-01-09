@@ -50,6 +50,10 @@ const general = [
     {
         name: "Activities",
         location: "/"
+    },
+    {
+        name: "Profile",
+        location: "/profile"
     }
 ]
 const traffic = [
