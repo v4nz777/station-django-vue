@@ -44,11 +44,11 @@ export const dtrStore = defineStore({
     },
     actions: {
         watchTimer() {
-            if(!this.timed){
+            if(!this.timed && this.as_obj){
                 // Subtract current time by 8 to fix GMT+8 
-                setTimeout(() => {
-                    this.as_obj=this.as_obj.subtract(8,"hours")
-                }, 1000);
+                // setTimeout(() => {
+                //     this.as_obj=this.as_obj //.subtract(8,"hours")
+                // }, 1000);
                 setInterval(() => {
                     const now = moment()
                     this.timer_ms = now.diff(this.as_obj)
@@ -73,12 +73,15 @@ export const dtrStore = defineStore({
                     this.pathForCurrent = localStorage.getItem("dtrCurrent")
                 }
                 const response = await axios.get(this.pathForCurrent)
-                this.year = response.data.year
-                this.month = response.data.month
-                this.date = response.data.date
-                this.in = response.data.time_in
-                this.as_obj = moment(response.data.time_in_datetime)
-                this.loaded = true
+                if(response.status===200){
+                    this.year = response.data.year
+                    this.month = response.data.month
+                    this.date = response.data.date
+                    this.in = response.data.time_in
+                    this.as_obj = moment(response.data.time_in_datetime).subtract(8,"hours")
+                    this.loaded = true
+                }
+                
             }
         },
         async getMonthlyDTRList() {
@@ -99,6 +102,20 @@ export const dtrStore = defineStore({
    
             const response = await axios.get(`/get_history/${userstore.user}/${year}/${month}/`)
             this.dtr_logs = response.data.history
+        },
+        clear() {
+            this.pathForCurrent= null
+            this.loaded= false
+            this.year= null
+            this.month= null
+            this.date= null
+            this.in= null
+            this.out= null
+            this.timer_ms= null
+            this.timed= false
+            this.as_obj= {}
+            this.dtr_logs= []
+            localStorage.removeItem("dtrCurrent")
         }
     }
 

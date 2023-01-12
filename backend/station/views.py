@@ -130,8 +130,6 @@ def inDTR(request):
         try:
             _all = History.objects.filter(user=user, month=month, date=date, year=year)
             current = History.objects.get(user=user, month=month, date=date, year=year)
-            print(current)
-            print(_all)
             if current in _all:
                 activity = Activity()
                 activity.new_activity(username.lower(), "relogged in", type="relogin")
@@ -144,20 +142,16 @@ def inDTR(request):
             activity.new_activity(username.lower(), "logged in", type="login")
    
         
-        context = {
-            "message": f"{user} successfully logged",
-            "is_logged": user.is_logged
-        }
-        return Response(context)
+        return Response({"is_logged":user.is_logged})
     else:
-        return Response({"message": f"{user} is already logged"})
+        return Response({"is_logged":user.is_logged})
 
 
 
 
 """ ::::::::::::::::::::::::::::::::::::::::
     Function: Change is_logged status to false and write on DTR sheet
-    API route: "/dtr_log"
+    API route: "/dtr_out"
 
     Can be used to access current user
     """
@@ -191,9 +185,9 @@ def outDTR(request):
 
         activity = Activity()
         activity.new_activity(username.lower(), "logged out", type="logout")
-        return Response({"message": f"{user} successfully logged out"})
+        return Response({"is_logged": user.is_logged})
     else:
-        return Response({"message": f"{user} is not logged"})
+        return Response({"is_logged": user.is_logged})
 
 
 """ ::::::::::::::::::::::::::::::::::::::::
@@ -253,13 +247,10 @@ def filterUserHistoryByMonth(request, username, year, month):
 @api_view(["GET"])
 def filterUserHistoryByDate(request, username, year, month, date):
     user = User.objects.get(username=username)
-    try:
-        data = History.objects.get(user=user, year=year, month=month, date=date)
-        serializer = HistorySerializer(data)
-        return Response(serializer.data)
-
-    except ObjectDoesNotExist:
-        return Response({"message":"history does not exist"})
+    
+    data = History.objects.get(user=user, year=year, month=month, date=date)
+    serializer = HistorySerializer(data)
+    return Response(serializer.data)
 
 """ ::::::::::::::::::::::::::::::::::::::::
     Function: Returns new avatar for user
