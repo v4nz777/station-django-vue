@@ -1,15 +1,31 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .models import AdVersion, Adcategory, Advertiser, AudioFile, Invoice, Ad
+from .models import (
+    AdVersion,
+    Adcategory,
+    Advertiser,
+    AudioFile,
+    Invoice,
+    Ad,
+    Package
+    )
 from station.models import Activity, User
-from .serializers import AdSerializer, AdVersionSerializer, AdvertiserSerializer,AudioFileSerializer, InvoiceSerializer
+from .serializers import (
+    AdSerializer,
+    AdVersionSerializer,
+    AdvertiserSerializer,
+    AudioFileSerializer,
+    InvoiceSerializer,
+    PackageSerializer,
+    )
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 import json
-from datetime import datetime
+from datetime import datetime,date
 from .invoice import create_invoice
 from django.core.files import File
+from django.db.models import Q
 
 
 """
@@ -40,8 +56,13 @@ def submitAd(request):
     adtype = data["type"]
     adtitle = data["title"]
     advertiser = None
-
     revision = False
+    package = None
+
+    try:
+        package = Package.objects.get(name=data["ad_package"])
+    except ObjectDoesNotExist:
+        package = None
 
     """ Make new advertiser if not yet existed """
     try:
@@ -73,8 +94,7 @@ def submitAd(request):
         pricing = data["pricing"],
         ex_deal = data["ex_deal"][0],
         amount = float(data["amount"]),
-        
-        # category = data["category"],
+        package = package,
         broadcast_start = data["broadcast_start"],
         broadcast_end = data["broadcast_end"],
         ad_spots = int(data["ad_spots"]),
@@ -126,9 +146,12 @@ def submitAd(request):
 
     """ set current version to use """
     ad.current_ver = version.version
-
     ad.save()
 
+    """Add this ad to version"""
+    if package:
+        package.ads.add(ad)
+        package.save()
 
 
     """Add to activities"""
@@ -197,7 +220,11 @@ def changeAdAvatar(request):
 
 @api_view(["GET"])
 def searchAdvertisers(request,keyword):
-    data = Advertiser.objects.filter(name__icontains=keyword)
+    if keyword == "all":
+        data = Advertiser.objects.all()
+    else:
+        data = Advertiser.objects.filter(name__icontains=keyword)
+    
     serializer = AdvertiserSerializer(data,many=True)
     return Response(serializer.data)
 
@@ -284,3 +311,175 @@ def payInvoice(request):
             return Response(serializer.data)
         except ObjectDoesNotExist:
             return Response({"failed":"failed"})
+
+@api_view(["PUT"])
+def bankDeposit(request,invoice):
+    data = request.data
+    image = data["deposit_slip"]
+    print(data)
+    invoice = Invoice.objects.get(invoice_no=invoice)
+
+    invoice.deposit_slip = image
+    invoice.deposited = True
+    invoice.save()
+
+    serializer = InvoiceSerializer(invoice)
+
+    return Response(serializer.data)
+
+
+
+@api_view(["POST"])
+def newPackage(request):
+    data = request.data
+    print(data)
+    name = str(data["name"]).lower()
+    description = str(data["description"])
+    price = float(data["price"])
+    pricing = str(data["pricing"])
+    duration_of_pricing = int(data["duration_of_pricing"])
+    spots_per_day = int(data["spots_per_day"])
+    aob_per_day = int(data["aob_per_day"])
+    tc_per_day = int(data["tc_per_day"])
+    ss_per_day = int(data["ss_per_day"])
+    material_duration = float(data["material_duration"])
+    author = str(data["author"])
+
+    package = Package(
+        name = name,
+        description = description,
+        price = price,
+        pricing = pricing,
+        duration_of_pricing = duration_of_pricing,
+        spots_per_day = spots_per_day,
+        aob_per_day = aob_per_day,
+        tc_per_day = tc_per_day,
+        ss_per_day = ss_per_day,
+        material_duration = material_duration,
+        author=author
+    )
+    package.save()
+    serializer = PackageSerializer(package)
+    return Response(serializer.data)
+
+@api_view(["GET"])
+def loadPackages(request, filter):
+    if filter == "all":
+        pkg = Package.objects.all()
+    else:
+        pkg = Package.objects.filter(
+            Q(name__icontains=filter) | Q(description__icontains=filter)
+        )
+    serializer = PackageSerializer(pkg, many=True)
+    return Response(serializer.data)
+
+@api_view(["POST"])
+def getPackage(request):
+    data = request.data
+    package_name = str(data["package"])
+    pkg = Package.objects.get(name=package_name)
+    serializer = PackageSerializer(pkg)
+    return Response(serializer.data)
+
+@api_view(["PUT"])
+def changePackageColor(request,id):
+    data = request.data
+    pkg = Package.objects.get(id=id)
+    pkg.theme = data["color"]
+    pkg.save()
+
+    #for refresh
+    all_pkg = Package.objects.all()
+    serializer = PackageSerializer(all_pkg, many=True)
+    return Response(serializer.data)
+
+@api_view(["DELETE"])
+def deletePackage(request,id):
+    pkg = Package.objects.get(id=id)
+    pkg.delete()
+
+    #for refresh
+    all_pkg = Package.objects.all()
+    serializer = PackageSerializer(all_pkg, many=True)
+    return Response(serializer.data)
+
+"""Get  and calculate total collections based on filter"""
+@api_view(["GET"])
+def totalCollection(request,filter):
+    today = date.today()
+    total = 0
+    items = []
+    if filter.lower() == "today":
+        invoices = Invoice.objects.filter(
+            paid=True,
+            or_date__day__gte=today.day,
+            or_date__month__gte=today.month,
+            or_date__year__gte=today.year
+        )
+    elif filter.lower() == "month":
+        invoices = Invoice.objects.filter(
+            paid=True,
+            or_date__month__gte=today.month,
+            or_date__year__gte=today.year
+        )
+    elif filter.lower() == "year":
+        invoices = Invoice.objects.filter(
+            paid=True,
+            or_date__year__gte=today.year
+        )
+    elif filter.lower() == "all":
+        invoices = Invoice.objects.filter(paid=True)
+    
+    for i in invoices:
+        items.append({
+            "contract": i.from_contract,
+            "invoice": i.invoice_no,
+            "invoice_date": i.invoice_date,
+            "or": i.or_number,
+            "or_date": i.or_date,
+            "amount_received":i.amount_received
+        })
+        total = total+i.amount_received
+    
+    return Response({
+        "total":total,
+        "items": items
+    })
+
+"""Get  and calculate total sales based on filter"""
+@api_view(["GET"])
+def totalSales(request,filter):
+    today = date.today()
+    total = 0
+    items = []
+    if filter.lower() == "today":
+        invoices = Invoice.objects.filter(
+            or_date__day__gte=today.day,
+            or_date__month__gte=today.month,
+            or_date__year__gte=today.year
+        )
+    elif filter.lower() == "month":
+        invoices = Invoice.objects.filter(
+            or_date__month__gte=today.month,
+            or_date__year__gte=today.year
+        )
+    elif filter.lower() == "year":
+        invoices = Invoice.objects.filter(
+            or_date__year__gte=today.year
+        )
+    elif filter.lower() == "all":
+        invoices = Invoice.objects.all()
+    
+    for i in invoices:
+        items.append({
+            "contract": i.from_contract,
+            "invoice": i.invoice_no,
+            "invoice_date": i.invoice_date,
+            "amount":i.amount
+        })
+        total = total+i.amount
+    
+    return Response({
+        "total":total,
+        "items": items
+    })

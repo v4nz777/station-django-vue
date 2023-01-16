@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-col w-inventory-controls px-5 items-center">
-        <div class="w-full h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-md flex">
+        <div class="md:w-full w-screen h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-md flex">
             <NewInventory onMain/>
             <NewGroup
                 :items="batch"
@@ -18,7 +18,7 @@
             
         </div>
 
-        <div class="w-inventory">
+        <div class="md:w-full w-screen">
             <div v-if="loading" class="flex justify-center items-center">
                 <div class="w-9 h-9 border-4 border-x-primary border-y-secondary rounded-full animate-spin"></div>
             </div>

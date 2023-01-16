@@ -1,6 +1,6 @@
 from dataclasses import field
 from rest_framework import serializers
-from .models import AdVersion, Ad, Adcategory, Advertiser,AudioFile, Invoice
+from .models import AdVersion, Ad, Adcategory, Advertiser,AudioFile, Invoice, Package
 class AdSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ad
@@ -22,4 +22,9 @@ class AudioFileSerializer(serializers.ModelSerializer):
 class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoice
+        fields = "__all__"
+
+class PackageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Package
         fields = "__all__"

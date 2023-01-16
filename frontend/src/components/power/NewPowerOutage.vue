@@ -1,8 +1,8 @@
 <template>
     <div class="mx-auto my-3">
         <button @click="open = true" @mouseover="parentIsHovered = true" @mouseout=" parentIsHovered = false"
-                class="w-32 rounded-md hover:shadow-md flex items-center justify-start px-2 h-9 hover:bg-yellow-500 hover:text-white">
-        <i class="h-6 w-6" :class="parentIsHovered ? 'text-white':'text-yellow-500'"><LightningBoltIcon/></i>
+                class="w-32 rounded-md hover:shadow-md flex items-center justify-start px-2 h-9 hover:bg-primary hover:text-white">
+        <i class="h-6 w-6" :class="parentIsHovered ? 'text-white':'text-primary'"><LightningBoltIcon/></i>
         <h3 class="text-sm font-light">Power Outage</h3>
         </button>
         <teleport to='body'>
@@ -17,13 +17,19 @@
                     <hr class="my-4 w-full">
                 </div>
                 <div class="flex flex-col justify-center my-5 w-56 mx-auto mb-8">
-                    <label for="brownOutStart" class="text-yellow-600 font-semibold">🔦 Power Interrupted:</label>
-                    <input type="datetime-local" id="brownOutStart" class="text-gray-500 font-thin bg-yellow-500 text-sm px-3 py-1 mt-2 rounded-md"
+                    <label class="flex items-center mb-5">
+                        <input type="checkbox" class="form-checkbox" v-model="scheduled"/>
+                        <span class="ml-2 text-primary font-semibold">Check if scheduled!</span>
+                    </label>
+                    <hr>
+
+                    <label for="brownOutStart" class="text-primary font-semibold">🔦 Power Interrupted:</label>
+                    <input type="datetime-local" id="brownOutStart" class="text-white font-thin bg-primary text-sm px-3 py-1 mt-2 rounded-md"
                     v-model="interrupted"
                     @change="calculateDuration">
                     <hr class="my-6">
-                    <label for="brownOutRestored" class="text-yellow-600 font-semibold">🔅 Power Restored:</label>
-                    <input type="datetime-local" id="brownOutRestored" class="text-gray-500 font-thin bg-yellow-500 text-sm px-3 py-1 mt-2 rounded-md"
+                    <label for="brownOutRestored" class="text-primary font-semibold">🔅 Power Restored:</label>
+                    <input type="datetime-local" id="brownOutRestored" class="text-white font-thin bg-primary text-sm px-3 py-1 mt-2 rounded-md"
                     v-model="restored"
                     @change="calculateDuration">
                 </div>
@@ -50,6 +56,7 @@
 
     const interrupted = ref(null)
     const restored = ref(null)
+    const scheduled = ref(false)
     const open = ref(false)
     const duration = ref(null)
     const parentIsHovered = ref(false)
@@ -91,6 +98,7 @@
         fd.append("interrupted", interrupted.value)
         fd.append("restored", restored.value)
         fd.append("author", userstore.user)
+        fd.append("scheduled", scheduled.value)
         const response = await axios.post("new_power_interruption",fd)
         console.log(response.data.message)
 

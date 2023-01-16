@@ -15,8 +15,7 @@
                     </i>
                 </button>
                 <ul v-if="menuOpen && links.length" class="absolute top-1 left-8 bg-white shadow-md w-32">
-                    <li v-for="link in links" class="hover:bg-primary hover:text-white text-sm font-normal px-2 border-b"
-                        v-click-away="toggleOpen">
+                    <li v-for="link in links" class="hover:bg-primary hover:text-white text-primary text-sm font-normal px-2 border-b">
                         <button class="w-full text-left" @click="go(link.location)">{{link.name}}</button>
                     </li>
                     

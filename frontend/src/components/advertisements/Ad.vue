@@ -26,7 +26,7 @@
             </div>
             
             <div class="h-24 w-24 overflow-hidden rounded-md">
-                <img :src="ad.ad_avatar?'http://localhost:8000'+ad.ad_avatar:'/src/assets/ad.png'" class="w-full h-full object-cover">
+                <img :src="ad.ad_avatar?baseURL+ad.ad_avatar:StaticAdPhoto" class="w-full h-full object-cover">
             </div>
 
 
@@ -56,8 +56,8 @@
                     <div class="bg-white w-full h-max flex flex-col items-start shadow-md border"
                         v-if="adMenu"
                         v-click-away="toggleAdMenu">
-                        <button class="w-full border-b text-start hover:bg-gray-500 hover:text-white px-2 text-sm"
-                                @click="contractView = 'billing'; adMenu=false">Billing</button>
+                        <!-- <button class="w-full border-b text-start hover:bg-gray-500 hover:text-white px-2 text-sm"
+                                @click="contractView = 'billing'; adMenu=false">Billing</button> -->
                         <button class="w-full border-b text-start hover:bg-gray-500 hover:text-white px-2 text-sm"
                                 @click="contractView = 'edit'; adMenu=false">Edit Contract</button>
                         <button class="w-full border-b text-start hover:bg-gray-500 hover:text-white px-2 text-sm"
@@ -81,9 +81,9 @@
                         <p class="text-xs text-gray-500">Version {{ad.current_ver}}.0</p>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
-                        <div class="h-64 w-64 overflow-hidden rounded-md relative flex shadow">
+                        <div class="h-full w-auto overflow-hidden rounded-md relative flex shadow">
                             <img v-if="adAvatarUrl" :src="adAvatarUrl" class="w-full h-full object-cover">
-                            <img v-else :src="ad.ad_avatar?'http://localhost:8000'+ad.ad_avatar:'/src/assets/ad.png'" class="w-full h-full object-cover">
+                            <img v-else :src="ad.ad_avatar?baseURL+ad.ad_avatar:StaticAdPhoto" class="w-full h-full object-cover">
                             
                             <button class="absolute font-sans text-lg font-black text-white bg-black bg-opacity-30 w-full h-full"
                             v-if="adAvatarChangeMode"
@@ -190,13 +190,13 @@
                 </div>
                 <!-- MAIN END -->
                 <!-- BILLING VIEW -->
-                <AdInvoice 
+                <!-- <AdInvoice 
                     :contract="ad.contract"
                     :amount="adVersionView.amount"
                     :pricing="adVersionView.pricing"
                     :ae="ae"
                     :advertiser="advertiser"
-                    v-else-if="contractView === 'billing'"/>
+                    v-else-if="contractView === 'billing'"/> -->
                 <!-- BILLING END -->
                 <!--EDIT VIEW-->
                 <Adedit 
@@ -223,7 +223,7 @@
 </template>
 
 <script setup>
-    import { reactive, ref, onMounted,onBeforeMount, onUpdated, watch } from 'vue';
+    import { ref, onMounted,onBeforeMount, onUpdated, watch } from 'vue';
     import axios from 'axios';
     import { userStore } from '@/stores/user';
     import AudioItem from '@/components/AudioItem.vue';
@@ -231,11 +231,13 @@
     import Adedit from "@/components/advertisements/Adedit.vue"
     import AdRevisions from "@/components/advertisements/AdRevisions.vue"
 
-    import SaveIcon from "@/components/icons/SaveIcon.vue"
     import { DotsVerticalIcon, ReceiptTaxIcon, ArrowNarrowLeftIcon, CogIcon, RefreshIcon } from '@heroicons/vue/solid';
     import moment from 'moment';
     import StackIcon from '@/components/icons/StackIcon.vue';
+    import StaticAdPhoto from '@/assets/ad.png'
 
+    
+    const baseURL = axios.defaults.baseURL
     const open = ref(false)
     const adMenu = ref(false)
     const contractView = ref("main")

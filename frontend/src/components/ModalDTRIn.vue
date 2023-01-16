@@ -1,4 +1,8 @@
 <template>
+    <button @click="logoutToDTR"
+        class="bg-red-500 text-white font-bold text-sm px-2 py-1 rounded-full">
+        Time Out
+    </button>
     <!-- component -->
     <teleport to='body'>
         <div v-if="!userstore.dtrIsLogged">
@@ -17,12 +21,14 @@
 </template>
 
 <script setup>
-    import { reactive, ref } from 'vue';
+    import { reactive, ref, onMounted } from 'vue';
     import axios from 'axios';
     import { userStore } from '@/stores/user';
     import { dtrStore } from '@/stores/dtr';
 
     const userstore = userStore()
+    const dtrstore = dtrStore()
+
 
     const loginToDTR = async () => {
         if (!userstore.dtrIsLogged){
@@ -32,18 +38,24 @@
             localStorage.removeItem("dtrIsLogged")
             localStorage.setItem("dtrIsLogged", response.data.is_logged)
             userstore.dtrIsLoggedUpdate()
-
             location.reload(true)
-
-
         }
     }
     
-
-    setTimeout(() => {
-        loginToDTR()
-        
-    }, 3000);
+    onMounted(() => {
+        setTimeout(() => {
+            loginToDTR()
+        }, 3000); 
+    })
+    
+    const logoutToDTR = async ()=> {
+        await axios.put("dtr_out/", {
+            username: userstore.user,
+            month: dtrstore.month,
+            date: dtrstore.date,
+            year: dtrstore.year,
+        })
+    }
 </script>
 
 <style>

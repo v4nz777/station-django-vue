@@ -1,28 +1,16 @@
 <template>
     <div class="relative flex items-center justify-center">
-        <button @click="toggle()" id="menu-opener">
+        <button @click="toggle" id="menu-opener">
             <i class="block h-9 w-9">
                 <MenuIcon />
             </i>
         </button>
-    <div class="absolute right-0 top-0 bg-white w-max h-max z-10 mt-12 b-border shadow-lg
+    <div class="absolute left-0 top-0 bg-white w-max h-max z-10 mt-12 b-border shadow-lg
                 flex flex-col"
             v-if="open"
             v-click-away="toggle">
+            <SideBar @afterset="toggle"/>
 
-            <div class="flex flex-col justify-between">
-            <SidebarItem title="Activities" location="/">
-                <template #icon><HashtagIcon/></template>
-            </SidebarItem>
-
-            <SidebarItem title="Worktab">
-                <template #icon><HashtagIcon/></template>
-            </SidebarItem>
-
-            <SidebarItem title="About" location="/about/">
-                <template #icon><HashtagIcon/></template>
-            </SidebarItem>
-            </div>
             <hr>
             <div class="flex flex-col pt-12 m-4 justify-center items-center">
                 <RouterLink v-if="userstore.user" to="/profile/">
@@ -39,18 +27,16 @@
                 <hr>
                 <Logout />
             </div>
-
     </div>
     </div>
 </template>
 <script setup>
-    import { MenuIcon, HashtagIcon } from '@heroicons/vue/outline';
-    import SidebarItem from "@/components/SidebarItem.vue";
+    import { MenuIcon } from '@heroicons/vue/outline';
     import Logout from "@/components/Logout.vue";
     import DTRTimer from "@/components/DTRTimer.vue";
     import { userStore } from '../stores/user';
     import { ref } from 'vue';
-
+    import SideBar from "@/components/Sidebar.vue"
 
 
     const userstore = userStore()
@@ -59,6 +45,7 @@
     const toggle = () => {
         // open if closed -> close if opened
         open.value ? open.value=false : open.value=true
+  
     }
 
 </script>

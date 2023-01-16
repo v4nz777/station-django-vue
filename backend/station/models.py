@@ -19,6 +19,7 @@ class User(AbstractUser):
     in_charge_of = models.ManyToManyField('Department', blank=True, related_name="departments_headed")
     is_logged = models.BooleanField(default=False)
     avatar = models.ImageField(upload_to="avatars")
+    position_str = models.CharField(max_length=256,blank=True,null=True)
  
 
     def save(self, *args, **kwargs):
@@ -27,6 +28,8 @@ class User(AbstractUser):
                 self.is_in_charge = True
             else:
                 self.is_in_charge = False
+        if self.position != None:
+            self.position_str = Position.objects.get(id=self.position.id).title
         super(User, self).save(*args, **kwargs)
 
 

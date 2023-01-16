@@ -1,13 +1,13 @@
 <template>
-    <header class="h-12">
+    <header class="h-12 flex flex-row-reverse md:flex-row">
       <div class="shadow-3xl overflow-hidden rounded-full object-fill">
         <img class="h-11 self-center" src="../assets/stationlogo.png" alt="StationLogo" />
       </div>
 
-        <nav v-if="userstore.user" class="flex justify-center">
-          <Menu class="md:hidden block"/>
-          <Logout class="md:block hidden"/>
-        </nav>
+      <div v-if="userstore.user" class="flex justify-center">
+        <Menu class="md:hidden block"/>
+        <Logout class="md:block hidden"/>
+      </div>
   </header>
 </template>
 
@@ -18,7 +18,7 @@
   import { userStore } from '../stores/user';
   import { dtrStore } from '../stores/dtr';
   import Menu from '@/components/Menu.vue';
-  import Logout from '@/components/Logout.vue'
+  import Logout from '@/components/Logout.vue';
 
 
   const dtrstore = dtrStore()

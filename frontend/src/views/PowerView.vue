@@ -1,8 +1,8 @@
 <template>
-    <div class="flex flex-col w-inventory-controls px-5 items-center">
+    <div class="flex md:w-full w-screen px-5">
         
         
-        <div class="">
+        <div class="w-full px-5">
             <ConsumptionChart
             :data_labels="{labels:_labels,data:_data}"/>
 
@@ -14,14 +14,12 @@
             <ConsumptionData v-for="datum in data"
             :datum="datum"  
             @send="sendDataToChart"/>
-
         </div>
+
     </div>
 </template>
 
 <script setup>
-    import { Line } from "vue-chartjs";
-    import NewPowerOutage from "@/components/power/NewPowerOutage.vue"
     import NewPowerConsumption from "@/components/power/NewPowerConsumption.vue"
 
     import ConsumptionChart from "@/components/power/ConsumptionChart.vue"
@@ -34,7 +32,6 @@
     const loadConsumptionData = async()=> {
         const response = await axios.get("get_power_readings")
         data.value = response.data
-        console.log("triggered")
     }
     const _labels = ref([])
     const _data = ref([])

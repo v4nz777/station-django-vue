@@ -314,7 +314,6 @@
 
         try {
             const response = await axios.post("add_equipment",fd)
-            console.log(response.data)
             if(andExit){
                 setDefault();
                 open.value = false}

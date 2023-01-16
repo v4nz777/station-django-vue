@@ -15,4 +15,11 @@ urlpatterns = [
     path("activities/<str:filter>/", views.getFilteredActivity, name="generalActivity"),
     path("activities/add/brownout", views.postNewBrownOut, name="addNewBrownout"),
     path("generate/dtr/<str:username>", views.generateDTR, name="generateDTR"),
+    path("generate/dtr/<str:username>", views.generateDTR, name="generateDTR"),
+    path("positions/<str:query>", views.positions, name="positions"),
+    path("position/<int:id>", views.position, name="position"),
+    path("add_position", views.addPosition, name="add_position"),
+    path("assign_pos/<str:username>", views.assignPos, name="assignPos"),
+
+
 ]

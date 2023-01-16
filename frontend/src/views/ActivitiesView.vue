@@ -1,19 +1,36 @@
 
 <template>
-  <main>
-    <ModalDTRIn />
-    <div class="flex w-activity-controls h-20 bg-white border shadow-lg rounded-2xl p-2 mb-8 my-6 mx-2">
-        <NewAds buttonTitle="Advertisement"/>
-        <NewPowerOutage/>
+  <div class="md:w-full h-screen md:px-24">
+    
+    <div class="flex justify-between items-center md:flex-row flex-col gap-20 
+                w-full h-auto bg-white border shadow-lg rounded-2xl p-5 mb-8 my-6">
+      <div class="flex flex-col md:flex-row gap-2 w-max">
+        <div class="w-20 h-20 bg-white overflow-hidden rounded-full shadow-lg border-2 border-primary">
+          <img :src="user.avatar"
+            class=" object-contain">
+        </div>
+        <div class="">
+          <p class="text-xl font-bold cursor-pointer" @click="router.push('profile/')" 
+            v-if="user.userDetails.first_name&&user.userDetails.last_name">
+            {{ user.userDetails.first_name.charAt(0).toUpperCase()+user.userDetails.first_name.slice(1) }} 
+            {{ user.userDetails.last_name.charAt(0).toUpperCase()+user.userDetails.last_name.slice(1) }}
+          </p>
+          <p class="mb-2 -mt-2">@{{ user.user }}</p>
+          <div class="bg-primary flex justify-center rounded-sm w-max px-1 py-1">
+            <p class="text-xs font-bold text-white">Technician</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center">
+        <!-- <ModalDTRIn /> -->
+        <DTRTimer />
+      </div>
     </div>
-    <div class="w-activities h-full mt-4 mb-14 flex flex-col md:px-14 px-32">
+    <div class="w-full mt-4 mb-14 flex flex-col px-4 md:mx-10">
       <!--:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::-->
       
-      <div class="flex my-6"
-        :class="i.other.type === 'brownout' 
-          || i.other.type === 'ads'
-          ? 'p-3 bg-white rounded-2xl border shadow-md':''"
-        v-for="i in activitystore.filteredActivities">
+      <div class="flex my-6" v-for="i in activitystore.filteredActivities">
         <!--:: Main Activities ::-->
           <div class="w-10 h-10 border-2 border-gray-300 rounded-full flex item-center
                       justify-center overflow-hidden mr-2 shadow-sm shadow-black bg-white">
@@ -22,36 +39,10 @@
           <div>
             <div class="text-gray-800">
                 <span class="font-bold">{{i.username}}</span> 
-                <span v-if="i.other.type === 'ads'">{{' ' + i.subject }} <a href="/ads/" class="text-blue-500">#{{i.other.contract}}</a></span>
-                <span v-else>{{' ' + i.subject }}</span>
-            </div>
- 
-            <!--Brownouts-->
-            <div class="text-gray-800 text-sm font-thin"
-                v-if="i.other.type==='brownout'">
-                {{activitystore.humanizeDate(i.created)}}
-                <hr class="mb-3 mt-1 w-full">
-                📅Date: {{activitystore.simplifyDateTimeRange(i.other.interrupted,i.other.restored).date}} <br>
-                🔦Interrupted : {{activitystore.simplifyDateTimeRange(i.other.interrupted,i.other.restored).from_time}} |  {{activitystore.simplifyDateTimeRange(i.other.interrupted,i.other.restored).from_day}}<br>
-                🔅Restored: {{activitystore.simplifyDateTimeRange(i.other.interrupted,i.other.restored).to_time}} | {{activitystore.simplifyDateTimeRange(i.other.interrupted,i.other.restored).to_day}}<br>
-                ⏱️Duration: {{i.other.duration}}
-            </div>
-            <!--Ads-->
-            <div class="text-gray-800 text-sm font-thin"
-                v-if="i.other.type==='ads'">
-                {{activitystore.humanizeDate(i.created)}}
-                <hr class="mb-3 mt-1 w-full">
-                <h2 class="text-lg font-bold">{{i.other.title?i.other.title.toUpperCase():null}}</h2>
-                <p>Duration: <span class="font-normal">will run for {{i.other.duration}}</span></p>
-                <!-- <ul class="my-5">
-                  <li v-for="f,index in i.other.audio_files">
-                    <AudioItem :id="f" :index="index" />
-                  </li>
-                </ul> -->
+                <span>{{' ' + i.subject }}</span>
             </div>
             <!--Simple-->
-            <div class="text-gray-800 text-sm font-thin"
-                v-else>
+            <div class="text-gray-800 text-sm font-thin">
                 {{activitystore.humanizeDate(i.created)}}
             </div>
 
@@ -64,25 +55,26 @@
 
       <!--:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::-->
     </div>
-  </main>
+  </div>
 </template>
 
 <script setup>
   import ModalDTRIn from '@/components/ModalDTRIn.vue';
+  import DTRTimer from '@/components/DTRTimer.vue'
+  import router from '../router';
   import { userStore } from '@/stores/user';
   import { dtrStore } from '@/stores/dtr'
   import { activityStore } from '@/stores/activity';
-  import NewPowerOutage from '@/components/power/NewPowerOutage.vue';
-  import NewAds from '@/components/advertisements/NewAds.vue';
-  import AudioItem from '@/components/AudioItem.vue';
   import { ref, onMounted, onUnmounted } from 'vue';
 
-  const userstore = userStore()
+
+  const user = userStore()
   const dtrstore = dtrStore()
   const activitystore = activityStore()
 
+
   //intitialize dtr
-  dtrstore.loadDTR()
+  //dtrstore.loadDTR()
 
   //load filtered
   const watchActivities = setInterval(() => {

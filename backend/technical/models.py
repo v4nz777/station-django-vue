@@ -77,14 +77,15 @@ class PowerInterruption(models.Model):
     duration_hours = models.IntegerField(null=True,blank=True)
     duration_minutes = models.IntegerField(null=True,blank=True)
     duration_seconds = models.IntegerField(null=True,blank=True)
-
+    scheduled = models.BooleanField(default=False)
     def set_duration(self):
         if self.restored:
-            i = self.restored
-            r = self.interrupted
-            interrupted = timedelta(hours=i.hour, minutes=i.minute, seconds=i.second)
-            restored = timedelta(hours=r.hour, minutes=r.minute, seconds=r.second)
-            duration = (interrupted - restored).total_seconds()        
+            r = self.restored
+            i = self.interrupted
+            interrupted = timedelta(days=i.day,hours=i.hour, minutes=i.minute, seconds=i.second)
+            restored = timedelta(days=r.day, hours=r.hour, minutes=r.minute, seconds=r.second)
+            duration = (restored - interrupted).total_seconds()   
+            print("duration", duration)     
 
             hours,remainder = divmod(duration,3600)
             minutes,seconds = divmod(remainder, 60)

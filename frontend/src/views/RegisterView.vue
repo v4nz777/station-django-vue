@@ -23,7 +23,6 @@
         methods: {
             async submitRegistration() {
                 const response = await axios.post("/register/", this.registration)
-                console.log(response.data)
                 this.$router.push("login/")
                 
             }

@@ -3,7 +3,7 @@ import router from "../router";
 import axios from "axios";
 import { userStore } from "./user";
 import moment from "moment";
-
+import staticAvatar from "@/assets/avatar.png"
 
 export const activityStore = defineStore({
     id: "activitystore",
@@ -55,7 +55,7 @@ export const activityStore = defineStore({
             
         },
         setAvatar(avatar){
-            if(avatar === "" | avatar === null) return "/src/assets/avatar.png"
+            if(avatar === "" | avatar === null) return staticAvatar
      
             return axios.defaults.baseURL + avatar
         },

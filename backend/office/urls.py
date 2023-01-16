@@ -15,5 +15,12 @@ urlpatterns = [
     path("change_ad_avatar", views.changeAdAvatar, name="changeAdAvatar"),
     path("compare/<str:contract>/<int:x>/<int:y>", views.compareVersions, name="compareVersions"),
     path("change_version", views.changeVersion, name="changeVersion"),
-
+    path("save_snap/bank_deposit/<str:invoice>", views.bankDeposit, name="bankDeposit"),
+    path("add_package", views.newPackage, name="newPackage"),
+    path("load_packages/<str:filter>", views.loadPackages, name="loadPackages"),
+    path("get_package", views.getPackage, name="getPackage"),
+    path("change_pkg_color/<int:id>", views.changePackageColor, name="changePackageColor"),
+    path("delete_pkg/<int:id>", views.deletePackage, name="deletePackage"),
+    path("total_collections/<str:filter>", views.totalCollection, name="totalCollection"),
+    path("total_sales/<str:filter>", views.totalSales, name="totalSales"),
 ]

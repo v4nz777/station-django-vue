@@ -1,9 +1,9 @@
 <template>
     <div class="flex flex-col w-full px-5 items-center">
-        <div class="w-ads-controls h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-md">
+        <div class="md:w-full w-screen h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-md ">
             <NewAds buttonTitle="Add New"/>
         </div>
-        <div v-if="loaded" class="w-ads">
+        <div v-if="loaded" class="md:w-full w-screen">
             <div class="m-5 mb-10 pb-10 h-max gap-4 grid-auto-cols"
                 :class="adsList.length < 4 ? 'w-max': 'w-full'">
                     <div v-if="adsList.length"
@@ -39,7 +39,6 @@
         if (currentcount !== response.data.length){
             loaded.value = false
             adsList.value = []
-            console.log('triggered')
         }
         adsList.value = response.data
         loaded.value = true

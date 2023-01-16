@@ -1,12 +1,15 @@
 from rest_framework.response import Response
 from django.db import IntegrityError
 from rest_framework.decorators import api_view
-from .models import User, History, Activity
-from .serializers import UserSerializer, HistorySerializer, ActivitySerializer, MonthlyDTRSerializer
+from .models import User, History, Activity, Position
+from .serializers import (
+    UserSerializer,
+    HistorySerializer,
+    ActivitySerializer,
+    MonthlyDTRSerializer,
+    PositionSerializer
+    )
 import json
-import PIL
-from PIL import Image
-
 from .dtr import generate_workbook
 from datetime import datetime, tzinfo, date
 from django.core.exceptions import ObjectDoesNotExist
@@ -130,8 +133,6 @@ def inDTR(request):
         try:
             _all = History.objects.filter(user=user, month=month, date=date, year=year)
             current = History.objects.get(user=user, month=month, date=date, year=year)
-            print(current)
-            print(_all)
             if current in _all:
                 activity = Activity()
                 activity.new_activity(username.lower(), "relogged in", type="relogin")
@@ -144,20 +145,16 @@ def inDTR(request):
             activity.new_activity(username.lower(), "logged in", type="login")
    
         
-        context = {
-            "message": f"{user} successfully logged",
-            "is_logged": user.is_logged
-        }
-        return Response(context)
+        return Response({"is_logged":user.is_logged})
     else:
-        return Response({"message": f"{user} is already logged"})
+        return Response({"is_logged":user.is_logged})
 
 
 
 
 """ ::::::::::::::::::::::::::::::::::::::::
     Function: Change is_logged status to false and write on DTR sheet
-    API route: "/dtr_log"
+    API route: "/dtr_out"
 
     Can be used to access current user
     """
@@ -186,14 +183,17 @@ def outDTR(request):
  
         # instance.time_out = time
         instance.time_out_datetime = now
-
         instance.save()
+
+        #record last active
+        user.last_login = now
+        user.save()
 
         activity = Activity()
         activity.new_activity(username.lower(), "logged out", type="logout")
-        return Response({"message": f"{user} successfully logged out"})
+        return Response({"is_logged": user.is_logged})
     else:
-        return Response({"message": f"{user} is not logged"})
+        return Response({"is_logged": user.is_logged})
 
 
 """ ::::::::::::::::::::::::::::::::::::::::
@@ -253,13 +253,10 @@ def filterUserHistoryByMonth(request, username, year, month):
 @api_view(["GET"])
 def filterUserHistoryByDate(request, username, year, month, date):
     user = User.objects.get(username=username)
-    try:
-        data = History.objects.get(user=user, year=year, month=month, date=date)
-        serializer = HistorySerializer(data)
-        return Response(serializer.data)
-
-    except ObjectDoesNotExist:
-        return Response({"message":"history does not exist"})
+    
+    data = History.objects.get(user=user, year=year, month=month, date=date)
+    serializer = HistorySerializer(data)
+    return Response(serializer.data)
 
 """ ::::::::::::::::::::::::::::::::::::::::
     Function: Returns new avatar for user
@@ -364,4 +361,50 @@ def generateDTR(request, username):
     return Response(serializer.data)
 
 
+"""Handles Positions"""
 
+@api_view(["GET"])
+def positions(request,query:str):
+    if query.lower() == 'all':
+        positions = Position.objects.all()
+    else:
+        positions = Position.objects.filter(title__icontains=query.lower()).exclude(title__iexact=query.lower())
+
+    serializer = PositionSerializer(positions,many=True)
+    return Response(serializer.data)
+
+@api_view(["GET"])
+def position(request,id:int):
+    position = Position.objects.get(id=id)
+    serializer = PositionSerializer(position)
+    return Response(serializer.data)
+
+@api_view(["POST"])
+def addPosition(request):
+    if request.method == "POST":
+        data = request.data
+        title = str(data["position_title"]).lower()
+        try:
+            Position.objects.get(title=title)
+        except ObjectDoesNotExist:
+            Position(title=title).save()
+        positions = Position.objects.all()
+        serializer = PositionSerializer(positions,many=True)
+        return Response(serializer.data)
+
+@api_view(["POST"])
+def assignPos(request,username):
+    data = request.data
+    title = str(data["position_title"]).lower()
+    try:
+        position = Position.objects.get(title=title)
+    except ObjectDoesNotExist:
+        position = Position(title=title)
+        position.save()
+
+    user = User.objects.get(username=username)
+    user.position = position
+    user.save()
+    serializer = PositionSerializer(position)
+    return Response(serializer.data)
+    
