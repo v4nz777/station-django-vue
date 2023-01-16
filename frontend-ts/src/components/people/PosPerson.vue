@@ -138,7 +138,7 @@ const refactorPositions = async () => {
     } else {
       newPosition.value = {
         title: valuePosition.value,
-      };
+      } as any;
       positions.value = [newPosition.value, ...positions.value];
     }
   } else await getPositions("all");
