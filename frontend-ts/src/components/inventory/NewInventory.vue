@@ -289,7 +289,7 @@ const eqStatus = ref("");
 const eqAcquired = ref("");
 const eqGroup = ref("");
 
-const brands = ref([]);
+const brands = ref([] as Array<any>);
 const searchBrand = async () => {
   if (eqBrand.value === "") {
     brands.value = [];
@@ -298,7 +298,7 @@ const searchBrand = async () => {
     brands.value = response.data;
   }
 };
-const groups = ref([]);
+const groups = ref([] as Array<any>);
 const searchGroup = async () => {
   if (eqGroup.value === "") {
     groups.value = [];
@@ -320,13 +320,13 @@ const validForm = ref(false);
 const checkForm = () => {
   setInterval(() => {
     validForm.value =
-      !takenName.value && eqName.value && eqOwner.value && eqStatus.value;
+      !takenName.value as any && eqName.value as any && eqOwner.value as any && eqStatus.value as any; 
   }, 1000);
 };
 
 onMounted(() => {
   checkForm();
-  if (!props.onMain) eqGroup.value = props.preGroup;
+  if (!props.onMain) eqGroup.value = props.preGroup as string;
 });
 
 const setDefault = () => {
@@ -360,15 +360,15 @@ const setAddNew = () => {
   brands.value = [];
 };
 
-const submitEquipment = async (andExit) => {
+const submitEquipment = async (andExit:boolean) => {
   const fd = new FormData();
-  fd.append("user", userstore.user);
+  fd.append("user", userstore.user as string);
   fd.append("name", eqName.value);
   fd.append("brand", eqBrand.value);
   fd.append("model", eqModel.value);
   fd.append("serial_no", eqSerialNo.value);
   fd.append("property_no", eqPropertyNo.value);
-  fd.append("purchase_cost", eqCost.value);
+  fd.append("purchase_cost", eqCost.value as any);
   fd.append("owner", eqOwner.value);
   fd.append("status", eqStatus.value);
   fd.append("date_acquired", eqAcquired.value);

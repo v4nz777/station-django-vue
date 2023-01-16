@@ -22,8 +22,8 @@
               <img :src="userstore.avatar" class="object-cover w-full h-full" />
             </div>
             <span class="text-gray-900 text-sm font-light"
-              >{{ userstore.userDetails.first_name }}
-              {{ userstore.userDetails.last_name }}</span
+              >{{ userstore.first_name }}
+              {{ userstore.last_name }}</span
             >
             <DTRTimer />
           </div>
