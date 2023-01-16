@@ -1,11 +1,13 @@
 <template>
-  <button
-    @click="logoutToDTR"
-    v-if="logged"
-    class="bg-red-500 text-white font-bold text-sm px-2 py-1 rounded-full"
-  >
-    Time Out
-  </button>
+  <Transition>
+    <button
+      @click="logoutToDTR"
+      v-if="logged"
+      class="bg-red-500 text-white font-bold text-sm px-2 py-1 rounded-full"
+    >
+      Time Out
+    </button>
+  </Transition>
   <div
     class="flex bg-white rounded-2xl b-border shadow-md justify-center items-center px-2 h-9"
   >
@@ -70,3 +72,14 @@ onMounted(async () => {
   dtrstore.watchTimer();
 });
 </script>
+<style>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>

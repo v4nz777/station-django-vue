@@ -5,11 +5,23 @@ import { userStore } from "./user";
 import moment from "moment";
 import staticAvatar from "@/assets/avatar.png";
 
+interface Activity {
+  user: number;
+  username: string;
+  userpic: string;
+  sub_user: string;
+  sub_username: string;
+  sub_userpic: string;
+  created: string;
+  subject: string;
+  other: object;
+}
+
 export const activityStore = defineStore({
   id: "activitystore",
   state: () => ({
     userActivities: [],
-    filteredActivities: [] as Array<string|any>,
+    filteredActivities: [] as Array<Activity>,
   }),
   actions: {
     async getUserActivity() {

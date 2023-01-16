@@ -11,11 +11,12 @@
       :styles="styles"
       :width="width"
       :height="height"
+      :data="chartData"
     />
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, watch, onMounted } from "vue";
 import { Line } from "vue-chartjs";
 import {
@@ -30,7 +31,6 @@ import {
   Chart,
 } from "chart.js";
 import Hammer from "hammerjs";
-import { objectToString } from "@vue/shared";
 
 ChartJS.register(
   Title,
@@ -98,9 +98,12 @@ const chartOptions = ref({
   },
 });
 
-const plugins = [
+const plugins: any = [
   {
-    afterDraw: (chart, args) => {
+    afterDraw: (
+      chart: { scales?: any; ctx?: any; canvas?: any; chartArea?: any },
+      args: any
+    ) => {
       const {
         ctx,
         canvas,
@@ -108,7 +111,7 @@ const plugins = [
       } = chart;
 
       const hammer = new Hammer(canvas);
-      hammer.on("swipe", (event) => {
+      hammer.on("swipe", (event: { direction: number }) => {
         // Object.assign(chartOptions)
         if (event.direction === 2) {
           //swipeleft
@@ -148,13 +151,13 @@ const chartData = ref({
   ],
 });
 
-const updateGraph = (labelsAndData) => {
+const updateGraph = (labelsAndData: Record<string, any> | undefined) => {
   chartData.value = {
-    labels: labelsAndData.labels,
+    labels: labelsAndData?.labels,
     datasets: [
       {
         label: "Power Consumption",
-        data: labelsAndData.data,
+        data: labelsAndData?.data,
         backgroundColor: "#ffcc33",
         borderColor: "#ffcc33",
       },

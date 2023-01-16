@@ -101,8 +101,7 @@
             </div>
             <div class="w-max h-max">
               <div
-                class="bg-emerald-100 w-32 h-60 overflow-y-scroll none-scroll"
-              >
+                class="bg-emerald-100 w-32 h-60 overflow-y-scroll none-scroll">
                 <div
                   v-for="(img, index) in eqGallery"
                   :key="index"
@@ -111,65 +110,60 @@
                   :class="
                     img.id === eqPicPreview.id
                       ? 'border-2 border-primary'
-                      : 'hover:border-2 border-yellow-400 hover:shadow-yellow-300'
-                  "
-                >
+                      : 'hover:border-2 border-yellow-400 hover:shadow-yellow-300'">
                   <img
                     :src="baseURL + img.file"
                     :alt="img.file_name"
-                    class="w-full h-full object-cover"
-                  />
+                    class="w-full h-full object-cover"/>
                 </div>
               </div>
-              <div class="bg-emerald-100 w-full h-9 relative">
+              <div class="bg-emerald-100 w-full h-9 relative flex justify-around">
                 <input
                   type="file"
                   ref="uploadGallery"
                   accept="image/*"
                   class="hidden"
                   @change="galleryPrepareUpload()"
-                  multiple
-                />
+                  multiple/>
 
-                <div
-                  v-if="uploadTabOpen"
-                  class="w-7 h-7 my-2 border-4 border-x-primary border-emerald-300 rounded-full animate-spin mx-auto"
-                ></div>
+                <div v-if="uploadTabOpen"
+                  class="w-7 h-7 my-2 border-4 border-x-primary border-emerald-300 rounded-full animate-spin mx-auto">
+                </div>
                 <button
                   v-else-if="!uploadTabOpen && uploadGalleryList.length"
-                  class="my-2 mx-auto text-primary flex justify-center items-center"
-                >
-                  <i class="block h-8 w-8"><UploadIcon /></i>
+                  class="my-2 mx-auto text-primary flex justify-center items-center">
+                  <i class="block h-7 w-7"><UploadIcon /></i>
                 </button>
                 <button
                   v-else
                   class="my-2 mx-auto text-primary flex justify-center items-center"
-                  @click="$refs.uploadGallery.click"
-                >
-                  <i class="block h-8 w-8"><UploadIcon /></i>
+                  @click="$refs.uploadGallery.click">
+                  <i class="block h-7 w-7"><UploadIcon /></i>
                 </button>
+                <button
+                  class="my-2 mx-auto text-primary flex justify-center items-center"
+                  @click="$refs.uploadGallery.click">
+                  <i class="block h-7 w-7"><CameraIcon /></i>
+                </button>
+                
 
                 <div
                   class="absolute bg-white w-72 h-52 right-0 shadow-md grid shadow-emerald-100"
-                  v-if="uploadTabOpen"
-                >
+                  v-if="uploadTabOpen">
                   <div
-                    class="p-3 small-grid-auto-cols overflow-scroll none-scroll"
-                  >
+                    class="p-3 small-grid-auto-cols overflow-scroll none-scroll">
                     <button
                       class="shadow-md w-9 h-12 bg-white border-primary border-2 border-dashed text-primary hover:bg-primary hover:text-white"
-                      @click="$refs.uploadGallery.click"
-                    >
-                      <i class="block h-6 w-6 mx-auto text-center"
-                        ><PlusIcon
-                      /></i>
+                      @click="$refs.uploadGallery.click">
+                      <i class="block h-6 w-6 mx-auto text-center">
+                        <PlusIcon/>
+                      </i>
                     </button>
 
                     <div
                       v-for="(imgurl, index) in uploadGalleryListForShow"
                       :key="index"
-                      class="overflow-hidden shadow-md w-9 h-12"
-                    >
+                      class="overflow-hidden shadow-md w-9 h-12">
                       <img
                         :src="imgurl"
                         :alt="imgurl.file_name"
@@ -184,9 +178,7 @@
                       @click="
                         uploadGallery = null;
                         uploadGalleryList = [];
-                        uploadGalleryListForShow = [];
-                      "
-                    >
+                        uploadGalleryListForShow = [];">
                       Cancel
                     </button>
                     <button
@@ -196,9 +188,7 @@
                       :class="
                         uploadGalleryList.length
                           ? 'bg-primary hover:bg-emerald-600'
-                          : 'bg-emerald-300'
-                      "
-                    >
+                          : 'bg-emerald-300'">
                       <p>save</p>
                     </button>
                   </div>

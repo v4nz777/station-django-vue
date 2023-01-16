@@ -4,12 +4,14 @@
       <NewPackage @done="loadPacks()" />
     </div>
     <div class="grid-auto-cols my-5 w-3/4 place-items-center">
-      <Package
-        v-for="pkg in packages"
-        :key="pkg.id"
-        @modified="loadPacks()"
-        :pack="pkg"
-      />
+      <TransitionGroup>
+        <Package
+          v-for="pkg in packages"
+          :key="pkg.id"
+          @modified="loadPacks()"
+          :pack="pkg"
+        />
+      </TransitionGroup>
     </div>
   </div>
 </template>

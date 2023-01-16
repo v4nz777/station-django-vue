@@ -11,6 +11,8 @@ import PowerOutageView from "@/views/PowerOutageView.vue";
 import TransmitterView from "@/views/TransmitterView.vue";
 import BillingView from "@/views/BillingView.vue";
 import AdPackageView from "@/views/AdPackageView.vue";
+import PeopleView from "@/views/PeopleView.vue";
+import PromosView from "@/views/PromosView.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -99,6 +101,22 @@ const router = createRouter({
       path: "/billing",
       name: "billing",
       component: BillingView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/people",
+      name: "people",
+      component: PeopleView,
+      meta: {
+        requiresAuth: true,
+      },
+    },
+    {
+      path: "/promos",
+      name: "promos",
+      component: PromosView,
       meta: {
         requiresAuth: true,
       },

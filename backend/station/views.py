@@ -1,12 +1,15 @@
 from rest_framework.response import Response
 from django.db import IntegrityError
 from rest_framework.decorators import api_view
-from .models import User, History, Activity
-from .serializers import UserSerializer, HistorySerializer, ActivitySerializer, MonthlyDTRSerializer
+from .models import User, History, Activity, Position
+from .serializers import (
+    UserSerializer,
+    HistorySerializer,
+    ActivitySerializer,
+    MonthlyDTRSerializer,
+    PositionSerializer
+    )
 import json
-import PIL
-from PIL import Image
-
 from .dtr import generate_workbook
 from datetime import datetime, tzinfo, date
 from django.core.exceptions import ObjectDoesNotExist
@@ -180,8 +183,11 @@ def outDTR(request):
  
         # instance.time_out = time
         instance.time_out_datetime = now
-
         instance.save()
+
+        #record last active
+        user.last_login = now
+        user.save()
 
         activity = Activity()
         activity.new_activity(username.lower(), "logged out", type="logout")
@@ -355,4 +361,50 @@ def generateDTR(request, username):
     return Response(serializer.data)
 
 
+"""Handles Positions"""
 
+@api_view(["GET"])
+def positions(request,query:str):
+    if query.lower() == 'all':
+        positions = Position.objects.all()
+    else:
+        positions = Position.objects.filter(title__icontains=query.lower()).exclude(title__iexact=query.lower())
+
+    serializer = PositionSerializer(positions,many=True)
+    return Response(serializer.data)
+
+@api_view(["GET"])
+def position(request,id:int):
+    position = Position.objects.get(id=id)
+    serializer = PositionSerializer(position)
+    return Response(serializer.data)
+
+@api_view(["POST"])
+def addPosition(request):
+    if request.method == "POST":
+        data = request.data
+        title = str(data["position_title"]).lower()
+        try:
+            Position.objects.get(title=title)
+        except ObjectDoesNotExist:
+            Position(title=title).save()
+        positions = Position.objects.all()
+        serializer = PositionSerializer(positions,many=True)
+        return Response(serializer.data)
+
+@api_view(["POST"])
+def assignPos(request,username):
+    data = request.data
+    title = str(data["position_title"]).lower()
+    try:
+        position = Position.objects.get(title=title)
+    except ObjectDoesNotExist:
+        position = Position(title=title)
+        position.save()
+
+    user = User.objects.get(username=username)
+    user.position = position
+    user.save()
+    serializer = PositionSerializer(position)
+    return Response(serializer.data)
+    

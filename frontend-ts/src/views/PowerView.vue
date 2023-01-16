@@ -10,8 +10,8 @@
       </div>
 
       <ConsumptionData
-        v-for="datum in data"
-        :key="datum.id"
+        v-for="(datum, index) in data"
+        :key="index"
         :datum="datum"
         @send="sendDataToChart"
       />
@@ -19,7 +19,7 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import NewPowerConsumption from "@/components/power/NewPowerConsumption.vue";
 
 import ConsumptionChart from "@/components/power/ConsumptionChart.vue";
@@ -33,14 +33,14 @@ const loadConsumptionData = async () => {
   const response = await axios.get("get_power_readings");
   data.value = response.data;
 };
-const _labels = ref([]);
-const _data = ref([]);
-const sendDataToChart = (data) => {
+const _labels = ref([] as Array<any>);
+const _data = ref([] as Array<any>);
+const sendDataToChart = (data: any) => {
   _labels.value = Array.from([data.dt.month, ..._labels.value]);
   _data.value = Array.from([data.kwh_used, ..._data.value]);
 };
 
-onMounted(() => {
-  loadConsumptionData();
+onMounted(async () => {
+  await loadConsumptionData();
 });
 </script>

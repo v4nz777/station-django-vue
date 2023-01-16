@@ -6,12 +6,18 @@
       <NewAds buttonTitle="Add New" />
     </div>
     <div v-if="loaded" class="md:w-full w-screen">
-      <div
-        class="m-5 mb-10 pb-10 h-max gap-4 grid-auto-cols"
-        :class="adsList.length < 4 ? 'w-max' : 'w-full'"
-      >
-        <div v-if="adsList.length" v-for="i in adsList" :key="i.id">
-          <Ad :ad="i" :adscount="adsList.length" />
+      <div class="w-full h-full">
+        <div
+          v-if="adsList.length"
+          class="m-5 mb-10 pb-10 h-max gap-4 grid-auto-cols"
+          :class="adsList.length < 4 ? 'w-max' : 'w-full'"
+        >
+          <Ad
+            v-for="i in adsList"
+            :key="i.id"
+            :ad="i"
+            :adscount="adsList.length"
+          />
         </div>
         <div v-else>
           <p class="text-center font-bold">No advertisement yet!</p>

@@ -20,8 +20,6 @@
 import { userStore } from "@/stores/user";
 import InfoCard from "@/components/InfoCard.vue";
 import ProfileSettings from "@/components/ProfileSettings.vue";
-// import avatar from "../assets/avatar.png"
-import { ref } from "vue";
 
 const userstore = userStore();
 

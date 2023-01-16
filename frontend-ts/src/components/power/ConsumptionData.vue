@@ -12,15 +12,18 @@
       </p>
     </div>
     <div class="w-max flex items-center justify-center">
-      <i v-if="datum.trend === 'up'" class="block w-9 h-9 text-red-500"
-        ><TrendingUpIcon
-      /></i>
-      <i v-else-if="datum.trend === 'down'" class="block w-9 h-9 text-green-500"
-        ><TrendingDownIcon
-      /></i>
-      <i v-else-if="datum.trend === 'same'" class="block w-9 h-9 text-sky-500"
-        ><ArrowNarrowRightIcon
-      /></i>
+      <i v-if="datum.trend === 'up'" class="block w-9 h-9 text-red-500">
+        <TrendingUpIcon />
+      </i>
+      <i
+        v-else-if="datum.trend === 'down'"
+        class="block w-9 h-9 text-green-500"
+      >
+        <TrendingDownIcon />
+      </i>
+      <i v-else-if="datum.trend === 'same'" class="block w-9 h-9 text-sky-500">
+        <ArrowNarrowRightIcon />
+      </i>
 
       <p v-if="datum.trend === 'up'" class="text-lg text-red-500 font-bold">
         {{ datum.consumed }} kwH

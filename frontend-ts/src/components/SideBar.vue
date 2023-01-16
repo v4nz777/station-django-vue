@@ -36,25 +36,31 @@
       >
         <template #icon><HashtagIcon /></template>
       </SidebarItem>
+
+      <SidebarItem
+        title="Production"
+        :links="production"
+        @select="setSelected"
+        :selected="selected === 'Production'"
+      >
+        <template #icon><HashtagIcon /></template>
+      </SidebarItem>
     </div>
   </nav>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { RouterLink } from "vue-router";
-import { userStore } from "@/stores/user";
 import SidebarItem from "./SidebarItem.vue";
 import { HashtagIcon } from "@heroicons/vue/outline";
 
 const emits = defineEmits(["afterset"]);
 
 const selected = ref("");
-const setSelected = (menu) => {
+const setSelected = (menu: string) => {
   selected.value = menu;
   emits("afterset");
 };
-const userstore = userStore();
 const general = [
   {
     name: "Activities",
@@ -63,6 +69,10 @@ const general = [
   {
     name: "Profile",
     location: "/profile",
+  },
+  {
+    name: "People",
+    location: "/people",
   },
 ];
 const traffic = [
@@ -101,7 +111,18 @@ const accounting = [
   },
 ];
 
-const extractPropArray = (objArray) => {
+const production = [
+  {
+    name: "Promos",
+    location: "/promos",
+  },
+];
+
+interface Link {
+  name: string;
+  location: string;
+}
+const extractPropArray = (objArray: Array<Link>) => {
   return objArray.map((prop) => prop.location);
 };
 
@@ -110,6 +131,7 @@ onMounted(() => {
   const trafficLocations = extractPropArray(traffic);
   const technicalLocations = extractPropArray(technical);
   const accountingLocations = extractPropArray(accounting);
+  const productionLocations = extractPropArray(production);
 
   if (generalLocations.includes(location.pathname)) selected.value = "General";
   else if (trafficLocations.includes(location.pathname))
@@ -118,5 +140,7 @@ onMounted(() => {
     selected.value = "Technical";
   else if (accountingLocations.includes(location.pathname))
     selected.value = "Acounting";
+  else if (productionLocations.includes(location.pathname))
+    selected.value = "Production";
 });
 </script>

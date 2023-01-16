@@ -3,55 +3,55 @@
     <hr />
 
     <div
-      v-if="userstore.userDetails.first_name"
+      v-if="userstore.first_name"
       class="flex justify-start text-sm"
     >
       <i class="h-6 w-6 mr-3">
         <IdentificationIcon />
       </i>
-      {{ userstore.userDetails.first_name }}
-      {{ userstore.userDetails.last_name }}
+      {{ userstore.first_name }}
+      {{ userstore.last_name }}
     </div>
-    <div v-if="userstore.userDetails.email" class="flex justify-start text-sm">
+    <div v-if="userstore.email" class="flex justify-start text-sm">
       <i class="h-6 w-6 mr-3">
         <MailOpenIcon />
       </i>
-      <span class="text-gray-700">{{ userstore.userDetails.email }}</span>
+      <span class="text-gray-700">{{ userstore.email }}</span>
     </div>
     <div
-      v-if="userstore.userDetails.address"
+      v-if="userstore.address"
       class="flex justify-start text-sm"
     >
       <i class="h-6 w-6 mr-3">
         <HomeIcon />
       </i>
-      <span class="text-gray-700">{{ userstore.userDetails.address }}</span>
+      <span class="text-gray-700">{{ userstore.address }}</span>
     </div>
     <div
-      v-if="userstore.userDetails.facebook"
+      v-if="userstore.facebook"
       class="flex justify-start text-sm"
     >
       <i class="h-6 w-6 mr-3">
         <GlobeAltIcon />
       </i>
       <span class="text-gray-700"
-        >fb.com/{{ userstore.userDetails.facebook }}</span
+        >fb.com/{{ userstore.facebook }}</span
       >
     </div>
-    <div v-if="userstore.userDetails.mobile" class="flex justify-start text-sm">
+    <div v-if="userstore.mobile" class="flex justify-start text-sm">
       <i class="h-6 w-6 mr-3">
         <DeviceMobileIcon />
       </i>
-      <span class="text-gray-700">{{ userstore.userDetails.mobile }}</span>
+      <span class="text-gray-700">{{ userstore.mobile }}</span>
     </div>
     <div
-      v-if="userstore.userDetails.telephone"
+      v-if="userstore.telephone"
       class="flex justify-start text-sm"
     >
       <i class="h-6 w-6 mr-3">
         <PhoneIcon />
       </i>
-      <span class="text-gray-700">{{ userstore.userDetails.telephone }}</span>
+      <span class="text-gray-700">{{ userstore.telephone }}</span>
     </div>
   </div>
 </template>

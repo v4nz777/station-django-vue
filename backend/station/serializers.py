@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .models import User, History, Activity, MonthlyDTR
+from .models import User, History, Activity, MonthlyDTR, Position
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = "__all__"
+        exclude = ("password",)
 
 class HistorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,4 +19,9 @@ class ActivitySerializer(serializers.ModelSerializer):
 class MonthlyDTRSerializer(serializers.ModelSerializer):
     class Meta:
         model = MonthlyDTR
+        fields = "__all__"
+
+class PositionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Position
         fields = "__all__"
