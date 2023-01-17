@@ -35,18 +35,18 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import axios from "axios";
 import { ref, onMounted, onUnmounted } from "vue";
 import Ad from "@/components/advertisements/Ad.vue";
 import { dtrStore } from "@/stores/dtr";
 import NewAds from "@/components/advertisements/NewAds.vue";
-const filter = ref("all");
-const adsList = ref([]);
+const filter = ref("all" as string);
+const adsList = ref([] as Array<any>);
 const loaded = ref(false);
 const dtrstore = dtrStore();
 
-const getAds = async (_filter) => {
+const getAds = async (_filter:string) => {
   const currentcount = adsList.value.length;
   const response = await axios.get(`ads/${_filter}`);
 
@@ -58,11 +58,12 @@ const getAds = async (_filter) => {
   loaded.value = true;
 };
 
-const watchAds = setInterval(() => {
-  getAds(filter.value);
+const watchAds = setInterval(async () => {
+  await getAds(filter.value);
 }, 3000);
-onMounted(() => {
-  dtrstore.loadDTR();
+onMounted(async () => {
+  await getAds(filter.value)
+  await dtrstore.loadDTR();
   watchAds;
 });
 onUnmounted(() => {

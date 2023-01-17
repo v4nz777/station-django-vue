@@ -37,24 +37,26 @@
         </button>
       </div>
     </div>
-
-    <div
-      class="grid md:grid-cols-4 grid-cols-2 shadow-xl py-4"
-      v-if="viewEquipments"
-    >
-      <Equipment
-        v-for="equipment in group.equipments"
-        :key="equipment.id"
-        @mark="sendToBatch"
-        @unmark="removeFromBatch"
-        @notify="notifOn = true"
-        @unnotify="notifOn = false"
-        :id="equipment"
-        :mother="group"
-        :alled="all"
-        :batched-items="batchedItems"
-      />
-    </div>
+    <Transition>
+      <div
+        class="grid md:grid-cols-4 grid-cols-2 shadow-xl py-4"
+        v-if="viewEquipments"
+      >
+      
+        <Equipment
+          v-for="equipment in group.equipments"
+          :key="equipment.id"
+          @mark="sendToBatch"
+          @unmark="removeFromBatch"
+          @notify="notifOn = true"
+          @unnotify="notifOn = false"
+          :id="equipment"
+          :mother="group"
+          :alled="all"
+          :batched-items="batchedItems"
+        />
+      </div>
+    </Transition>
   </div>
 </template>
 
@@ -65,10 +67,6 @@ import NewInventory from "@/components/inventory/NewInventory.vue";
 import {
   ChevronUpIcon,
   ChevronDownIcon,
-  PlusIcon,
-  ArrowCircleRightIcon,
-  TrashIcon,
-  RefreshIcon,
 } from "@heroicons/vue/solid";
 const viewEquipments = ref(false);
 const all = ref(false);

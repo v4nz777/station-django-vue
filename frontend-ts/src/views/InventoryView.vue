@@ -17,15 +17,18 @@
         ></div>
       </div>
       <div v-else class="w-full">
-        <EquipmentGroup
-          v-if="groups.length"
-          v-for="group in groups"
-          :key="group.id"
-          :group="group"
-          :batched-items="batch"
-          @batched="addSomeInBatch"
-          @unbatched="deleteSomeInBatch"
-        />
+        <div v-if="groups.length">
+          <TransitionGroup>
+            <EquipmentGroup
+              v-for="group in groups"
+              :key="group.id"
+              :group="group"
+              :batched-items="batch"
+              @batched="addSomeInBatch"
+              @unbatched="deleteSomeInBatch"
+            />
+          </TransitionGroup>
+        </div>
         <div v-else class="">
           <p>No groups created yet!</p>
         </div>
