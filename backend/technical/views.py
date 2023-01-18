@@ -30,18 +30,17 @@ Will save equipments info to the database
 @api_view(["POST"])
 def newEquipment(request):
     data = request.data
+    print(data)
     _name = data["name"].lower()
     _brand = data["brand"].lower()
     _model = data["model"]
     _serial_no = data["serial_no"]
     _property_no = data["property_no"]
-    _purchase_cost = int(data["purchase_cost"])
+    _purchase_cost = int(data["purchase_cost"]) if data["purchase_cost"] !='null' else None
     _owner = data["owner"]
     _status = data["status"]
-    _date_acquired = datetime.strptime(data["date_acquired"],"%Y-%m-%d")
+    _date_acquired = datetime.strptime(data["date_acquired"],"%Y-%m-%d") if data["date_acquired"] else None
     _group = data["group"].lower()
-
-
 
     #Get Brand
     try:
