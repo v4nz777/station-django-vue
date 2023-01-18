@@ -18,4 +18,5 @@ frontend/.vscode/
 uploads/*
 !uploads/.gitkeep
 backend/technical/inventory/generated/*
+backend/technical/inventory/__pycache__/
 !backend/technical/inventory/generated/.gitkeep

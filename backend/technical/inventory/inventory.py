@@ -38,7 +38,7 @@ def get_latest_inventory_workbook(filename:str):
     sheet["B4"].value = station.call_sign
     sheet["B5"].value = station.frequency
     sheet["B6"].value = (
-        str(station.station_manager.first_name).title() + ' ' + str(station.station_manager.first_name).title() 
+        str(station.station_manager.first_name).title() + ' ' + str(station.station_manager.last_name).title() 
         if station.station_manager != None else None
     )
     sheet["B7"].value = Equipment.objects.latest('modified').modified.strftime("%m/%d/%Y, %H:%M:%S")

@@ -57,9 +57,9 @@
         @click.self="open = false"
         class="bg-slate-800 bg-opacity-50 flex justify-center items-center absolute top-0 right-0 bottom-0 left-0"
       >
-        <div class="bg-white rounded-md w-adcontract h-5/6 px-5 py-5 relative">
-          <div class="w-full h-max flex justify-around border-b-2 pb-2">
-            <div class="bg-emerald-100 w-80 h-72 relative">
+        <div class="bg-white w-screen rounded-md h-5/6 px-5 py-5 relative">
+          <div class="w-full h-max flex justify-between border-b-2 pb-2 gap-2">
+            <div class="bg-black w-full h-72 relative">
               <div v-if="camera&&!uploadGalleryList.length " class="absolute w-full h-full bg-black">
                 <WebCamUI fullscreenState @photoTaken="snapshot" @exitFullscreen="camera=false"/>
               </div>
@@ -102,9 +102,9 @@
                 </button>
               </div>
             </div>
-            <div class="w-max h-max">
+            <div class="w-32 h-full flex flex-col">
               <div
-                class="bg-emerald-100 w-32 h-60 overflow-y-scroll none-scroll">
+                class="bg-gray-300 w-full h-60 overflow-y-scroll none-scroll">
                 <div
                   v-for="(img, index) in eqGallery"
                   :key="index"

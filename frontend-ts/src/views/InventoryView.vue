@@ -1,16 +1,16 @@
 <template>
   <div class="flex flex-col w-inventory-controls px-5 items-center">
     <div
-      class="md:w-full w-screen h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-md flex justify-between"
+      class="md:w-full w-screen h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-md flex md:flex-row flex-col justify-between"
     >
-      <div class="w-full h-max bg-white rounded-3xl my-5 px-5 py-2 flex">
+      <div class="w-full h-full bg-white rounded-3xl flex items-center justify-between">
         <NewInventory onMain />
         <NewGroup :items="batch" @done="batch = []" />
         <MoveInventory :items="batch" @done="batch = []" />
         <StatusInventory :items="batch" @done="batch = []" />
         <DeleteInventory :items="batch" @done="batch = []" />
       </div>
-      <div class="w-full h-max bg-white rounded-3xl my-5 px-5 py-2 flex justify-end">
+      <div class="w-full h-max bg-white rounded-3xl my-5 px-5 py-2 flex md:justify-end justify-center">
         <button class="w-max h-max bg-primary text-white px-2 py-1 rounded-md font-bold text-sm" @click="download">Export latest</button>
       </div>
     </div>
