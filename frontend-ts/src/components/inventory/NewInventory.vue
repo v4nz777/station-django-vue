@@ -283,7 +283,7 @@ const eqBrand = ref("");
 const eqModel = ref("");
 const eqSerialNo = ref("");
 const eqPropertyNo = ref("");
-const eqCost = ref(0);
+const eqCost = ref(null);
 const eqOwner = ref("");
 const eqStatus = ref("");
 const eqAcquired = ref("");
@@ -335,7 +335,7 @@ const setDefault = () => {
   eqModel.value = "";
   eqSerialNo.value = "";
   eqPropertyNo.value = "";
-  eqCost.value = 0;
+  eqCost.value = null;
   eqOwner.value = "";
   eqStatus.value = "";
   eqAcquired.value = "";
@@ -350,7 +350,7 @@ const setAddNew = () => {
   eqModel.value = "";
   eqSerialNo.value = "";
   eqPropertyNo.value = "";
-  eqCost.value = 0;
+  eqCost.value = null;
   eqOwner.value = "";
   eqStatus.value = "";
   eqAcquired.value = "";
@@ -375,7 +375,7 @@ const submitEquipment = async (andExit:boolean) => {
   fd.append("group", eqGroup.value);
 
   try {
-    const response = await axios.post("add_equipment", fd);
+    await axios.post("add_equipment", fd);
     if (andExit) {
       setDefault();
       open.value = false;

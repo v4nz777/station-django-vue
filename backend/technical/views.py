@@ -10,17 +10,21 @@ from .serializers import (EquipmentSerializer,
                             BrandSerializer,
                             ImageSerializer,
                             PowerConsumptionSerializer,
-                            PowerInterruptionSerializer)
+                            PowerInterruptionSerializer,
+                            InventoryExportSerializer)
 from .models import (Equipment,
                     EquipmentGroup,
                     Brand,
                     Image,
                     PowerInterruption,
-                    PowerConsumption)
+                    PowerConsumption,
+                    InventoryExport)
 
 from station.models import User
 from station.models import Activity
-
+from .inventory.inventory import get_latest_inventory_workbook
+from django.core.files import File
+import os
 
 
 """
@@ -30,18 +34,17 @@ Will save equipments info to the database
 @api_view(["POST"])
 def newEquipment(request):
     data = request.data
+    print(data)
     _name = data["name"].lower()
     _brand = data["brand"].lower()
     _model = data["model"]
     _serial_no = data["serial_no"]
     _property_no = data["property_no"]
-    _purchase_cost = int(data["purchase_cost"])
+    _purchase_cost = int(data["purchase_cost"]) if data["purchase_cost"] !='null'or not data["purchase_cost"] else None
     _owner = data["owner"]
     _status = data["status"]
-    _date_acquired = datetime.strptime(data["date_acquired"],"%Y-%m-%d")
+    _date_acquired = datetime.strptime(data["date_acquired"],"%Y-%m-%d") if data["date_acquired"] else None
     _group = data["group"].lower()
-
-
 
     #Get Brand
     try:
@@ -382,3 +385,23 @@ def getPowerInterruptions(request):
     power_interruptions = PowerInterruption.objects.all().order_by("-interrupted")
     serializer = PowerInterruptionSerializer(power_interruptions, many=True)
     return Response(serializer.data)
+
+
+@api_view(["GET"])
+def generateLatestInventory(request):
+    now = datetime.now().strftime("%m-%d-%Y-T%H-%M-%S")
+    inventory = InventoryExport(name = f"inventory-{now}")
+    inventory.save()
+    file = get_latest_inventory_workbook(inventory.name)
+    with open(file,"rb") as f:
+        inventory.file.save(file,File(f), save=True)
+    inventory.save()
+    serializer = InventoryExportSerializer(inventory)
+    return Response(serializer.data)
+
+    # invoice = Invoice.objects.get(invoice_no=data["invoice_no"])
+
+    # invoice_file = create_invoice(data["invoice_no"])
+    # with open(invoice_file, "rb") as f:
+    #     invoice.file.save(invoice_file,File(f), save=True)
+    # invoice.save()

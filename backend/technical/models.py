@@ -33,15 +33,18 @@ class Equipment(models.Model):
     model = models.CharField(max_length=100, null=True, blank=True)
     serial_no = models.CharField(max_length=100, null=True, blank=True)
     property_no = models.CharField(max_length=100, null=True, blank=True)
-    date_acquired = models.DateTimeField(auto_now_add=False, auto_now=False)
-    purchase_cost = models.IntegerField(default=0)
-    owner = models.CharField(max_length=100, null=False, blank=False)
+    date_acquired = models.DateTimeField(auto_now_add=False, auto_now=False, null=True, blank=True)
+    purchase_cost = models.IntegerField(null=True, blank=True)
+    owner = models.CharField(max_length=100, null=True, blank=True)
     status = models.CharField(max_length=100, null=True, blank=True)
     group = models.ForeignKey(EquipmentGroup, on_delete=models.SET_NULL,null=True, blank=True)
-    version = models.IntegerField(default=0)
+    version = models.IntegerField(null=True, blank=True)
     gallery = models.ManyToManyField(Image, blank=True, related_name="gallery")
     avatar = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, blank=True)
     set = models.ForeignKey(Set, on_delete=models.SET_NULL, null=True, blank=True, related_name="set")
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+
 
     def get_brand_name(self):
         return self.brand.brand_name
@@ -98,11 +101,6 @@ class PowerInterruption(models.Model):
         else:
             return False
     
-    
-
-
-
-
 class PowerConsumption(models.Model):
     date_time = models.DateTimeField(blank=False, null=False)
     meter = models.IntegerField(blank=False, null=False)
@@ -115,6 +113,12 @@ class PowerConsumption(models.Model):
         self.consumed = _pres - _prev
         self.save()
         return self.consumed
+
+class InventoryExport(models.Model):
+    datetime = models.DateTimeField(auto_now_add=True)
+    name = models.CharField(max_length=256, blank=True, null=True)
+    file = models.FileField(upload_to="technical_excel", null=True)
+
         
 
 

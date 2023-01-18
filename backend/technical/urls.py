@@ -22,4 +22,6 @@ urlpatterns = [
     path("new_power_reading",views.newPowerConsumption, name="newPowerConsumption"),
     path("get_power_readings",views.getPowerConsumptions, name="getPowerConsumptions"),
     path("get_power_interruptions",views.getPowerInterruptions, name="getPowerInterruptions"),
+    path("get_latest_inventory",views.generateLatestInventory, name="generateLatestInventory"),
+
 ]

@@ -1,13 +1,18 @@
 <template>
   <div class="flex flex-col w-inventory-controls px-5 items-center">
     <div
-      class="md:w-full w-screen h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-md flex"
+      class="md:w-full w-screen h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-md flex justify-between"
     >
-      <NewInventory onMain />
-      <NewGroup :items="batch" @done="batch = []" />
-      <MoveInventory :items="batch" @done="batch = []" />
-      <StatusInventory :items="batch" @done="batch = []" />
-      <DeleteInventory :items="batch" @done="batch = []" />
+      <div class="w-full h-max bg-white rounded-3xl my-5 px-5 py-2 flex">
+        <NewInventory onMain />
+        <NewGroup :items="batch" @done="batch = []" />
+        <MoveInventory :items="batch" @done="batch = []" />
+        <StatusInventory :items="batch" @done="batch = []" />
+        <DeleteInventory :items="batch" @done="batch = []" />
+      </div>
+      <div class="w-full h-max bg-white rounded-3xl my-5 px-5 py-2 flex justify-end">
+        <button class="w-max h-max bg-primary text-white px-2 py-1 rounded-md font-bold text-sm" @click="download">Export latest</button>
+      </div>
     </div>
 
     <div class="md:w-full w-screen">
@@ -17,15 +22,18 @@
         ></div>
       </div>
       <div v-else class="w-full">
-        <EquipmentGroup
-          v-if="groups.length"
-          v-for="group in groups"
-          :key="group.id"
-          :group="group"
-          :batched-items="batch"
-          @batched="addSomeInBatch"
-          @unbatched="deleteSomeInBatch"
-        />
+        <div v-if="groups.length">
+          <TransitionGroup>
+            <EquipmentGroup
+              v-for="group in groups"
+              :key="group.id"
+              :group="group"
+              :batched-items="batch"
+              @batched="addSomeInBatch"
+              @unbatched="deleteSomeInBatch"
+            />
+          </TransitionGroup>
+        </div>
         <div v-else class="">
           <p>No groups created yet!</p>
         </div>
@@ -67,6 +75,11 @@ const getGroups = async () => {
   loading.value = false;
 };
 const autoUpdateGroups = setInterval(async () => await getGroups(), 1000);
+
+const download = async ()=> {
+  const response = await axios.get("get_latest_inventory")
+  window.open(axios.defaults.baseURL+response.data.file)
+}
 
 onMounted(async () => {
   autoUpdateGroups;

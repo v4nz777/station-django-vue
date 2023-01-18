@@ -60,6 +60,9 @@
         <div class="bg-white rounded-md w-adcontract h-5/6 px-5 py-5 relative">
           <div class="w-full h-max flex justify-around border-b-2 pb-2">
             <div class="bg-emerald-100 w-80 h-72 relative">
+              <div v-if="camera&&!uploadGalleryList.length " class="absolute w-full h-full bg-black">
+                <WebCamUI fullscreenState @photoTaken="snapshot" @exitFullscreen="camera=false"/>
+              </div>
               <img
                 v-if="avatar.file"
                 :src="
@@ -136,16 +139,18 @@
                 </button>
                 <button
                   v-else
-                  class="my-2 mx-auto text-primary flex justify-center items-center"
-                  @click="$refs.uploadGallery.click">
+                  class="w-full my-2 mx-auto text-primary flex justify-center items-center"
+                  @click="($refs.uploadGallery as HTMLInputElement).click">
                   <i class="block h-7 w-7"><UploadIcon /></i>
                 </button>
-                <button
-                  class="my-2 mx-auto text-primary flex justify-center items-center"
-                  @click="$refs.uploadGallery.click">
-                  <i class="block h-7 w-7"><CameraIcon /></i>
-                </button>
-                
+                <div class="my-2 w-full">
+                  <button
+                    class="mx-auto text-primary flex justify-center items-center"
+                    @click="camera = true">
+                    <i class="block h-7 w-7"><CameraIcon /></i>
+                  </button>
+                  
+                </div>
 
                 <div
                   class="absolute bg-white w-72 h-52 right-0 shadow-md grid shadow-emerald-100"
@@ -154,7 +159,7 @@
                     class="p-3 small-grid-auto-cols overflow-scroll none-scroll">
                     <button
                       class="shadow-md w-9 h-12 bg-white border-primary border-2 border-dashed text-primary hover:bg-primary hover:text-white"
-                      @click="$refs.uploadGallery.click">
+                      @click="($refs.uploadGallery as HTMLInputElement).click">
                       <i class="block h-6 w-6 mx-auto text-center">
                         <PlusIcon/>
                       </i>
@@ -260,16 +265,19 @@
   </div>
 </template>
 
-<script setup>
+<script lang="ts" setup>
 import { ref, onMounted, onUnmounted, watch, onBeforeMount } from "vue";
 import { CameraIcon, PlusIcon, UploadIcon } from "@heroicons/vue/solid";
 import axios from "axios";
 import moment from "moment";
 import { userStore } from "@/stores/user";
 import StaticEquipmentPic from "@/assets/equipment.png";
+import { WebCamUI } from "vue-camera-lib";
+
 const baseURL = axios.defaults.baseURL;
 const userstore = userStore();
 const open = ref(false);
+const camera = ref(false)
 const props = defineProps({
   id: Number,
   mother: Object,
@@ -279,46 +287,46 @@ const props = defineProps({
 const emits = defineEmits(["mark", "unmark", "notify", "unnotify"]);
 const marked = ref(false);
 const toggleMark = () => {
-  if (props.batchedItems.includes(props.id)) {
+  if (props.batchedItems?.includes(props.id)) {
     unmark(props.id);
   } else mark(props.id);
 };
-const mark = (itemID) => {
+const mark = (itemID:any) => {
   emits("mark", itemID);
   marked.value = true;
   // if(marked.value)marked.value = false
   // else marked.value = true
 };
-const unmark = (itemID) => {
+const unmark = (itemID:any) => {
   emits("unmark", itemID);
   marked.value = false;
   // if(marked.value)marked.value = false
   // else marked.value = true
 };
 
-const eqPicPreview = ref({});
-const avatar = ref({});
-const eqGallery = ref([]);
-const getPic = async (id) => {
+const eqPicPreview = ref({} as any);
+const avatar = ref({} as any);
+const eqGallery = ref([] as any);
+const getPic = async (id:any) => {
   const response = await axios.get(`equipment_image/${id}`);
   return response.data;
 };
 const loadEqGallery = async () => {
   eqGallery.value = [];
-  await equipment.value.gallery.forEach(async (image) => {
-    const asyncImage = await getPic(image);
+  await equipment.value.gallery.forEach(async (image:any) => {
+    const asyncImage = await getPic(image) as any;
     eqGallery.value.push(asyncImage);
   });
 };
 
-const uploadGallery = ref(null);
-const uploadGalleryList = ref([]);
-const uploadGalleryListForShow = ref([]);
+const uploadGallery = ref<HTMLInputElement|null>(null);
+const uploadGalleryList = ref([] as Array<any>);
+const uploadGalleryListForShow = ref([] as Array<any>);
 const galleryPrepareUpload = async () => {
   //Ready for upload
-  uploadGalleryList.value = [...(await uploadGallery.value.files)];
+  uploadGalleryList.value = [...uploadGallery.value?.files??[]as any];
   //For show before upload
-  uploadGalleryList.value.forEach((item) => {
+  uploadGalleryList.value.forEach((item:any) => {
     const new_ = URL.createObjectURL(item);
     uploadGalleryListForShow.value.push(new_);
   });
@@ -326,8 +334,8 @@ const galleryPrepareUpload = async () => {
 
 const eqGalleryUpload = async () => {
   const fd = new FormData();
-  fd.append("uploader", userstore.user);
-  fd.append("equipment", props.id);
+  fd.append("uploader", userstore.user as string);
+  fd.append("equipment", props.id as any);
   uploadGalleryList.value.forEach((upload) =>
     fd.append("uploads", upload, upload.name)
   );
@@ -337,6 +345,7 @@ const eqGalleryUpload = async () => {
     uploadGallery.value = null;
     uploadGalleryList.value = [];
     uploadGalleryListForShow.value = [];
+    camera.value = false
   } catch (e) {
     console.log(e);
   }
@@ -355,7 +364,7 @@ const setAsDisplay = async () => {
 };
 
 const uploadTabOpen = ref(false);
-const equipment = ref({});
+const equipment = ref({} as any);
 const getEquipment = async () => {
   const response = await axios.get(`equipment/${props.id}`);
   equipment.value = response.data;
@@ -373,12 +382,12 @@ const getGroup = async () => {
   const response = await axios.get(`group/${equipment.value.group}`);
   group.value = response.data;
 };
-const brand = ref({});
+const brand = ref({} as any);
 const getBrand = async () => {
   const response = await axios.get(`brand/${equipment.value.brand}`);
   brand.value = response.data;
 };
-const humanizeDate = (date) => {
+const humanizeDate = (date:any) => {
   if (date !== "") return moment(date).format("LL");
   else return "";
 };
@@ -421,7 +430,7 @@ WATCHER - watches avatar is changed from the database
 WATCHER - if the number of items in group changes, it means there is moved or added.
         - if so, update the item
 */ watch(
-  () => props.mother.equipments.length,
+  () => props.mother?.equipments.length,
   async (newval, oldval) => {
     if (newval !== oldval) {
       await getEquipment();
@@ -435,7 +444,7 @@ WATCHER - if the number of items in group changes, it means there is moved or ad
           avatar.value = {};
           eqPicPreview.value = {};
         }
-        if (props.batchedItems.includes(props.id)) {
+        if (props.batchedItems?.includes(props.id)) {
           marked.value = true;
         } else marked.value = false;
       }, 1000);
@@ -464,12 +473,23 @@ WATCHER - watch for status update
 */
 watch(
   () => equipment.value.status,
-  async (newval, oldval) => {
-    if (props.batchedItems.includes(props.id)) {
+  async () => {
+    if (props.batchedItems?.includes(props.id)) {
       marked.value = true;
     } else marked.value = false;
   }
 );
+
+
+const snapshot = async (data:any)=> {
+  const blob = await data.blob as Blob
+  const datetime = moment().format("MM_DD_YYYY_HH_mm_ss")
+  const file = new File([blob],`snap_${datetime}.jpg`,{
+    type:blob.type
+  })
+  uploadGalleryList.value.push(file)
+  uploadGalleryListForShow.value.push(data.image_data_url);
+}
 
 onMounted(async () => {
   await getEquipment();
@@ -485,7 +505,7 @@ onMounted(async () => {
   emits("unnotify");
 });
 onBeforeMount(async () => {
-  if (props.batchedItems.includes(props.id)) {
+  if (props.batchedItems?.includes(props.id)) {
     marked.value = true;
   }
 });
