@@ -6,6 +6,12 @@ from django.db.models.signals import m2m_changed, post_save, pre_save
 from datetime import timedelta, datetime
 from datetimerange import DateTimeRange
 
+class Station(models.Model):
+    station_name = models.CharField(max_length=256, null=True, blank=True)
+    address = models.CharField(max_length=1000, null=True, blank=True)
+    call_sign = models.CharField(max_length=256, null=True, blank=True)
+    frequency = models.CharField(max_length=256, null=True, blank=True)
+    station_manager = models.ForeignKey("User",on_delete=models.SET_NULL,null=True, blank=True)
 
 class User(AbstractUser):
     gender = models.CharField(max_length=20, null=False, blank=False)
