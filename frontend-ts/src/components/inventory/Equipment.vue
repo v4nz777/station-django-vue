@@ -60,6 +60,9 @@
         <div class="bg-white rounded-md w-adcontract h-5/6 px-5 py-5 relative">
           <div class="w-full h-max flex justify-around border-b-2 pb-2">
             <div class="bg-emerald-100 w-80 h-72 relative">
+              <div v-if="camera&&!uploadGalleryList.length " class="absolute w-full h-full bg-black">
+                <WebCamUI fullscreenState @photoTaken="snapshot" @exitFullscreen="camera=false"/>
+              </div>
               <img
                 v-if="avatar.file"
                 :src="
@@ -136,16 +139,18 @@
                 </button>
                 <button
                   v-else
-                  class="my-2 mx-auto text-primary flex justify-center items-center"
+                  class="w-full my-2 mx-auto text-primary flex justify-center items-center"
                   @click="($refs.uploadGallery as HTMLInputElement).click">
                   <i class="block h-7 w-7"><UploadIcon /></i>
                 </button>
-                <button
-                  class="my-2 mx-auto text-primary flex justify-center items-center"
-                  @click="($refs.uploadGallery as HTMLInputElement).click">
-                  <i class="block h-7 w-7"><CameraIcon /></i>
-                </button>
-                
+                <div class="my-2 w-full">
+                  <button
+                    class="mx-auto text-primary flex justify-center items-center"
+                    @click="camera = true">
+                    <i class="block h-7 w-7"><CameraIcon /></i>
+                  </button>
+                  
+                </div>
 
                 <div
                   class="absolute bg-white w-72 h-52 right-0 shadow-md grid shadow-emerald-100"
@@ -267,9 +272,12 @@ import axios from "axios";
 import moment from "moment";
 import { userStore } from "@/stores/user";
 import StaticEquipmentPic from "@/assets/equipment.png";
+import { WebCamUI } from "vue-camera-lib";
+
 const baseURL = axios.defaults.baseURL;
 const userstore = userStore();
 const open = ref(false);
+const camera = ref(false)
 const props = defineProps({
   id: Number,
   mother: Object,
@@ -337,6 +345,7 @@ const eqGalleryUpload = async () => {
     uploadGallery.value = null;
     uploadGalleryList.value = [];
     uploadGalleryListForShow.value = [];
+    camera.value = false
   } catch (e) {
     console.log(e);
   }
@@ -470,6 +479,17 @@ watch(
     } else marked.value = false;
   }
 );
+
+
+const snapshot = async (data:any)=> {
+  const blob = await data.blob as Blob
+  const datetime = moment().format("MM_DD_YYYY_HH_mm_ss")
+  const file = new File([blob],`snap_${datetime}.jpg`,{
+    type:blob.type
+  })
+  uploadGalleryList.value.push(file)
+  uploadGalleryListForShow.value.push(data.image_data_url);
+}
 
 onMounted(async () => {
   await getEquipment();
