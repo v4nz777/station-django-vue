@@ -1,18 +1,24 @@
 from rest_framework.response import Response
 from django.db import IntegrityError
 from rest_framework.decorators import api_view
-from .models import User, History, Activity, Position
+from .models import User, History, Activity, Position, Station
 from .serializers import (
     UserSerializer,
     HistorySerializer,
     ActivitySerializer,
     MonthlyDTRSerializer,
-    PositionSerializer
+    PositionSerializer,
+    StationSerializer
     )
 import json
 from .dtr import generate_workbook
 from datetime import datetime, tzinfo, date
 from django.core.exceptions import ObjectDoesNotExist
+
+@api_view(["GET"])
+def giveStationInfo(request):
+    station = StationSerializer(Station.objects.first())
+    return Response(station.data)
 
 
 """ ::::::::::::::::::::::::::::::::::::::::
