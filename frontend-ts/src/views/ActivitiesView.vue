@@ -27,6 +27,7 @@
           <p class="mb-2 -mt-2">@{{ useUser.user }}</p>
           <div
             class="bg-primary flex justify-center rounded-sm w-max px-1 py-1"
+            :class="useUser.regular?'bg-primary':'bg-disabled'"
           >
             <p class="text-xs font-bold text-white">
               {{ userPosition.title }}

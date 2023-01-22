@@ -16,6 +16,7 @@ class Station(models.Model):
 class User(AbstractUser):
     gender = models.CharField(max_length=20, null=False, blank=False)
     position = models.ForeignKey('Position', on_delete=models.CASCADE, blank=True, null=True, related_name="pos")
+    regular = models.BooleanField(default=False)
     designation = models.ManyToManyField('Department', blank=True, related_name="departments_assigned")
     address = models.CharField(max_length=100, blank=True)
     mobile = models.CharField(max_length=20, blank=True)

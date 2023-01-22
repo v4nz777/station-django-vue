@@ -404,6 +404,7 @@ def assignPos(request,username):
 
     user = User.objects.get(username=username)
     user.position = position
+    user.regular = True if data["regular"]=="true" else False
     user.save()
     serializer = PositionSerializer(position)
     return Response(serializer.data)

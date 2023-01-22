@@ -13,6 +13,7 @@ export interface Person {
   last_name: string | null;
   email: string | null;
   position: number | null;
+  regular:boolean;
   positionSTR: string | undefined;
   gender: string | null;
   address: string | null;
@@ -52,6 +53,7 @@ export const userStore = defineStore({
       last_name: "",
       email: "",
       position: null,
+      regular:false,
       gender: "",
       address: "",
       mobile: "",
@@ -131,6 +133,8 @@ export const userStore = defineStore({
           this.in_charge_of = userDetails.in_charge_of;
           this.last_login = userDetails.last_login;
           this.positionSTR = userDetails.position_str;
+          this.regular = userDetails.regular;
+
 
           localStorage.setItem("userLoaded", "true");
           this.userLoaded = JSON.parse(
