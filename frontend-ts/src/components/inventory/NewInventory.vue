@@ -266,6 +266,7 @@ import { ref, onMounted } from "vue";
 import { ArchiveIcon, PlusSmIcon } from "@heroicons/vue/solid";
 import axios from "axios";
 import { userStore } from "@/stores/user";
+const emits = defineEmits(["done"])
 
 const props = defineProps({
   onMain: Boolean,
@@ -376,10 +377,13 @@ const submitEquipment = async (andExit:boolean) => {
 
   try {
     await axios.post("add_equipment", fd);
+    
     if (andExit) {
       setDefault();
       open.value = false;
     } else setAddNew();
+
+    emits("done")
   } catch (e) {
     console.log(e);
   }

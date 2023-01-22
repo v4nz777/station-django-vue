@@ -6,8 +6,13 @@
       <div
         v-if="open"
         class="w-full h-full bg-black absolute bg-opacity-25 flex justify-center items-center md:p-5">
-        <div class="bg-white w-full h-full flex flex-col items-center justify-center">
-          <p class="text-sm font-bold w-64 mb-2">Choose or add position...</p>
+        <div class="bg-white w-full h-full flex flex-col gap-2 items-center justify-center">
+          <p class="text-sm font-bold w-64 mb-2 border-b">Choose or add position...</p>
+          <div class="flex w-64">
+            <input type="checkbox" v-model="regular">
+            <p class="text-xs text-primary font-bold">Regular?</p>
+          </div>
+          
           <div class="w-64 bg-white shadow-lg border-primary z-50">
             <div class="flex border-2 border-primary gap-0.5">
               <p class="text-xs font-bold text-primary w-max mr-1">Position:</p>
@@ -62,16 +67,17 @@
             <p class="font-bold text-lg">
               {{
                 person?.first_name.charAt(0).toUpperCase() +
-                person?.first_name.slice(0)
+                person?.first_name.slice(1)
               }}
               {{
                 person?.last_name.charAt(0).toUpperCase() +
-                person?.last_name.slice(0)
+                person?.last_name.slice(1)
               }}
             </p>
             <p class="text-sm">{{ person?.username }}</p>
             <div
-              class="bg-primary font-bold text-white rounded-sm flex justify-center py-0.5 px-1 w-max"
+              class="font-bold text-white rounded-sm flex justify-center py-0.5 px-1 w-max"
+              :class="person?.regular?'bg-orange-500 shadow-md shadow-orange-300':'bg-sky-300 shadow-md'"
             >
               <p class="text-xs">{{ current.title ?? "Unnasigned" }}</p>
             </div>
@@ -121,6 +127,7 @@ const props = defineProps({
 const open = ref(false as boolean);
 const current = ref({} as Position);
 const positions = ref([] as Array<Position>);
+const regular = ref(false as boolean)
 const newPosition = ref({} as Position);
 const valuePosition = ref("" as string);
 const activity = ref("" as string);
@@ -154,6 +161,7 @@ const toggle = async (event: MouseEvent) => {
 const assign = async () => {
   const fd = new FormData();
   fd.append("position_title", valuePosition.value);
+  fd.append("regular",regular.value as any)
   const response = await axios.post(`assign_pos/${props.person?.username}`, fd);
   current.value = response.data;
   positions.value = [] as Array<Position>;

@@ -5,6 +5,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 from datetime import datetime
 
+
+
 from .serializers import (EquipmentSerializer,
                             EquipmentGroupSerializer,
                             BrandSerializer,

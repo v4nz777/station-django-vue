@@ -1,16 +1,16 @@
 <template>
   <div class="flex flex-col w-inventory-controls px-5 items-center">
     <div
-      class="md:w-full w-screen h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-md flex justify-between"
+      class="md:w-full w-screen h-max bg-white rounded-3xl my-5 px-5 py-2 shadow-md flex md:flex-row flex-col justify-between"
     >
-      <div class="w-full h-max bg-white rounded-3xl my-5 px-5 py-2 flex">
-        <NewInventory onMain />
-        <NewGroup :items="batch" @done="batch = []" />
-        <MoveInventory :items="batch" @done="batch = []" />
-        <StatusInventory :items="batch" @done="batch = []" />
-        <DeleteInventory :items="batch" @done="batch = []" />
+      <div class="w-full h-full bg-white rounded-3xl flex items-center justify-between">
+        <NewInventory onMain @done="getGroups"/>
+        <NewGroup :items="batch" @done="batch = [];getGroups()" />
+        <MoveInventory :items="batch" @done="batch = [];getGroups()" />
+        <StatusInventory :items="batch" @done="batch = [];getGroups()" />
+        <DeleteInventory :items="batch" @done="batch = [];getGroups()" />
       </div>
-      <div class="w-full h-max bg-white rounded-3xl my-5 px-5 py-2 flex justify-end">
+      <div class="w-full h-max bg-white rounded-3xl my-5 px-5 py-2 flex md:justify-end justify-center">
         <button class="w-max h-max bg-primary text-white px-2 py-1 rounded-md font-bold text-sm" @click="download">Export latest</button>
       </div>
     </div>
@@ -31,10 +31,11 @@
               :batched-items="batch"
               @batched="addSomeInBatch"
               @unbatched="deleteSomeInBatch"
+              @dbTouched="getGroups"
             />
           </TransitionGroup>
         </div>
-        <div v-else class="">
+        <div v-else>
           <p>No groups created yet!</p>
         </div>
       </div>
@@ -74,7 +75,6 @@ const getGroups = async () => {
   groups.value = response.data;
   loading.value = false;
 };
-const autoUpdateGroups = setInterval(async () => await getGroups(), 1000);
 
 const download = async ()=> {
   const response = await axios.get("get_latest_inventory")
@@ -82,11 +82,9 @@ const download = async ()=> {
 }
 
 onMounted(async () => {
-  autoUpdateGroups;
+  await getGroups();
 });
-onUnmounted(() => {
-  clearInterval(autoUpdateGroups);
-});
+
 </script>
 <style>
 .grid-auto-cols {

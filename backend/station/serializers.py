@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, History, Activity, MonthlyDTR, Position
+from .models import User, History, Activity, MonthlyDTR, Position, Station
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,4 +24,9 @@ class MonthlyDTRSerializer(serializers.ModelSerializer):
 class PositionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Position
+        fields = "__all__"
+
+class StationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Station
         fields = "__all__"

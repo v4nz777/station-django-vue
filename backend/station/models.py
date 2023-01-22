@@ -12,10 +12,13 @@ class Station(models.Model):
     call_sign = models.CharField(max_length=256, null=True, blank=True)
     frequency = models.CharField(max_length=256, null=True, blank=True)
     station_manager = models.ForeignKey("User",on_delete=models.SET_NULL,null=True, blank=True)
+    logo = models.ImageField(upload_to="station")
+    main_font_color = models.CharField(max_length=50, blank=True, null=True)
 
 class User(AbstractUser):
     gender = models.CharField(max_length=20, null=False, blank=False)
     position = models.ForeignKey('Position', on_delete=models.CASCADE, blank=True, null=True, related_name="pos")
+    regular = models.BooleanField(default=False)
     designation = models.ManyToManyField('Department', blank=True, related_name="departments_assigned")
     address = models.CharField(max_length=100, blank=True)
     mobile = models.CharField(max_length=20, blank=True)

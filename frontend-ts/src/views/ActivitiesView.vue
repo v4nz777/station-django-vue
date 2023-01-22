@@ -26,7 +26,8 @@
           </p>
           <p class="mb-2 -mt-2">@{{ useUser.user }}</p>
           <div
-            class="bg-primary flex justify-center rounded-sm w-max px-1 py-1"
+            class="flex justify-center rounded-sm w-max px-1 py-1"
+            :class="useUser.regular?'bg-orange-500 shadow-md shadow-orange-300':'bg-sky-300 shadow-md'"
           >
             <p class="text-xs font-bold text-white">
               {{ userPosition.title }}
