@@ -62,11 +62,11 @@
             <p class="font-bold text-lg">
               {{
                 person?.first_name.charAt(0).toUpperCase() +
-                person?.first_name.slice(0)
+                person?.first_name.slice(1)
               }}
               {{
                 person?.last_name.charAt(0).toUpperCase() +
-                person?.last_name.slice(0)
+                person?.last_name.slice(1)
               }}
             </p>
             <p class="text-sm">{{ person?.username }}</p>
