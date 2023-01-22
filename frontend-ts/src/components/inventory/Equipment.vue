@@ -284,7 +284,7 @@ const props = defineProps({
   batchedItems: Array,
   alled: Boolean,
 });
-const emits = defineEmits(["mark", "unmark", "notify", "unnotify"]);
+const emits = defineEmits(["mark", "unmark", "notify", "unnotify","dbTouched"]);
 const marked = ref(false);
 const toggleMark = () => {
   if (props.batchedItems?.includes(props.id)) {
@@ -346,6 +346,7 @@ const eqGalleryUpload = async () => {
     uploadGalleryList.value = [];
     uploadGalleryListForShow.value = [];
     camera.value = false
+    emits("dbTouched")
   } catch (e) {
     console.log(e);
   }
@@ -391,11 +392,6 @@ const humanizeDate = (date:any) => {
   if (date !== "") return moment(date).format("LL");
   else return "";
 };
-const watchUpdates = setInterval(async () => {
-  await getEquipment();
-  await getBrand();
-  await getGroup();
-}, 5000);
 
 const watchUploadTab = setInterval(() => {
   if (uploadGalleryList.value.length) uploadTabOpen.value = true;
@@ -448,7 +444,6 @@ WATCHER - if the number of items in group changes, it means there is moved or ad
           marked.value = true;
         } else marked.value = false;
       }, 1000);
-      watchUpdates;
     }
     if (newval > oldval) {
       emits("notify");
@@ -492,16 +487,18 @@ const snapshot = async (data:any)=> {
 }
 
 onMounted(async () => {
+  // await getEquipment();
+  // setTimeout(async () => {
+  //   await getBrand();
+  //   await getGroup();
+  //   await loadEqGallery();
+  //   if (equipment.value.avatar) {
+  //     eqPicPreview.value = avatar.value;
+  //   }
+  // }, 1000);
   await getEquipment();
-  setTimeout(async () => {
-    await getBrand();
-    await getGroup();
-    await loadEqGallery();
-    if (equipment.value.avatar) {
-      eqPicPreview.value = avatar.value;
-    }
-  }, 1000);
-  watchUpdates;
+  await getBrand();
+  await getGroup();
   emits("unnotify");
 });
 onBeforeMount(async () => {
@@ -510,7 +507,6 @@ onBeforeMount(async () => {
   }
 });
 onUnmounted(() => {
-  clearInterval(watchUpdates);
   clearInterval(watchUploadTab);
 });
 </script>

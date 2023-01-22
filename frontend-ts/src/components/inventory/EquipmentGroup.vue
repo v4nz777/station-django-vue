@@ -50,6 +50,7 @@
           @unmark="removeFromBatch"
           @notify="notifOn = true"
           @unnotify="notifOn = false"
+          @dbTouched="dbTouched"
           :id="equipment"
           :mother="group"
           :alled="all"
@@ -75,7 +76,8 @@ const props = defineProps({
   group: Object,
   batchedItems: Array,
 });
-const emits = defineEmits(["batched", "unbatched"]);
+const emits = defineEmits(["batched", "unbatched","dbTouched"]);
+const dbTouched = ()=> emits("dbTouched")
 
 // const batch = ref([])
 const sendToBatch = (item) => {
