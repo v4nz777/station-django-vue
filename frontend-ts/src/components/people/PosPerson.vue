@@ -77,7 +77,7 @@
             <p class="text-sm">{{ person?.username }}</p>
             <div
               class="font-bold text-white rounded-sm flex justify-center py-0.5 px-1 w-max"
-              :class="person?.regular?'bg-primary':'bg-disabled'"
+              :class="person?.regular?'bg-orange-500 shadow-md shadow-orange-300':'bg-sky-300 shadow-md'"
             >
               <p class="text-xs">{{ current.title ?? "Unnasigned" }}</p>
             </div>
