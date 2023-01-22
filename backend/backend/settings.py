@@ -19,7 +19,6 @@ import socket
 HOST_NAME = socket.gethostname().lower()
 IPV4_ADDRESS = socket.gethostbyname(HOST_NAME)
 
-print(IPV4_ADDRESS,HOST_NAME)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -34,19 +33,21 @@ SECRET_KEY = 'django-insecure-oc_8+t6feg(gd8-v2c_!=sov-l##1_#bayiu8okd#orrq3%1ta
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [IPV4_ADDRESS, HOST_NAME, "localhost", "yes.local"]
+ALLOWED_HOSTS = [IPV4_ADDRESS, HOST_NAME, "localhost", "yes.local", '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    # 'daphne',
+    # 'channels',
+    'django_eventstream',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
@@ -57,6 +58,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    # 'django_grip.GripMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -87,7 +89,13 @@ CORS_ORIGIN_WHITELIST = [
     'http://' + HOST_NAME,
 ]
 
+#TODO
+EVENTSTREAM_ALLOW_ORIGIN = 'http://localhost:5173'
+EVENTSTREAM_ALLOW_CREDENTIALS = False
+EVENTSTREAM_ALLOW_HEADERS = 'Authorization'
+EVENTSTREAM_STORAGE_CLASS = 'django_eventstream.storage.DjangoModelStorage'
 
+GRIP_PROXY_REQUIRED = False
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -108,6 +116,8 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'backend.wsgi.application'
+ASGI_APPLICATION = 'backend.asgi.application'
+
 
 
 # Database
