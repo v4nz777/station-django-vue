@@ -29,35 +29,67 @@
           ></span>
           {{ group.equipments.length }}
         </span>
-        <button v-if="!viewEquipments" @click="viewEquipments = true">
+        <button v-if="viewEquipments === 'list'" @click="viewEquipments = 'thumbnail'">
           <i class="block h-4 w-4 text-primary"><ChevronDownIcon /></i>
         </button>
-        <button v-else @click="viewEquipments = false">
+        <button v-else @click="viewEquipments = 'list'">
           <i class="block h-4 w-4 text-primary"><ChevronUpIcon /></i>
         </button>
       </div>
     </div>
-    <Transition>
-      <div
-        class="grid md:grid-cols-4 grid-cols-2 shadow-xl py-4"
-        v-if="viewEquipments"
-      >
-      
-        <Equipment
-          v-for="equipment in group.equipments"
-          :key="equipment.id"
-          @mark="sendToBatch"
-          @unmark="removeFromBatch"
-          @notify="notifOn = true"
-          @unnotify="notifOn = false"
-          @dbTouched="dbTouched"
-          :id="equipment"
-          :mother="group"
-          :alled="all"
-          :batched-items="batchedItems"
-        />
-      </div>
-    </Transition>
+  
+    <div
+      class="grid md:grid-cols-4 grid-cols-2 shadow-xl py-4"
+      v-if="viewEquipments === 'thumbnail'"
+    >
+    
+      <Equipment
+        v-for="equipment in group.equipments"
+        :key="equipment.id"
+        @mark="sendToBatch"
+        @unmark="removeFromBatch"
+        @notify="notifOn = true"
+        @unnotify="notifOn = false"
+        @dbTouched="dbTouched"
+        :id="equipment"
+        :mother="group"
+        :alled="all"
+        :batched-items="batchedItems"
+      />
+    </div>
+    
+    <div class="w-full px-3 pb-2 overflow-x-auto" v-else-if="viewEquipments === 'list'">
+      <table class="w-full" v-if="group.equipments.length">
+        <thead>
+          <tr class="text-sm font-bold border-b">
+            <td></td>
+            <td>Item</td>
+            <td>Brand</td>
+            <td>Model</td>
+            <td>SN</td>
+            <td>Owner</td>
+            <td>PN</td>
+            <td>Status</td>
+            <td>Action</td>
+          </tr>
+        </thead>
+        <tbody class="w-full">
+          <EquipmentRow
+            v-for="equipment in group.equipments"
+            :key="equipment.id"
+            @mark="sendToBatch"
+            @unmark="removeFromBatch"
+            @notify="notifOn = true"
+            @unnotify="notifOn = false"
+            @dbTouched="dbTouched"
+            :id="equipment"
+            :mother="group"
+            :alled="all"
+            :batched-items="batchedItems"
+          />
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -65,11 +97,13 @@
 import { ref, watch } from "vue";
 import Equipment from "@/components/inventory/Equipment.vue";
 import NewInventory from "@/components/inventory/NewInventory.vue";
+import EquipmentRow from "@/components/inventory/EquipmentRow.vue";
 import {
   ChevronUpIcon,
   ChevronDownIcon,
+
 } from "@heroicons/vue/solid";
-const viewEquipments = ref(false);
+const viewEquipments = ref('list');
 const all = ref(false);
 const notifOn = ref(false);
 const props = defineProps({
