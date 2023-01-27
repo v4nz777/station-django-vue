@@ -9,8 +9,8 @@
       <i class="h-6 w-6 mr-3">
         <IdentificationIcon />
       </i>
-      {{ userstore.first_name }}
-      {{ userstore.last_name }}
+      {{ titleCaseSentence(userstore.first_name+' '+userstore.last_name) }}
+
     </div>
     <div v-if="userstore.email" class="flex justify-start text-sm">
       <i class="h-6 w-6 mr-3">
@@ -57,6 +57,7 @@
 </template>
 
 <script setup>
+import { titleCaseSentence } from "@/composables/texts";
 import { userStore } from "@/stores/user";
 import {
   HomeIcon,

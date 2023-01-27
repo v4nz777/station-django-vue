@@ -21,6 +21,7 @@ import { userStore } from "@/stores/user";
 import InfoCard from "@/components/InfoCard.vue";
 import ProfileSettings from "@/components/ProfileSettings.vue";
 
+
 const userstore = userStore();
 
 const getImage = () => {
