@@ -22,8 +22,7 @@
               <img :src="userstore.avatar" class="object-cover w-full h-full" />
             </div>
             <span class="text-gray-900 text-sm font-light"
-              >{{ userstore.first_name }}
-              {{ userstore.last_name }}</span
+              >{{ titleCaseSentence(userstore.first_name+' '+userstore.last_name) }}</span
             >
             <DTRTimer />
           </div>
@@ -41,6 +40,7 @@ import DTRTimer from "@/components/DTRTimer.vue";
 import { userStore } from "../stores/user";
 import { ref } from "vue";
 import SideBar from "@/components/SideBar.vue";
+import { titleCaseSentence } from "@/composables/texts";
 
 const userstore = userStore();
 const open = ref(false);

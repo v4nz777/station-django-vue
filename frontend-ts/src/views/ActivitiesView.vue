@@ -15,14 +15,7 @@
             @click="router.push('profile/')"
             v-if="useUser.first_name && useUser.last_name"
           >
-            {{
-              useUser.first_name.charAt(0).toUpperCase() +
-              useUser.first_name.slice(1)
-            }}
-            {{
-              useUser.last_name.charAt(0).toUpperCase() +
-              useUser.last_name.slice(1)
-            }}
+            {{ titleCaseSentence(useUser.first_name + ' ' + useUser.last_name) }}
           </p>
           <p class="mb-2 -mt-2">@{{ useUser.user }}</p>
           <div
@@ -30,7 +23,7 @@
             :class="useUser.regular?'bg-orange-500 shadow-md shadow-orange-300':'bg-sky-300 shadow-md'"
           >
             <p class="text-xs font-bold text-white">
-              {{ userPosition.title }}
+              {{ titleCaseSentence(userPosition.title) }}
             </p>
           </div>
         </div>
@@ -83,6 +76,7 @@ import { activityStore } from "@/stores/activity";
 import { onMounted, onUnmounted, ref, watch, onUpdated } from "vue";
 import { getPosition } from "@/composables/userdetails";
 import type { Position } from "@/composables/userdetails";
+import { titleCaseSentence } from "@/composables/texts";
 
 const useUser = userStore();
 const activitystore = activityStore();

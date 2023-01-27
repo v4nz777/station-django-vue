@@ -54,7 +54,6 @@ const loadStationInfo = async ()=> {
   station.value = response.data
   const title = document.querySelector('#stationTitle') as HTMLElement
   title.style.color = station.value.main_font_color??'white'
-  
 }
 
 onMounted(async() => {

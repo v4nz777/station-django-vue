@@ -43,7 +43,7 @@
               <li v-for="position in positions" :key="position.id"
                 @click="valuePosition = position.title;positions = [];"
                 class="text-sm text-primary hover:bg-primary hover:text-white cursor-pointer" >
-                {{ position.title }}
+                {{ titleCaseSentence(position.title) }}
               </li>
             </ul>
           </div>
@@ -65,21 +65,14 @@
           </div>
           <div>
             <p class="font-bold text-lg">
-              {{
-                person?.first_name.charAt(0).toUpperCase() +
-                person?.first_name.slice(1)
-              }}
-              {{
-                person?.last_name.charAt(0).toUpperCase() +
-                person?.last_name.slice(1)
-              }}
+              {{ titleCaseSentence(person?.first_name + ' ' +  person?.last_name) }}
             </p>
             <p class="text-sm">{{ person?.username }}</p>
             <div
               class="font-bold text-white rounded-sm flex justify-center py-0.5 px-1 w-max"
               :class="person?.regular?'bg-orange-500 shadow-md shadow-orange-300':'bg-sky-300 shadow-md'"
             >
-              <p class="text-xs">{{ current.title ?? "Unnasigned" }}</p>
+              <p class="text-xs">{{ titleCaseSentence(current.title ?? "unnasigned") }}</p>
             </div>
           </div>
         </div>
@@ -118,6 +111,7 @@ import axios from "axios";
 import staticAvatar from "@/assets/avatar.png";
 import { getPosition, useActivityStatus } from "@/composables/userdetails";
 import type { Position } from "@/composables/userdetails";
+import { titleCaseSentence } from "@/composables/texts";
 
 const props = defineProps({
   person: Object,
