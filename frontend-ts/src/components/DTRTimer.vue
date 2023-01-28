@@ -41,9 +41,6 @@ const loginToDTR = async () => {
       username: userstore.user,
     });
     logged.value = response.data.is_logged;
-    // localStorage.removeItem("dtrIsLogged")
-    // localStorage.setItem("dtrIsLogged", response.data.is_logged)
-    // userstore.dtrIsLoggedUpdate()
     await dtrstore.loadDTR();
     dtrstore.watchTimer();
   }

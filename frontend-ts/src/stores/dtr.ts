@@ -70,16 +70,17 @@ export const dtrStore = defineStore({
           "November",
           "December",
         ];
-        const curr_year = current.getFullYear();
-        const curr_month = all_months[current.getMonth()];
-        const curr_date = ("0" + current.getDate()).slice(-2);
+        const currentYear = current.getFullYear();
+        const currentMonth = all_months[current.getMonth()];
+        const currentDate = ("0" + current.getDate()).slice(-2);
+        
 
         if (localStorage.getItem("dtrCurrent")) {
           this.pathForCurrent = localStorage.getItem("dtrCurrent") as string;
         } else {
           localStorage.setItem(
             "dtrCurrent",
-            `/get_history/${userstore.user}/${curr_year}/${curr_month}/${curr_date}/`
+            `/get_history/${userstore.user}/${currentYear}/${currentMonth}/${currentDate}/`
           );
           this.pathForCurrent = localStorage.getItem("dtrCurrent") as string;
         }
