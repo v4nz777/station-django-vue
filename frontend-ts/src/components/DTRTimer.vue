@@ -29,8 +29,14 @@
 <script setup>
 import { dtrStore } from "@/stores/dtr";
 import { userStore } from "@/stores/user";
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted } from "vue";
+import { sendActivity } from '@/composables/activities'
 import axios from "axios";
+
+const props = defineProps({
+  socket:Object
+})
+
 const userstore = userStore();
 const dtrstore = dtrStore();
 const logged = ref(false);
@@ -43,6 +49,7 @@ const loginToDTR = async () => {
     logged.value = response.data.is_logged;
     await dtrstore.loadDTR();
     dtrstore.watchTimer();
+    sendActivity(props.socket,"logged in!")
   }
 };
 const logoutToDTR = async () => {
@@ -53,8 +60,10 @@ const logoutToDTR = async () => {
       date: dtrstore.date,
       year: dtrstore.year,
     });
+    const total = dtrstore.formatLogTimer
     logged.value = response.data.is_logged;
     dtrstore.clear();
+    sendActivity(props.socket,`logged out! (total: ${total})`)
   }
 };
 

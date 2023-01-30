@@ -26,5 +26,4 @@ app.use(VueCameraLib);
 
 
 
-
 app.mount("#app");

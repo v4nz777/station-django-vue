@@ -6,6 +6,7 @@ from django.db.models.signals import m2m_changed, post_save, pre_save
 from datetime import timedelta, datetime
 from datetimerange import DateTimeRange
 
+
 class Station(models.Model):
     station_name = models.CharField(max_length=256, null=True, blank=True)
     address = models.CharField(max_length=1000, null=True, blank=True)
@@ -14,6 +15,8 @@ class Station(models.Model):
     station_manager = models.ForeignKey("User",on_delete=models.SET_NULL,null=True, blank=True)
     logo = models.ImageField(upload_to="station")
     main_font_color = models.CharField(max_length=50, blank=True, null=True)
+
+
 
 class User(AbstractUser):
     gender = models.CharField(max_length=20, null=False, blank=False)
@@ -67,6 +70,7 @@ class Activity(models.Model):
         self.subject = subject
         self.other = kwargs
         self.save()
+        return self
 
     def save(self, *args, **kwargs):
         self.username = self.user.username

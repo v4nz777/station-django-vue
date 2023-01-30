@@ -22,7 +22,6 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
-import django_eventstream
 
 
 urlpatterns = [
@@ -31,8 +30,6 @@ urlpatterns = [
     path("",include("office.urls")),
     path("",include("technical.urls")),
     path("",include("transmitter.urls")),
-    path("events/<channels>",include(django_eventstream.urls),{ 'channels': ['test','groups','data-sent'] }),
-
     path("login/", TokenObtainPairView.as_view(), name="login"),
     path("refresh/", TokenRefreshView.as_view(), name="refresh"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
