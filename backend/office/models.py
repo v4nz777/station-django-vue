@@ -9,24 +9,13 @@ class Ad(models.Model):
     category = models.ForeignKey('Adcategory', on_delete=models.SET_NULL, blank=True, null=True)
     versions = models.ManyToManyField("AdVersion", related_name="ads")
     ad_avatar = models.ImageField(upload_to="ads_avatars", blank=True, null=True)
-    # current_ver = models.CharField(max_length=50, blank=False)
     current_ver = models.IntegerField(blank=False, null=True)
     
     def __str__(self):
         return f"{self.title} #{self.contract}"
-
-
-class AdVersion(models.Model):
-    # title = models.CharField(max_length=50, unique=True, blank=False)
-    # contract = models.CharField(max_length=50, unique=True, blank=False)
-    # type = models.CharField(max_length=50, unique=False, blank=False)
-    # bo_number = models.CharField(max_length=50, unique=False, blank=True)
-    # advertiser = models.ForeignKey('Advertiser', on_delete=models.SET_NULL, blank=True, null=True)
-    # category = models.ForeignKey('Adcategory', on_delete=models.SET_NULL, blank=True, null=True)
-    # ad_avatar = models.ImageField(upload_to="ads_avatars", blank=True, null=True)
     
+class AdVersion(models.Model):
     name = models.CharField(max_length=50, blank=False)
-    # version = models.CharField(max_length=50, blank=False)
     version = models.IntegerField(blank=False)
     running = models.BooleanField(default=True)
     amount = models.FloatField(blank=False)
@@ -85,7 +74,6 @@ class Adcategory(models.Model):
 class Invoice(models.Model):
     advertiser = models.ForeignKey(Advertiser, on_delete=models.SET_NULL, null=True)
     from_contract = models.CharField(max_length=100, blank=False)
-    # account_executive = models.ForeignKey('station.User', on_delete=models.SET_NULL, null=True)
     account_executive = models.CharField(max_length=200)
     for_ads = models.ManyToManyField(AdVersion, blank=True)
     invoice_date = models.DateField(null=True, blank=True)
@@ -142,16 +130,18 @@ class Package(models.Model):
         return self.name
 
     def verify(self, name, description, price, pricing, duration_of_pricing, spots_per_day, aob_per_day, tc_per_day, ss_per_day,material_duration):
-        _name = name == self.name
-        _description = description == self.description
-        _price = price == self.price
-        _pricing = pricing == self.pricing
-        _duration_of_pricing = duration_of_pricing == self.duration_of_pricing
-        _spots_per_day = spots_per_day == self.spots_per_day
-        _aob_per_day = aob_per_day == self.aob_per_day
-        _tc_per_day = tc_per_day == self.tc_per_day
-        _ss_per_day = ss_per_day == self.ss_per_day
-        _material_duration = material_duration == self.material_duration
+        verification = (
+            name == self.name and
+            description == self.description and
+            price == self.price and
+            pricing == self.pricing and
+            duration_of_pricing == self.duration_of_pricing and
+            spots_per_day == self.spots_per_day and
+            aob_per_day == self.aob_per_day and
+            tc_per_day == self.tc_per_day and
+            ss_per_day == self.ss_per_day and
+            material_duration == self.material_duration
+        )
 
-        return _name and _description and _price and _pricing and _duration_of_pricing and _spots_per_day and _aob_per_day and _tc_per_day and _ss_per_day and _material_duration
+        return verification
     

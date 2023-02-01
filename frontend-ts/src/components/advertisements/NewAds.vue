@@ -434,6 +434,7 @@ const props = defineProps({
   buttonTitle: String,
 });
 
+const emits = defineEmits(["submitted"])
 const open = ref(false);
 const parentIsHovered = ref(false);
 const outer = ref("");
@@ -646,8 +647,14 @@ const submitNewAds = async () => {
   const response = await axios.post("/new_ads", fd);
   if (response.status === 200) {
     open.value = false;
+
+    emits("submitted",response.data)
     setDefault();
   }
+  
+  
+  
+
 };
 onMounted(async () => {
   validityWatcher;
