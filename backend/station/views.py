@@ -1,14 +1,14 @@
 from rest_framework.response import Response
 from django.db import IntegrityError
 from rest_framework.decorators import api_view
-from .models import User, History, Activity, Position, Station
+from .models import User, History, Position, Station, Activity
 from .serializers import (
     UserSerializer,
     HistorySerializer,
-    ActivitySerializer,
     MonthlyDTRSerializer,
     PositionSerializer,
-    StationSerializer
+    StationSerializer,
+    ActivitySerializer
     )
 import json
 from .dtr import generate_workbook
@@ -67,8 +67,6 @@ def createUser(request):
             facebook=facebook.lower(),
         )
         registration.save()
-        activity = Activity()
-        activity.new_activity(username.lower(), "joined the station", type="registration")
 
         message = "Registration succeeded!"
         print(message)
@@ -139,16 +137,11 @@ def inDTR(request):
         try:
             _all = History.objects.filter(user=user, month=month, date=date, year=year)
             current = History.objects.get(user=user, month=month, date=date, year=year)
-            if current in _all:
-                activity = Activity()
-                activity.new_activity(username.lower(), "relogged in", type="relogin")
-
 
         except ObjectDoesNotExist:
             create_instance = History(user=user, time_in_datetime=now)
             create_instance.save()
-            activity = Activity()
-            activity.new_activity(username.lower(), "logged in", type="login")
+
    
         
         return Response({"is_logged":user.is_logged})
@@ -195,8 +188,6 @@ def outDTR(request):
         user.last_login = now
         user.save()
 
-        activity = Activity()
-        activity.new_activity(username.lower(), "logged out", type="logout")
         return Response({"is_logged": user.is_logged})
     else:
         return Response({"is_logged": user.is_logged})
@@ -281,9 +272,6 @@ def changeAvatar(request, username):
     user.avatar = image
     user.save()
 
-    pronoun = "his" if user.gender == "male" else "her"
-    activity = Activity()
-    activity.new_activity(username.lower(), f"changed {pronoun} avatar", type="profile_modify")
     response = {
         "message": "Avatar updated!",
         "new_avatar": user.avatar.url
@@ -329,26 +317,6 @@ def getFilteredActivity(request, filter):
     else:
         return Response({"message": f"no assigned filter: '{filter}' yet"})
     #TODO elifs new filter
-
-""" ::::::::::::::::::::::::::::::::::::::::
-    Function: Add new activity called Brownouts
-    API route: "/activities/add/"
-    Output: Single object response
-
-    """
-@api_view(["POST"])
-def postNewBrownOut(request):
-    data = request.data
-    activity = Activity()
-    activity.new_activity(
-        data["author"].lower(),
-        "reported a brownout incident",
-        type="brownout",
-        interrupted=data["interrupted"],
-        restored=data["restored"],
-        duration=data["duration"]
-        )
-    return Response({"message": "success"})
 
 
 """ ::::::::::::::::::::::::::::::::::::::::

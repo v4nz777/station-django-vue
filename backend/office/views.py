@@ -19,6 +19,7 @@ from .serializers import (
     InvoiceSerializer,
     PackageSerializer,
     )
+from .helpers import writeAdtoDatabase
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
 import json
@@ -28,10 +29,7 @@ from django.core.files import File
 from django.db.models import Q
 
 
-"""
-    :: Get all ads with filter
-    :: api: "/ads/<str:filter>"
-"""
+
 @api_view(["GET"])
 def getAds(request,filter):
     if filter.lower() == "all":
@@ -41,147 +39,18 @@ def getAds(request,filter):
 
 @api_view(["GET"])
 def getAdVersion(request,contract,version):
+    
     ad = Ad.objects.get(contract=contract)
-    version = ad.versions.get(version=version)
+    version = ad.versions.get(version=int(version))
 
     serializer = AdVersionSerializer(version)
     return Response(serializer.data)
 
-"""
-    :: Create a new ad, or add new version  to an ad
-"""
 @api_view(["POST"])
 def submitAd(request):
     data = request.data
-    adtype = data["type"]
-    adtitle = data["title"]
-    advertiser = None
-    revision = False
-    package = None
-
-    try:
-        package = Package.objects.get(name=data["ad_package"])
-    except ObjectDoesNotExist:
-        package = None
-
-    """ Make new advertiser if not yet existed """
-    try:
-        advertiser = Advertiser.objects.get(name=data["advertiser"])
-    except ObjectDoesNotExist:
-        new_advertiser = Advertiser(
-            name = data["advertiser"]
-        ).save()
-        advertiser = Advertiser.objects.get(name=data["advertiser"])
-
-    """ Query for existing Ad, else make a fresh Ad """
-    try:
-        ad = Ad.objects.get(contract=data["contract"])
-        revision = True
-    except ObjectDoesNotExist:
-        new_ad = Ad(
-            title = adtitle,
-            contract = data["contract"],
-            type = data["type"],
-            bo_number = data["bo_number"],
-            advertiser = advertiser,
-        ).save()
-        ad = Ad.objects.get(contract=data["contract"])
-
-    """ Create new version """
-    version = AdVersion(
-        name = f"{adtitle} {ad.versions.count() + 1}",
-        version = ad.versions.count() + 1,
-        pricing = data["pricing"],
-        ex_deal = data["ex_deal"][0],
-        amount = float(data["amount"]),
-        package = package,
-        broadcast_start = data["broadcast_start"],
-        broadcast_end = data["broadcast_end"],
-        ad_spots = int(data["ad_spots"]),
-        schedule = data["schedule"],
-        has_tagline = data["has_tagline"][0],
-        aob_spots = int(data["aob_spots"]),
-        tc_spots = int(data["tc_spots"]),
-        ss_spots = int(data["ss_spots"]),
-        aob_sched = data["aob_sched"],
-        tc_sched = data["tc_sched"],
-        ss_sched = data["ss_sched"],
-        account_executive = data["account_executive"],
-        material_duration = data["material_duration"]
-    )
-    version.save()
-
-    """Upload files then add to files(ManytoMany) field of this Ad"""
-    audio_files = []
-
-    if revision:
-        print(data["existing_files"].split(","))
-        for old_file_id in data["existing_files"].split(","):
-
-            # if old_file_id not in data.getlist("files_remove") and old_file_id != "":
-            if old_file_id not in data["files_remove"].split(",") and old_file_id != "":
-                old_file = AudioFile.objects.get(id=old_file_id)
-                audio_files.append(old_file)
-                version.files.add(old_file)
-
-
-    for file in data.getlist("files"):
-        try:
-            create_file = AudioFile(
-                filename = file.name,
-                from_ad = version,
-                file = file
-            ).save()
-        except IntegrityError:
-            pass # dont create if already existed // same filename
-        
-        # query the file and list to Ads
-        this = AudioFile.objects.get(filename=file.name, from_ad = version)
-        audio_files.append(this)
-        version.files.add(this)
-        version.save()
-    
-    """ add this version to Ad """
-    ad.versions.add(version)
-
-    """ set current version to use """
-    ad.current_ver = version.version
-    ad.save()
-
-    """Add this ad to version"""
-    if package:
-        package.ads.add(ad)
-        package.save()
-
-
-    """Add to activities"""
-    """ Activity types:
-        ⭐ "ads"            -> if new ads
-        ⭐ "ad_revisions"   -> if not new ads
-    """
-    activity = Activity()
-    if not revision:
-        activity.new_activity(
-            data["uploader"],
-            f"added a new {adtype} ad",
-            type="ads",
-            title=data["title"],
-            contract=data["contract"],
-            audio_files=[i.id for i in audio_files],
-            duration=data["duration"]
-            )
-    else:
-        _contract = data["contract"]
-        
-        activity.new_activity(
-            data["uploader"],
-            f"made changes to ad {_contract}",
-            type="ad_revisions",
-            title=data["title"],
-            contract=data["contract"],
-            duration=data["duration"]
-            )
-    return Response({"message":"Posted!"})
+    response = writeAdtoDatabase(data)
+    return Response(response)
 
 @api_view(["PUT"])
 def changeVersion(request):
@@ -201,7 +70,6 @@ def compareVersions(request, contract, x ,y):
 
     x_serializer = AdVersionSerializer(verX)
     y_serializer = AdVersionSerializer(verY)
-
 
     return Response({
         "x": x_serializer.data,
@@ -483,3 +351,6 @@ def totalSales(request,filter):
         "total":total,
         "items": items
     })
+
+
+    

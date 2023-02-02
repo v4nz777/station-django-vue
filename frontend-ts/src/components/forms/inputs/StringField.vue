@@ -12,8 +12,10 @@
     <input
       type="text"
       v-model="value"
-      class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
+      class="font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
+      :class="disabled?'bg-disabled':'bg-secondary focus-visible:outline-2 focus-within:outline-primary'"
       :placeholder="placeholder"
+      :disabled="disabled"
       @keyup="verify"
       @change="decide"
     />
@@ -43,6 +45,7 @@ const props = defineProps({
   querySecondary: String,
   end: Boolean, //End of the  batch. Has border at bottom
   placeholder: String,
+  disabled: Boolean
 });
 const emits = defineEmits(["done"]);
 const error = ref("");

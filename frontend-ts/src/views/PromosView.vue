@@ -3,49 +3,33 @@
     <div class="flex">
       <img :src="onGoing" alt="" class="md:w-24 h-24 w-max animate-bounce">
       <p class="font-bold text-3xl w-full h-full text-center self-baseline">Build ongoing...</p>
-      
+      <button @click="trying">click</button>
+      <div>{{ activityData }}</div>
     </div>
     
   </div>
 </template>
 <script setup lang="ts">
-  import { onMounted } from "vue";
+  import { onMounted,onUnmounted } from "vue";
   import onGoing from "@/assets/ongoing.png"
-  
-  // const socket = new WebSocket("wss://127.0.0.1:8000")
-  // console.log(socket)
-
+  import { activityData, openActivitiesConnection, sendActivity } from "@/composables/activities"
   
 
+  let socket:WebSocket;
 
+  const trying = ()=> {
+    sendActivity(socket, "new obj")
+    console.log(activityData.value)
+  }
+  
   onMounted(async ()=> {
-
-    const sse = new EventSource("http://127.0.0.1:8000/events/data-sent")
-
-    
-    // sse.addEventListener('stream-open',(event)=> {
-    //   console.log(event)
-    // })
-    // sse.addEventListener('message',(event)=> {
-    //   console.log(event)
-    // })
-
-    sse.addEventListener('data-sent',(event)=> {
-      console.log(event)
-    })
-    // sse.addEventListener('data-sent', (event)=> {
-    //   console.log(event)
-    // })
- 
-    
-    
-    
-    
+      socket = openActivitiesConnection()
   })
-  
-  // sse.onopen((event:any) => {
-  //   console.log(event)
-  // })
+
+  onUnmounted(() => {
+    socket.close()
+  })
+
  
   
 </script>

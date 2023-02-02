@@ -1,657 +1,219 @@
 <template>
   <div class="w-full h-5/6 overflow-y-scroll none-scroll pt-3">
     <!-- :Title: -->
-    <div class="my-3 w-96 text-right px-11">
-      <label
-        for="adTitle"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1 bg-gray-500"
-        >Title:
-      </label>
-      <input
-        type="text"
-        v-model="adTitle"
-        class="bg-gray-300 focus-visible:outline-2 focus-within:outline-gray-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-gray-900 focus-within:bg-gray-100"
-        disabled
-      />
-    </div>
+    <StringField
+      @done="setAdTitle"
+      :default="adTitle"
+      title="Title"
+      type="text"
+      disabled
+    />
 
     <!-- :Advertiser: -->
-    <div class="my-3 w-96 text-right px-11">
-      <label
-        for="adAdvertiser"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1 bg-gray-500"
-        >Advertiser:
-      </label>
-      <div class="inline-block relative">
-        <input
-          type="text"
-          v-model="adAdvertiser"
-          class="bg-gray-300 focus-visible:outline-2 focus-within:outline-gray-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-gray-900 focus-within:bg-gray-100"
-          disabled
-        />
-      </div>
-    </div>
+    <StringField
+      @done="setAdvertiser"
+      :default="adAdvertiser"
+      title="Advertiser"
+      type="text"
+      disabled
+      end
+    />
 
     <!-- :Type: -->
-    <div class="my-3 w-96 text-right px-11">
-      <label
-        for="adType"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        :class="adType ? 'bg-gray-500' : 'bg-gray-300'"
-        >Type:
-      </label>
-      <select
-        v-model="adType"
-        class="bg-gray-300 focus-visible:outline-2 focus-within:outline-gray-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-gray-900 focus-within:bg-gray-100"
-        disabled
-      >
-        <option value="local">Local</option>
-        <option value="national">National</option>
-      </select>
-    </div>
+    <StringField
+      @done="setAdType"
+      :default="adType"
+      title="Type"
+      type="text"
+      disabled
+    />
 
     <!-- :Contract: -->
-    <div class="my-3 w-96 text-right px-11">
-      <label
-        for="adContract"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        :class="adContract ? 'bg-gray-500' : 'bg-gray-300'"
-        >{{ adType === "local" ? "Contract:" : "IM:" }}</label
-      >
-      <input
-        type="text"
-        v-model="adContract"
-        class="bg-gray-300 focus-visible:outline-2 focus-within:outline-gray-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-gray-900 focus-within:bg-gray-100"
-        disabled
-      />
+    <StringField
+      @done="setAdContract"
+      :default="adContract"
+      :title="adType === 'local' ? 'Contract' : 'IM'"
+      queryURL="ads/all"
+      queryKey="contract"
+      :end="adType === 'local'"
+      type="text"
+      disabled
+    />
 
-      <hr class="my-5" v-if="adType === 'local'" />
-    </div>
     <!-- :BO Number: -->
-    <div class="my-3 w-96 text-right px-11" v-if="adType == 'national'">
-      <label
-        for="adBONum"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1 bg-gray-500"
-        >B.O. Number:
-      </label>
-      <input
-        type="text"
-        v-model="adBONum"
-        class="bg-gray-300 focus-visible:outline-2 focus-within:outline-gray-500 font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-gray-900 focus-within:bg-gray-100"
-        disabled
-      />
+    <StringField
+      v-if="adType == 'national'"
+      @done="setBO"
+      :default="adBONum"
+      title="BO"
+      :end="adType === 'national'"
+      type="text"
+    />
 
-      <hr class="my-5" v-if="adType === 'national'" />
-    </div>
     <!-- :Ex Deal: -->
-    <div class="my-3 w-96 text-right px-11">
-      <label for="exDeal" class="text-primary px-2 py-1 w-full text-sm mr-1"
-        >This is an ex-deal
-      </label>
-      <input
-        id="exDeal"
-        type="checkbox"
-        v-model="exDeal"
-        class="w-4 h-4 border-primary align-bottom"
-      />
-    </div>
+    <CheckBox
+      @done="setExDeal"
+      :default="exDeal"
+      title="This is an ex-deal"
+    />
+
     <!-- :Pricing: -->
-    <div class="my-3 w-96 text-right px-11">
-      <label
-        for="adPricing"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        :class="
-          adPricing ? 'bg-primary text-white' : 'bg-secondary text-primary'
-        "
-        >Pricing:
-      </label>
-      <select
-        name=""
-        id="adPricing"
-        v-model="adPricing"
-        class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
-        @change="summarizeBroadcast"
-      >
-        <option value="monthly">Monthly</option>
-        <option value="daily">Daily</option>
-        <option value="fixed">Fixed</option>
-      </select>
-      <div class="inline-block ml-1" v-if="adPricing">
-        <i class="inline-block w-4 h-4 text-primary"><CheckCircleIcon /></i>
-      </div>
-    </div>
+    <Select
+      @done="setAdPricing"
+      :default="adPricing"
+      title="Pricing"
+      :offlineOptions="['package_deal', 'monthly', 'daily']"
+    />
+
+    <!-- :Package: -->
+    <SearchOrAdd
+      v-if="adPricing === 'package_deal'"
+      @done="setPackage"
+      :default="adPackage"
+      title="Package"
+      searchURL="load_packages/"
+      searchFilter="all"
+    />
+
     <!-- :Amount: -->
-    <div class="my-3 w-96 text-right px-11" v-if="adPricing">
-      <label
-        for="adAmount"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        v-if="adPricing === 'monthly'"
-        :class="
-          adAmount ? 'bg-primary text-white' : 'bg-secondary text-primary'
-        "
-        >₱ per month:
-      </label>
-      <label
-        for="adAmount"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        v-else-if="adPricing === 'daily'"
-        :class="
-          adAmount ? 'bg-primary text-white' : 'bg-secondary text-primary'
-        "
-        >₱ per day:
-      </label>
-      <label
-        for="adAmount"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        v-else-if="adPricing === 'fixed'"
-        :class="
-          adAmount ? 'bg-primary text-white' : 'bg-secondary text-primary'
-        "
-        >₱ in total:
-      </label>
-      <input
-        type="text"
-        v-model="adAmount"
-        class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
-        @keyup="summarizeBroadcast"
-        @change="amountCheck"
-      />
-      <div class="inline-block ml-1" v-if="isAmountDecided">
-        <i class="inline-block w-4 h-4 text-primary" v-if="isAmountValid"
-          ><CheckCircleIcon
-        /></i>
-        <i class="inline-block w-4 h-4 text-red-500" v-if="!isAmountValid"
-          ><XCircleIcon
-        /></i>
-      </div>
-      <div class="text-xs text-red-500 text-left mx-5">
-        {{ amountError }}
-      </div>
-    </div>
+    <NumberField
+      v-if="adPricing"
+      @done="setAdAmount"
+      :default="adAmount"
+      title="₱ Amount"
+      :disabled="adPricing === 'package_deal'"
+    />
+
     <!-- :Broadcast Start: -->
-    <div class="my-3 w-96 text-right px-11">
-      <label
-        for="adStart"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        :class="adStart ? 'bg-primary text-white' : 'bg-secondary text-primary'"
-        >Broadcast Start:
-      </label>
-      <input
-        type="date"
-        v-model="adStart"
-        class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
-        @change="startCheck"
-      />
-      <div class="inline-block ml-1" v-if="isStartDecided">
-        <i class="inline-block w-4 h-4 text-primary" v-if="isStartValid"
-          ><CheckCircleIcon
-        /></i>
-        <i class="inline-block w-4 h-4 text-red-500" v-if="!isStartValid"
-          ><XCircleIcon
-        /></i>
-      </div>
-      <div class="text-xs text-red-500 text-left mx-5">
-        {{ startError }}
-      </div>
-    </div>
+    <DateField
+      @done="setAdStart"
+      :default="adStart"
+      title="Broadcast Start"
+    />
+
     <!-- :Broadcast End: -->
-    <div class="my-3 w-96 text-right px-11">
-      <label
-        for="adEnd"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        :class="adEnd ? 'bg-primary text-white' : 'bg-secondary text-primary'"
-        >Broadcast End:
-      </label>
-      <input
-        type="date"
-        v-model="adEnd"
-        class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
-        @change="endCheck"
-      />
-      <div class="inline-block ml-1" v-if="isEndDecided">
-        <i class="inline-block w-4 h-4 text-primary" v-if="isEndValid"
-          ><CheckCircleIcon
-        /></i>
-        <i class="inline-block w-4 h-4 text-red-500" v-if="!isEndValid"
-          ><XCircleIcon
-        /></i>
-      </div>
-      <div class="text-xs text-red-500 text-left mx-5">
-        {{ endError }}
-      </div>
-    </div>
-    <div
-      class="my-3 w-96 text-center px-11 text-primary font-light text-sm"
-      v-if="totalPrice"
-    >
-      <div>
-        <span class="font-bold">₱{{ totalPrice }}.00</span> in total
-      </div>
-      <div>
-        will run for <span class="font-bold">{{ totalBroadcastRange }}</span>
-      </div>
-    </div>
-    <hr class="my-5" />
+    <DateField
+      @done="setAdEnd"
+      :default="adEnd"
+      title="Broadcast End"
+      :match="adStart"
+      end
+    />
+
     <!-- :Spots/day: -->
-    <div class="my-3 w-96 text-right px-11">
-      <label
-        for="adSpot"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        :class="adSpot ? 'bg-primary text-white' : 'bg-secondary text-primary'"
-        >Spots/day:
-      </label>
-      <input
-        type="number"
-        v-model="adSpot"
-        class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
-        @change="spotCheck"
-      />
-      <div class="inline-block ml-1" v-if="isSpotDecided">
-        <i class="inline-block w-4 h-4 text-primary" v-if="isSpotValid"
-          ><CheckCircleIcon
-        /></i>
-        <i class="inline-block w-4 h-4 text-red-500" v-if="!isSpotValid"
-          ><XCircleIcon
-        /></i>
-      </div>
-      <div class="text-xs text-red-500 text-right mx-5" v-if="spotError">
-        {{ spotError }}
-      </div>
-    </div>
+    <NumberField
+      @done="setAdSpot"
+      :default="adSpot"
+      title="Spots/day"
+      :disabled="adPricing === 'package_deal'"
+    />
+
     <!-- :Schedule: -->
-    <div class="my-3 w-96 text-right px-11">
-      <label
-        for="adSchedule"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        :class="
-          adSchedule ? 'bg-primary text-white' : 'bg-secondary text-primary'
-        "
-        >Schedule:
-      </label>
-      <input
-        type="text"
-        v-model="adSchedule"
-        class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
-        placeholder="ex: 6:10am,7:40am"
-        @keyup="pushToScheduleList"
-      />
-      <div class="inline-block ml-1" v-if="adSchedule">
-        <i
-          class="inline-block w-4 h-4 text-primary"
-          v-if="adSpot === adScheduleList.length"
-          ><CheckCircleIcon
-        /></i>
-        <i class="inline-block w-4 h-4 text-red-500" v-else><XCircleIcon /></i>
-      </div>
-      <div
-        class="text-xs text-red-500 text-right mx-5"
-        v-if="adSpot !== adScheduleList.length && adSchedule"
-      >
-        {{ adSpot }} is allowed, you provided {{ adScheduleList.length }}
-      </div>
-      <div class="grid grid-cols-4 p-6 my-2 bg-secondary" v-if="adSchedule">
-        <div
-          v-for="(i, index) in adScheduleList"
-          :key="index"
-          class="bg-primary w-full shadow-sm border rounded-xl text-xs text-center text-white font-extralight py-1"
-        >
-          {{ i }}
-        </div>
-      </div>
-    </div>
-    <hr class="my-5" />
+    <StringToList
+      @done="setAdSchedule"
+      :default="adSchedule"
+      title="Schedule"
+      placeholder="ex: 6:10am,7:40am"
+      type="text"
+      end
+      :basedOn="adSpot"
+    />
+
+    <!-- :AudioFile: -->
+    <UploadZone
+      @done="setAudioFiles"
+      :default="adAudioFiles"
+      title="Audio Upload"
+      accepts="audio/*"
+    />
 
     <!-- :MaterialDuration: -->
-    <div class="my-3 w-96 text-right px-10">
-      <label
-        for="adMaterialDuration"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        :class="
-          adMaterialDuration
-            ? 'bg-primary text-white'
-            : 'bg-secondary text-primary'
-        "
-        >Duration(seconds):
-      </label>
-      <input
-        type="text"
-        v-model="adMaterialDuration"
-        class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary w-20"
-        @change="materialDurationCheck"
-      />
-      <div class="inline-block ml-1" v-if="isMaterialDurationDecided">
-        <i
-          class="inline-block w-4 h-4 text-primary"
-          v-if="isMaterialDurationValid"
-          ><CheckCircleIcon
-        /></i>
-        <i
-          class="inline-block w-4 h-4 text-red-500"
-          v-if="!isMaterialDurationValid"
-          ><XCircleIcon
-        /></i>
-      </div>
-      <div class="text-xs text-red-500 text-left mx-5">
-        {{ materialDurationError }}
-      </div>
-    </div>
-    <hr class="my-5" />
-    <!-- AudioFiles -->
-
-    <ul class="w-full h-max bg-gray-100 p-10">
-      <div class="flex" v-for="(audio, index) in audioMaterials" :key="index">
-        <AudioItem :id="audio" :index="index" />
-        <button @click="addToForDelete(audio, index)">
-          <i
-            class="inline-block align-middle w-6 h-6 text-red-500 hover:text-red-800"
-          >
-            <TrashIcon />
-          </i>
-        </button>
-      </div>
-    </ul>
-
-    <div class="my-3 w-96 text-right px-11">
-      <label
-        for="adAudioFile"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        :class="
-          uploadedFiles.length
-            ? 'bg-primary text-white'
-            : 'bg-secondary text-primary'
-        "
-        >Add:
-      </label>
-      <input
-        type="file"
-        ref="adAudioFile"
-        accept="audio/*"
-        class="hidden"
-        @change="audioFileCheck"
-        multiple
-      />
-      <button
-        class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
-        @click="$refs.adAudioFile.click"
-      >
-        Upload
-      </button>
-      <div class="inline-block ml-1" v-if="isAudioFileDecided">
-        <i class="inline-block w-4 h-4 text-primary" v-if="isAudioFileValid"
-          ><CheckCircleIcon
-        /></i>
-        <i class="inline-block w-4 h-4 text-red-500" v-if="!isAudioFileValid"
-          ><XCircleIcon
-        /></i>
-      </div>
-      <ul class="text-xs text-primary text-right mx-1" v-if="adAudioFile">
-        <li v-for="(file, index) in uploadedFiles" :key="index">
-          {{
-            file.name.length > 25
-              ? `${file.name.substring(0, 25)}...${file.name.substring(
-                  file.name.length - 3,
-                  file.name.length
-                )}`
-              : file.name
-          }}
-          <button
-            @click="removeFromFiles(file, index)"
-            class="text-primary hover:bg-red-500 hover:text-white rounded-full w-4 h-4 font-bold text-center"
-          >
-            x
-          </button>
-        </li>
-      </ul>
-      <div class="text-xs text-red-500 text-right mx-5">
-        {{ audioFileError }}
-      </div>
-    </div>
-
-    <hr class="my-5" />
+    <NumberField
+      @done="setMaterialDuration"
+      :default="adMaterialDuration"
+      title="Material Duration"
+      placeholder="seconds"
+      :disabled="adPricing === 'package_deal'"
+      end
+    />
 
     <!-- :Taglines: -->
-    <div class="my-3 w-96 text-right px-11">
-      <label for="adTaglines" class="text-primary px-2 py-1 w-full text-sm mr-1"
-        >This ad has taglines? (e.g: aob,ss,tc)
-      </label>
-      <input
-        id="adTaglines"
-        type="checkbox"
-        v-model="adTaglines"
-        class="w-4 h-4 border-primary align-bottom"
+    <div class="my-3 w-96 text-right">
+      <CheckBox
+        @done="setAdTaglines"
+        :default="adTaglines"
+        title="This ad has taglines? (e.g: aob,ss,tc)"
+        :disabled="adPricing === 'package_deal'"
       />
-      <div v-if="adTaglines" class="my-2">
+
+      <div v-if="adTaglines" class="my-2 w-full">
         <!-- /AOB/ -->
-        <div class="mt-6">
-          <label
-            for="adTagAOBspot"
-            class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-            :class="
-              adTagAOBspot
-                ? 'bg-primary text-white'
-                : 'bg-secondary text-primary'
-            "
-            >AOB spots/day</label
-          >
-          <input
-            type="number"
-            v-model="adTagAOBspot"
-            id="adTagAOBspot"
-            class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary w-20"
-          />
-          <div class="text-xs text-primary text-right mx-5">
-            leave blank if none
-          </div>
+        <NumberField
+          @done="setAdTagAOBspot"
+          :default="adTagAOBspot"
+          title="AOB spots/day"
+          :disabled="adPricing === 'package_deal'"
+        />
+        <div class="text-xs text-primary text-center -mt-2 mx-5">
+          leave blank if none
         </div>
-        <div v-if="adTagAOBspot" class="mt-2">
-          <label
-            for="adAOBsched"
-            class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-            :class="
-              adAOBsched ? 'bg-primary text-white' : 'bg-secondary text-primary'
-            "
-            >Schedule:</label
-          >
-          <input
-            type="text"
-            id="adAOBsched"
-            v-model="adAOBsched"
-            @keyup="pushToAOBschedList"
-            class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
-          />
-          <div class="inline-block ml-1" v-if="adAOBsched">
-            <i
-              class="inline-block w-4 h-4 text-primary"
-              v-if="adTagAOBspot === adAOBschedList.length"
-              ><CheckCircleIcon
-            /></i>
-            <i class="inline-block w-4 h-4 text-red-500" v-else
-              ><XCircleIcon
-            /></i>
-          </div>
-          <div
-            class="text-xs text-red-500 text-right mx-5"
-            v-if="adTagAOBspot !== adAOBschedList.length && adAOBsched"
-          >
-            {{ adTagAOBspot }} is allowed, you provided
-            {{ adAOBschedList.length }}
-          </div>
-          <div class="grid grid-cols-4 p-6 my-2 bg-secondary" v-if="adAOBsched">
-            <div
-              v-for="(i, index) in adAOBschedList"
-              :key="index"
-              class="bg-primary w-full shadow-sm border rounded-xl text-xs text-center text-white font-extralight py-1"
-            >
-              {{ i }}
-            </div>
-          </div>
-        </div>
+
+        <StringToList
+          @done="setAdTagAOBsched"
+          :default="adAOBsched"
+          title="Schedule"
+          :basedOn="adTagAOBspot"
+          end
+        />
+
         <!-- /TC/ -->
-        <div class="mt-6">
-          <label
-            for="adTagTCspot"
-            class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-            :class="
-              adTagTCspot
-                ? 'bg-primary text-white'
-                : 'bg-secondary text-primary'
-            "
-            >TC spots/day</label
-          >
-          <input
-            type="number"
-            v-model="adTagTCspot"
-            id="adTagTCspot"
-            class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary w-20"
-          />
-          <div class="text-xs text-primary text-right mx-5">
-            leave blank if none
-          </div>
+        <NumberField
+          @done="setAdTagTCspot"
+          :default="adTagTCspot"
+          title="TC spots/day"
+          :disabled="adPricing === 'package_deal'"
+        />
+        <div class="text-xs text-primary text-center -mt-2 mx-5">
+          leave blank if none
         </div>
-        <div v-if="adTagTCspot" class="mt-2">
-          <label
-            for="adTCsched"
-            class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-            :class="
-              adTCsched ? 'bg-primary text-white' : 'bg-secondary text-primary'
-            "
-            >Schedule:</label
-          >
-          <input
-            type="text"
-            id="adTCsched"
-            v-model="adTCsched"
-            placeholder="ex: 6:00am,7:00am"
-            @keyup="pushToTCschedList"
-            class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
-          />
-          <div class="inline-block ml-1" v-if="adTCsched">
-            <i
-              class="inline-block w-4 h-4 text-primary"
-              v-if="adTagTCspot === adTCschedList.length"
-              ><CheckCircleIcon
-            /></i>
-            <i class="inline-block w-4 h-4 text-red-500" v-else
-              ><XCircleIcon
-            /></i>
-          </div>
-          <div
-            class="text-xs text-red-500 text-right mx-5"
-            v-if="adTagTCspot !== adTCschedList.length && adTCsched"
-          >
-            {{ adTagTCspot }} is allowed, you provided
-            {{ adTCschedList.length }}
-          </div>
-          <div class="grid grid-cols-4 p-6 my-2 bg-secondary" v-if="adTCsched">
-            <div
-              v-for="(i, index) in adTCschedList"
-              :key="index"
-              class="bg-primary w-full shadow-sm border rounded-xl text-xs text-center text-white font-extralight py-1"
-            >
-              {{ i }}
-            </div>
-          </div>
-        </div>
+        <StringToList
+          @done="setAdTagTCsched"
+          :default="adTCsched"
+          title="Schedule"
+          :basedOn="adTagTCspot"
+          end
+        />
         <!-- /SS/ -->
-        <div class="mt-6">
-          <label
-            for="adTagSSspot"
-            class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-            :class="
-              adTagSSspot
-                ? 'bg-primary text-white'
-                : 'bg-secondary text-primary'
-            "
-            >SS spots/day</label
-          >
-          <input
-            type="number"
-            v-model="adTagSSspot"
-            id="adTagSSspot"
-            class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary w-20"
-          />
-          <div class="text-xs text-primary text-right mx-5">
-            leave blank if none
-          </div>
+        <NumberField
+          @done="setAdTagSSspot"
+          :default="adTagSSspot"
+          title="SS spots/day"
+          :disabled="adPricing === 'package_deal'"
+        />
+        <div class="text-xs text-primary text-center -mt-2 mx-5">
+          leave blank if none
         </div>
-        <div v-if="adTagSSspot" class="mt-2">
-          <label
-            for="adSSsched"
-            class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-            :class="
-              adSSsched ? 'bg-primary text-white' : 'bg-secondary text-primary'
-            "
-            >Schedule:</label
-          >
-          <input
-            type="text"
-            id="adSSsched"
-            v-model="adSSsched"
-            placeholder="ex: 6:30am,7:30am"
-            @keyup="pushToSSschedList"
-            class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
-          />
-          <div class="inline-block ml-1" v-if="adSSsched">
-            <i
-              class="inline-block w-4 h-4 text-primary"
-              v-if="adTagSSspot === adSSschedList.length"
-              ><CheckCircleIcon
-            /></i>
-            <i class="inline-block w-4 h-4 text-red-500" v-else
-              ><XCircleIcon
-            /></i>
-          </div>
-          <div
-            class="text-xs text-red-500 text-right mx-5"
-            v-if="adTagSSspot !== adSSschedList.length && adSSsched"
-          >
-            {{ adTagSSspot }} is allowed, you provided
-            {{ adSSschedList.length }}
-          </div>
-          <div class="grid grid-cols-4 p-6 my-2 bg-secondary" v-if="adSSsched">
-            <div
-              v-for="(i, index) in adSSschedList"
-              :key="index"
-              class="bg-primary w-full shadow-sm border rounded-xl text-xs text-center text-white font-extralight py-1"
-            >
-              {{ i }}
-            </div>
-          </div>
-        </div>
+        <StringToList
+          @done="setAdTagSSsched"
+          :default="adSSsched"
+          title="Schedule"
+          :basedOn="adTagSSspot"
+          end
+        />
         <!-- /// -->
       </div>
     </div>
-    <hr class="my-5" />
-
     <!-- :Account Executive: -->
-    <div class="my-3 w-96 text-right px-11">
-      <label
-        for="adAE"
-        class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
-        :class="adAE ? 'bg-primary text-white' : 'bg-secondary text-primary'"
-        >AE:
-      </label>
-      <div class="inline-block">
-        <select
-          name=""
-          id="adAE"
-          v-model="adAE"
-          class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
-        >
-          <option value="office">Office</option>
-          <option
-            v-for="user in accountExecutives"
-            :key="user.id"
-            :value="user.username"
-          >
-            {{ user.first_name }} {{ user.last_name }}
-          </option>
-        </select>
-      </div>
-      <div class="inline-block ml-1" v-if="adAE">
-        <i class="inline-block w-4 h-4 text-primary"><CheckCircleIcon /></i>
-      </div>
-    </div>
+    <Select
+      @done="setAdAE"
+      :default="adAE"
+      title="AE"
+      :offlineOptions="['office']"
+      onlineURL="users/"
+      onlineFilter=""
+      onlineKey="username"
+    />
+
     <!-- :: -->
 
     <div class="mx-10 my-5">
@@ -667,13 +229,25 @@
     </div>
   </div>
 </template>
-<script setup>
-import { ref, onMounted, onUnmounted } from "vue";
-import moment from "moment";
+<script setup lang="ts">
+import { ref, onMounted, onUnmounted, watch } from "vue";
 import axios from "axios";
-import { CheckCircleIcon, XCircleIcon, TrashIcon } from "@heroicons/vue/solid";
 import { userStore } from "@/stores/user";
-import AudioItem from "@/components/AudioItem.vue";
+
+import SearchOrAdd from "@/components/forms/inputs/SearchOrAdd.vue";
+import StringField from "@/components/forms/inputs/StringField.vue";
+import DateField from "@/components/forms/inputs/DateField.vue";
+import StringToList from "@/components/forms/inputs/StringToList.vue";
+import NumberField from "@/components/forms/inputs/NumberField.vue";
+import Select from "@/components/forms/inputs/Select.vue";
+import CheckBox from "@/components/forms/inputs/CheckBox.vue";
+import UploadZone from "@/components/forms/inputs/UploadZone.vue";
+
+import { openActivitiesConnection, sendActivity } from "@/composables/activities";
+
+let ACTIVITY_SOCKET:WebSocket;
+
+
 const props = defineProps({
   ad: Object,
   versionDetails: Object,
@@ -681,293 +255,190 @@ const props = defineProps({
   ae: String,
 });
 
-const adTitle = ref(props.ad.title);
-const adType = ref(props.ad.type);
+const emits = defineEmits(["saved"]);
 
-const adAdvertiser = ref(props.advertiser.name);
+const adTitle = ref(props.ad?.title);
+const setAdTitle = (val:string) => (adTitle.value = val);
 
-const adContract = ref(props.ad.contract);
+const adType = ref(props.ad?.type);
+const setAdType = async (val:string) => (adType.value = val);
 
-const adBONum = ref(props.ad.bo_number);
+const adAdvertiser = ref(props.advertiser?.name);
+const setAdvertiser = (val:string) => (adAdvertiser.value = val);
 
-const adPricing = ref(props.versionDetails.pricing);
-const exDeal = ref(props.versionDetails.ex_deal);
-
-const adAmount = ref(props.versionDetails.amount);
-const isAmountValid = ref(false);
-const amountError = ref("");
-const isAmountDecided = ref(false);
-const amountCheck = () => {
-  if (!adAmount.value) isAmountDecided.value = false;
-  else isAmountDecided.value = true;
-
-  isAmountValid.value = true;
-};
-const totalPrice = ref("");
-const summarizeBroadcast = () => {
-  // for pricing
-  if (adAmount.value === "" || adAmount.value === "") amountCheck();
-  if (
-    adAmount.value &&
-    adStart.value &&
-    adEnd.value &&
-    isStartValid.value &&
-    isEndValid.value
-  ) {
-    const ad_start = moment(adStart.value);
-    const ad_end = moment(adEnd.value);
-
-    let price = 0;
-    if (adPricing.value === "monthly") price = ad_end.diff(ad_start, "months");
-    else if (adPricing.value === "daily") price = ad_end.diff(ad_start, "days");
-    else if (adPricing.value === "fixed") price = 1;
-
-    if (price === 0) {
-      totalPrice.value = 1 * adAmount.value;
-    } else totalPrice.value = price * adAmount.value;
-
-    // for duration/length of broadcast
-    totalBroadcastRange.value = ad_start.to(ad_end, true);
-  }
+const adContract = ref(props.ad?.contract);
+const validContract = ref(false);
+const setAdContract = (val:string, validity:boolean) => {
+  adContract.value = val;
+  validContract.value = validity;
 };
 
-const adStart = ref(props.versionDetails.broadcast_start);
-const isStartValid = ref(false);
-const startError = ref("");
-const isStartDecided = ref(false);
-const startCheck = () => {
-  if (!adStart.value) isStartDecided.value = false;
-  else isStartDecided.value = true;
+const adBONum = ref(props.ad?.bo_number);
+const setBO = (val:string) => (adBONum.value = val);
 
-  if (adStart.value && adEnd.value) {
-    const s = moment(adStart.value);
-    const e = moment(adEnd.value);
+const adPricing = ref(props.versionDetails?.pricing);
+const setAdPricing = (val:string) => (adPricing.value = val);
 
-    if (e.diff(s) > 0) {
-      isEndValid.value = true;
-      isStartValid.value = true;
-    } else {
-      isEndValid.value = false;
-      isStartValid.value = false;
-    }
-  } else isStartValid.value = true;
-  summarizeBroadcast();
+const exDeal = ref(props.versionDetails?.ex_deal);
+const setExDeal = (val:boolean) => (exDeal.value = val);
+
+const adAmount = ref(props.versionDetails?.amount);
+const setAdAmount = (val:number) => (adAmount.value = val);
+
+const dateValid = ref(false);
+const adStart = ref(props.versionDetails?.broadcast_start);
+const setAdStart = (val:string) => {
+  adStart.value = val;
 };
 
-const adEnd = ref(props.versionDetails.broadcast_end);
-const isEndValid = ref(false);
-const endError = ref("");
-const isEndDecided = ref(false);
-const endCheck = () => {
-  if (!adEnd.value) isEndDecided.value = false;
-  else isEndDecided.value = true;
-
-  const s = moment(adStart.value);
-  const e = moment(adEnd.value);
-
-  if (e.diff(s) > 0) {
-    isEndValid.value = true;
-    isStartValid.value = true;
-  } else {
-    isEndValid.value = false;
-    isStartValid.value = false;
-  }
-  summarizeBroadcast();
+const adEnd = ref(props.versionDetails?.broadcast_end);
+const setAdEnd = (val:string, validity:boolean) => {
+  adEnd.value = val;
+  dateValid.value = validity;
 };
 
 const totalBroadcastRange = ref("");
 
-const adSpot = ref(props.versionDetails.ad_spots);
-const isSpotValid = ref(false);
-const spotError = ref("");
-const isSpotDecided = ref(false);
-const spotCheck = () => {
-  if (!adSpot.value) isSpotDecided.value = false;
-  else isSpotDecided.value = true;
+const adSpot = ref(props.versionDetails?.ad_spots);
+const setAdSpot = (val:number) => (adSpot.value = val);
 
-  if (adSchedule.value) {
-    if (adSpot.value === adScheduleList.value.length) {
-      isSpotValid.value = true;
-      spotError.value = "";
-    } else {
-      isSpotValid.value = false;
-      spotError.value = "no. of spots must be same no. of scheduled";
+const adSchedule = ref(props.versionDetails?.schedule);
+const setAdSchedule = (val:string) => (adSchedule.value = val);
+
+const adMaterialDuration = ref(props.versionDetails?.material_duration);
+const setMaterialDuration = (val:number) => (adMaterialDuration.value = val);
+
+const adAudioFiles = ref(props.versionDetails?.files);
+const adAudioForRemoval = ref([] as any)
+const setAudioFiles = (val:Array<any>,existing:Array<any>,forRemoval:Array<any>) => {
+  adAudioFiles.value = [...val];
+  adAudioForRemoval.value = [...forRemoval]
+};
+const savingInProgress = ref(false)
+
+
+const adTaglines = ref(props.versionDetails?.has_tagline);
+const setAdTaglines = (val:boolean) => {
+  if (val === false) {
+    setAdTagAOBspot(0);
+    setAdTagAOBsched("");
+    setAdTagTCspot(0);
+    setAdTagTCsched("");
+    setAdTagSSspot(0);
+    setAdTagSSsched("");
+  }
+  adTaglines.value = val;
+};
+
+const adTagAOBspot = ref(props.versionDetails?.aob_spots);
+const setAdTagAOBspot = (val:number) => (adTagAOBspot.value = val);
+
+const adAOBsched = ref(props.versionDetails?.aob_sched);
+const setAdTagAOBsched = (val:string) => (adAOBsched.value = val);
+
+const adTagTCspot = ref(props.versionDetails?.tc_spots);
+const setAdTagTCspot = (val:number) => (adTagTCspot.value = val);
+
+const adTCsched = ref(props.versionDetails?.tc_sched);
+const setAdTagTCsched = (val:string) => (adTCsched.value = val);
+
+const adTagSSspot = ref(props.versionDetails?.ss_spots);
+const setAdTagSSspot = (val:number) => (adTagSSspot.value = val);
+
+const adSSsched = ref(props.versionDetails?.ss_sched);
+const setAdTagSSsched = (val:string) => (adSSsched.value = val);
+
+const adAE = ref(props.versionDetails?.account_executive);
+const setAdAE = (val:string) => (adAE.value = val);
+
+//AD PACKAGE SETUP
+const adPackage = ref(props.versionDetails?.package_name);
+const setPackage = (value:string) => (adPackage.value = value);
+
+
+watch(
+  () => adPackage.value,
+  async (newVal, oldVal) => {
+    if (newVal && adPricing.value === "package_deal") {
+      const fd = new FormData();
+      fd.append("package", adPackage.value);
+      const response = await axios.post("get_package", fd);
+      const {
+        price,
+        spots_per_day,
+        aob_per_day,
+        ss_per_day,
+        tc_per_day,
+        material_duration,
+      } = response.data;
+
+      setAdAmount(price);
+      setAdSpot(spots_per_day);
+      setMaterialDuration(material_duration);
+
+      if (aob_per_day || ss_per_day || tc_per_day) setAdTaglines(true);
+      else setAdTaglines(false);
+      if (aob_per_day) setAdTagAOBspot(aob_per_day);
+      if (ss_per_day) setAdTagSSspot(ss_per_day);
+      if (tc_per_day) setAdTagTCspot(tc_per_day);
     }
-  } else isSpotValid.value = true;
-};
-
-const adSchedule = ref(props.versionDetails.schedule);
-const adScheduleList = ref([]);
-const pushToScheduleList = () => {
-  adScheduleList.value = adSchedule.value.split(","); //(/[, ]+/)separate comma or space
-  spotCheck();
-};
-
-const adMaterialDuration = ref(props.versionDetails.material_duration);
-const isMaterialDurationValid = ref(false);
-const materialDurationError = ref("");
-const isMaterialDurationDecided = ref(false);
-const materialDurationCheck = () => {
-  if (!adMaterialDuration.value) isMaterialDurationDecided.value = false;
-  else isMaterialDurationDecided.value = true;
-
-  isMaterialDurationValid.value = true;
-};
-
-const adAudioFile = ref("");
-const uploadedFiles = ref([]);
-const isAudioFileValid = ref(false);
-const audioFileError = ref("");
-const isAudioFileDecided = ref(false);
-const audioFileURL = ref("");
-const audioFileTemp = ref("");
-
-const removeFromFiles = (file, index) => {
-  uploadedFiles.value.splice(index, 1);
-  if (!uploadedFiles.value.length) {
-    adAudioFile.value.value = "";
-    adAudioFile.value = "";
-    isAudioFileDecided.value = false;
-    isAudioFileValid.value = false;
-    uploadedFiles.value = [];
-    audioFileURL.value = "";
-    audioFileTemp.value = "";
-  } else if (index === uploadedFiles.value.length) adAudioFile.value.value = "";
-};
-const audioFileCheck = () => {
-  audioFileURL.value = URL.createObjectURL(adAudioFile.value.files[0]);
-  audioFileTemp.value = new Audio(audioFileURL.value);
-
-  if (uploadedFiles.value.length && multiplVersions.value) {
-    uploadedFiles.value = [...uploadedFiles.value, ...adAudioFile.value.files];
-  } else uploadedFiles.value = [...adAudioFile.value.files];
-
-  isAudioFileDecided.value = true;
-  isAudioFileValid.value = true;
-};
-
-const audioMaterials = ref(props.versionDetails.files); // read only
-const audioForDelete = ref([]); // for write
-const addToForDelete = (id, index) => {
-  audioForDelete.value.push(id);
-
-  audioMaterials.value.splice(index, 1);
-};
-
-const adTaglines = ref(props.versionDetails.has_tagline);
-
-const adTagAOBspot = ref(props.versionDetails.aob_spots);
-const adAOBsched = ref(props.versionDetails.aob_sched);
-const adAOBschedList = ref([]);
-const pushToAOBschedList = () => {
-  adAOBschedList.value = adAOBsched.value.split(","); //(/[, ]+/)separate comma or space
-};
-
-const adTagTCspot = ref(props.versionDetails.tc_spots);
-const adTCsched = ref(props.versionDetails.tc_sched);
-const adTCschedList = ref([]);
-const pushToTCschedList = () => {
-  if (adTCsched.value) {
-    adTCschedList.value = adTCsched.value.split(","); //(/[, ]+/)separate comma or space
   }
-};
+);
 
-const adTagSSspot = ref(props.versionDetails.ss_spots);
-const adSSsched = ref(props.versionDetails.ss_sched);
-const adSSschedList = ref([]);
-const pushToSSschedList = () => {
-  if (adSSsched.value) {
-    adSSschedList.value = adSSsched.value.split(","); //(/[, ]+/)separate comma or space
-  }
-};
-
-const adAE = ref(props.versionDetails.account_executive);
-const accountExecutives = ref([]);
-const getAccountExecutuves = async () => {
-  const response = await axios.get("/users/");
-  return (accountExecutives.value = response.data);
-};
-
-onMounted(() => {
-  getAccountExecutuves(); // get list of AEs
-  pushToScheduleList(); // initialize spots schedules
-  pushToAOBschedList(); // initialize aob spots sched
-  pushToTCschedList(); // initialize tc spots sched
-  pushToSSschedList(); // initialize ss spots sched
-  startCheck(); //
-  endCheck(); //
-});
-
-onUnmounted(() => {
-  setDefault();
-});
+const submitEnabled = ref(false);
+const validityWatcher = setInterval(() => {
+  submitEnabled.value =
+    adTitle.value &&
+    adType.value &&
+    adAdvertiser.value &&
+    adContract.value &&
+    validContract.value &&
+    adPricing.value &&
+    adAmount.value &&
+    adStart.value &&
+    adEnd.value &&
+    adSpot.value &&
+    adSchedule.value &&
+    adMaterialDuration.value &&
+    adAE.value &&
+    dateValid.value;
+}, 1000);
 
 const setDefault = () => {
-  adTitle.value = props.ad.title;
-  adType.value = props.ad.type;
-  adAdvertiser.value = props.advertiser.name;
-  adContract.value = props.ad.contract;
-  adBONum.value = props.ad.bo_number;
-  adPricing.value = props.versionDetails.pricing;
-  exDeal.value = props.versionDetails.ex_deal;
-  adAmount.value = props.versionDetails.amount;
-  isAmountValid.value = false;
-  amountError.value = "";
-  isAmountDecided.value = false;
-  totalPrice.value = "";
-  adStart.value = props.versionDetails.broadcast_start;
-  isStartValid.value = false;
-  startError.value = "";
-  isStartDecided.value = false;
-  adEnd.value = props.versionDetails.broadcast_end;
-  isEndValid.value = false;
-  endError.value = "";
-  isEndDecided.value = false;
-  totalBroadcastRange.value = "";
-  adSpot.value = props.versionDetails.ad_spots;
-  isSpotValid.value = false;
-  spotError.value = "";
-  isSpotDecided.value = false;
-  adSchedule.value = props.versionDetails.schedule;
-  adScheduleList.value = [];
-  adMaterialDuration.value = props.versionDetails.material_duration;
-  isMaterialDurationValid.value = false;
-  materialDurationError.value = "";
-  isMaterialDurationDecided.value = false;
-  adAudioFile.value = "";
-  uploadedFiles.value = [];
-  isAudioFileValid.value = false;
-  audioFileError.value = "";
-  isAudioFileDecided.value = false;
-  audioFileURL.value = "";
-  audioFileTemp.value = "";
-  audioMaterials.value = props.versionDetails.files;
-  audioForDelete.value = [];
-  adTaglines.value = props.versionDetails.has_tagline;
-  adTagAOBspot.value = props.versionDetails.aob_spots;
-  adAOBsched.value = props.versionDetails.aob_sched;
-  adAOBschedList.value = [];
-  adTagTCspot.value = props.versionDetails.tc_spots;
-  adTCsched.value = props.versionDetails.tc_sched;
-  adTCschedList.value = [];
-  adTagSSspot.value = props.versionDetails.ss_spots;
-  adSSsched.value = props.versionDetails.ss_sched;
-  adSSschedList.value = [];
-  adAE.value = props.versionDetails.account_executive;
-  accountExecutives.value = [];
+  adTitle.value = "";
+  adType.value = "";
+  adAdvertiser.value = "";
+  adContract.value = "";
+  adBONum.value = "";
+  adPricing.value = "";
+  exDeal.value = false;
+  adAmount.value = 0;
+  dateValid.value = false;
+  adStart.value = "";
+  adEnd.value = "";
+  adSpot.value = 0;
+  adSchedule.value = "";
+  adMaterialDuration.value = 0;
+  adAudioFiles.value = [];
+  adTaglines.value = false;
+  adTagAOBspot.value = 0;
+  adAOBsched.value = "";
+  adTagTCspot.value = 0;
+  adTCsched.value = "";
+  adTagSSspot.value = 0;
+  adSSsched.value = "";
+  adAE.value = "";
+  adPackage.value = "";
+  adAudioForRemoval.value = [];
 };
 
-const savingInProgress = ref(false);
-const emits = defineEmits(["saved"]);
-
 const saveAd = async () => {
-  savingInProgress.value = true;
+  savingInProgress.value = true
 
   const fd = new FormData();
   const userstore = userStore();
-  fd.append("uploader", userstore.user);
+  fd.append("uploader", userstore.user as string);
   fd.append("duration", totalBroadcastRange.value);
-
   fd.append("title", adTitle.value);
   fd.append("contract", adContract.value);
   fd.append("type", adType.value);
@@ -989,21 +460,39 @@ const saveAd = async () => {
   fd.append("ss_sched", adSSsched.value);
   fd.append("account_executive", adAE.value);
   fd.append("material_duration", adMaterialDuration.value);
+  fd.append("ad_package", adPackage.value);
 
-  fd.append("existing_files", audioMaterials.value);
-  fd.append("files_remove", audioForDelete.value);
-
-  uploadedFiles.value.forEach((file) => {
-    fd.append("files", file, file.name);
+  fd.append("existing_files", props.versionDetails?.files);
+  fd.append("files_remove", adAudioForRemoval.value);
+  
+  adAudioFiles.value.forEach((f:File) => {
+    fd.append("files", f, f.name);
   });
+  
 
   const response = await axios.post("/new_ads", fd);
-  if (response.status === 200) {
+  if (response.status <= 400) {
+    console.log("OK")
     setTimeout(() => {
+      sendActivity(ACTIVITY_SOCKET,`revised the contract: ${props.ad?.contract}`)
       setDefault();
-      emits("saved");
       savingInProgress.value = false;
-    }, 3000);
+      emits("saved");
+    }, 1000);
   }
+  
+  
+  
+
 };
+onMounted(async () => {
+  validityWatcher;
+  //packageDealWatcher
+  ACTIVITY_SOCKET = openActivitiesConnection()
+});
+
+onUnmounted(() => {
+  clearInterval(validityWatcher);
+  ACTIVITY_SOCKET.close()
+});
 </script>

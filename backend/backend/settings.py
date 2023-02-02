@@ -39,9 +39,8 @@ ALLOWED_HOSTS = [IPV4_ADDRESS, HOST_NAME, "localhost", "yes.local", '127.0.0.1']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'daphne',
-    # 'channels',
-    'django_eventstream',
+    'channels',
+    'daphne',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -58,7 +57,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    # 'django_grip.GripMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
@@ -89,13 +87,6 @@ CORS_ORIGIN_WHITELIST = [
     'http://' + HOST_NAME,
 ]
 
-#TODO
-EVENTSTREAM_ALLOW_ORIGIN = 'http://localhost:5173'
-EVENTSTREAM_ALLOW_CREDENTIALS = False
-EVENTSTREAM_ALLOW_HEADERS = 'Authorization'
-EVENTSTREAM_STORAGE_CLASS = 'django_eventstream.storage.DjangoModelStorage'
-
-GRIP_PROXY_REQUIRED = False
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -123,6 +114,7 @@ ASGI_APPLICATION = 'backend.asgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -141,6 +133,21 @@ DATABASES = {
     }
 }
 """
+
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND':'channels.layers.InMemoryChannelLayer'
+#     }
+# }
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 AUTH_USER_MODEL = 'station.User'
 

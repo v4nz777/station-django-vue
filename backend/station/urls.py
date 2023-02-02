@@ -14,7 +14,6 @@ urlpatterns = [
     path("change/avatar/<str:username>/", views.changeAvatar, name="changeAvatar"),
     path("activity/<str:username>/", views.getUserActivity, name="getUserActivity"),
     path("activities/<str:filter>/", views.getFilteredActivity, name="generalActivity"),
-    path("activities/add/brownout", views.postNewBrownOut, name="addNewBrownout"),
     path("generate/dtr/<str:username>", views.generateDTR, name="generateDTR"),
     path("generate/dtr/<str:username>", views.generateDTR, name="generateDTR"),
     path("positions/<str:query>", views.positions, name="positions"),

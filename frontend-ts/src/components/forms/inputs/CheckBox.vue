@@ -1,5 +1,5 @@
 <template>
-  <div class="my-3 w-96 text-right px-11">
+  <div class="my-3 text-right px-11">
     <label class="text-primary px-2 py-1 w-full text-sm mr-1">{{
       title
     }}</label>
