@@ -23,19 +23,24 @@ to help and automate most task in radio station
 2. Install the dependencies:
 `pip install -r requirements.txt`
 
-3. Create a `.env` file in the root directory of the project and set the environment variables for the database and JWT secret key.
+3. Create `config.py` inside `/backend/backend/` then configure the following settings inside `config` file:
+    - `SECRET_KEY`
+    - `DATABASES`
+    - `CHANNEL_LAYERS`
 
-4. Run migrations:
+4. Create a `.env` file in the root directory of the project and set the environment variables for the database and JWT secret key.
+
+5. Run migrations:
 `python manage.py makemigrations
 python manage.py migrate`
 
-5. Run the development server:
+6. Run the development server:
 `python manage.py runserver`
 
-6. In a separate terminal, navigate to the `frontend-ts` directory and install the dependencies:
+7. In a separate terminal, navigate to the `frontend-ts` directory and install the dependencies:
 `npm install`
 
-7. Run the development server for the frontend:
+8. Run the development server for the frontend:
 `npm run dev`
 
 
