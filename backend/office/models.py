@@ -23,6 +23,7 @@ class AdVersion(models.Model):
     pricing = models.CharField(max_length=20)
     ex_deal = models.BooleanField(default=False)
     package = models.ForeignKey('Package',on_delete=models.SET_NULL, null=True, blank=True)
+    package_name = models.CharField(max_length=256, null=True, blank=True)
     broadcast_start = models.DateField(null=True, blank=True)
     broadcast_end = models.DateField(null=True, blank=True)
 
@@ -48,6 +49,11 @@ class AdVersion(models.Model):
     
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        if self.package:
+            self.package_name = self.package.name
+        return super().save(*args, **kwargs)
 
 class AudioFile(models.Model):
     from_ad = models.ForeignKey(AdVersion, on_delete=models.CASCADE, related_name="file")

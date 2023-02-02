@@ -1,5 +1,5 @@
 <template>
-  <div class="my-3 w-96 text-right px-11">
+  <div class="my-3 text-right px-11">
     <label
       class="text-white px-2 py-1 w-full rounded-l-md shadow-md text-sm mr-1"
       :class="
@@ -34,15 +34,26 @@
               )}`
             : f.name
         }}
-        <button
-          @click="removeFromFiles(f, index)"
-          class="text-primary hover:bg-red-500 hover:text-white rounded-full w-4 h-4"
-        >
-          <p class="font-bold flex justify-center items-center w-full h-full">
-            X
-          </p>
+        <button @click="removeFromUploaded(audio, index)">
+          <i
+            class="inline-block align-middle w-6 h-6 text-red-500 hover:text-red-800"
+          >
+            <TrashIcon />
+          </i>
         </button>
       </li>
+    </ul>
+    <ul class="w-full h-max bg-gray-100 p-10">
+      <div class="flex" v-for="(audio, index) in existing" :key="index">
+        <AudioItem :id="audio" :index="index" />
+        <button @click="removeFromExistingFiles(audio, index)">
+          <i
+            class="inline-block align-middle w-6 h-6 text-red-500 hover:text-red-800"
+          >
+            <TrashIcon />
+          </i>
+        </button>
+      </div>
     </ul>
     <div class="text-xs text-red-500 text-right mx-5">
       {{ error }}
@@ -53,8 +64,9 @@
 <script setup>
 import { ref } from "vue";
 import axios from "axios";
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/vue/solid";
+import { CheckCircleIcon, XCircleIcon, TrashIcon } from "@heroicons/vue/solid";
 import CheckBox from "@/components/forms/inputs/CheckBox.vue";
+import AudioItem from "@/components/AudioItem.vue";
 
 const props = defineProps({
   default: Array,
@@ -65,16 +77,23 @@ const props = defineProps({
 const emits = defineEmits(["done"]);
 
 const fileFieldInput = ref(null);
-const uploaded = ref(props.default);
+const uploaded = ref([]);
+const existing = ref([...props.default])
 
-const error = ref("");
+const error = ref("")
+const filesForRemoval = ref([])
+const removeFromExistingFiles = (file, index) => {
+  filesForRemoval.value.push(file)
+  existing.value.splice(index, 1);
+  emits("done", uploaded.value, existing.value, filesForRemoval.value);
+};
 
-const removeFromFiles = (file, index) => {
+const removeFromUploaded = (file, index) => {
   uploaded.value.splice(index, 1);
-  emits("done", uploaded.value);
+  emits("done", uploaded.value, existing.value, filesForRemoval.value);
 };
 const fileUpload = async () => {
   uploaded.value = [...uploaded.value, ...(await fileFieldInput.value.files)];
-  emits("done", uploaded.value);
+  emits("done", uploaded.value, existing.value, filesForRemoval.value);
 };
 </script>

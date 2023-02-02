@@ -12,7 +12,8 @@
       <input
         type="text"
         v-model="value"
-        class="bg-secondary focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
+        class="focus-visible:outline-2 focus-within:outline-primary font-thin text-sm px-2 py-1 shadow-md rounded-r-md text-primary focus-within:bg-secondary"
+        :class="disabled?'bg-disabled':'bg-secondary'"
         list="advertiserlist"
         v-click-away="emptyList"
         @click="getList"
@@ -55,6 +56,7 @@ const props = defineProps({
   searchURL: String, //include tailing slash eg. "url/"
   searchFilter: String, //use "all" as default
   end: Boolean, //End of the  batch. Has border at bottom
+  disabled: Boolean
 });
 const emits = defineEmits(["done"]);
 const value = ref(props.default);

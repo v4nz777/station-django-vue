@@ -430,6 +430,10 @@ import Select from "@/components/forms/inputs/Select.vue";
 import CheckBox from "@/components/forms/inputs/CheckBox.vue";
 import UploadZone from "@/components/forms/inputs/UploadZone.vue";
 
+import { sendActivity, openActivitiesConnection } from "@/composables/activities";
+
+let ACTIVITY_SOCKET;
+
 const props = defineProps({
   buttonTitle: String,
 });
@@ -647,7 +651,7 @@ const submitNewAds = async () => {
   const response = await axios.post("/new_ads", fd);
   if (response.status === 200) {
     open.value = false;
-
+    sendActivity(ACTIVITY_SOCKET,`created a new contract: ${adContract.value}`)
     emits("submitted",response.data)
     setDefault();
   }
@@ -659,10 +663,12 @@ const submitNewAds = async () => {
 onMounted(async () => {
   validityWatcher;
   //packageDealWatcher
+  ACTIVITY_SOCKET = openActivitiesConnection()
 });
 
 onUnmounted(() => {
   clearInterval(validityWatcher);
+  ACTIVITY_SOCKET.close()
 });
 </script>
 
