@@ -22,3 +22,4 @@ backend/technical/inventory/__pycache__/
 !backend/technical/inventory/generated/.gitkeep
 backend/backend/config.py
 *.rdb
+dump.rdb
