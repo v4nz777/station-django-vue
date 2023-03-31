@@ -1,32 +1,46 @@
-<script>
-import axios from "axios";
+<script setup lang="ts">
+  import { ref } from "vue";
+  import axios from "axios";
+  import router from "@/router";
 
-export default {
-  data() {
-    return {
-      registration: {
-        username: "",
-        email: "",
-        password: "",
-        confirmation: "",
-        gender: "",
-        address: "",
-        firstName: "",
-        lastName: "",
-        telephone: "",
-        mobile: "",
-        facebook: "",
-      },
-      message: "",
-    };
-  },
-  methods: {
-    async submitRegistration() {
-      const response = await axios.post("/register/", this.registration);
-      this.$router.push("login/");
-    },
-  },
-};
+  interface Registration {
+    username: string;
+    email: string;
+    password: string;
+    confirmation: string;
+    gender: string;
+    address: string;
+    firstName: string;
+    lastName: string;
+    telephone: string;
+    mobile: string;
+    facebook: string;
+  }
+
+  const registration = ref<Registration>({
+    username: "",
+    email: "",
+    password: "",
+    confirmation: "",
+    gender: "",
+    address: "",
+    firstName: "",
+    lastName: "",
+    telephone: "",
+    mobile: "",
+    facebook: "",
+  });
+
+  const message = ref<string>("");
+
+  async function submitRegistration() {
+    try {
+      await axios.post("/register/", registration.value);
+      router.push("login/");
+    } catch (error:any) {
+      message.value = error.message;
+    }
+  }
 </script>
 
 <template>
@@ -129,7 +143,6 @@ export default {
             <select
               id="gender"
               name="gender"
-              type="text"
               required
               v-model="registration.gender"
               class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-primary focus:border-primary focus:z-10 sm:text-sm"
