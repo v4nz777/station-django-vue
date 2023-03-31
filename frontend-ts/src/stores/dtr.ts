@@ -56,7 +56,7 @@ export const dtrStore = defineStore({
       if (!this.loaded) {
         const userstore = userStore();
         const current = new Date();
-        const all_months = [
+        const allMonths = [
           "January",
           "February",
           "March",
@@ -71,7 +71,7 @@ export const dtrStore = defineStore({
           "December",
         ];
         const currentYear = current.getFullYear();
-        const currentMonth = all_months[current.getMonth()];
+        const currentMonth = allMonths[current.getMonth()];
         const currentDate = ("0" + current.getDate()).slice(-2);
         
 
@@ -84,17 +84,21 @@ export const dtrStore = defineStore({
           );
           this.pathForCurrent = localStorage.getItem("dtrCurrent") as string;
         }
-        const response = await axios.get(this.pathForCurrent);
-        if (response.status === 200) {
-          this.year = response.data.year;
-          this.month = response.data.month;
-          this.date = response.data.date;
-          this.in = response.data.time_in;
-          this.as_obj = moment(response.data.time_in_datetime).subtract(
-            8,
-            "hours"
-          );
-          this.loaded = true;
+        try{
+          const response = await axios.get(this.pathForCurrent);
+          if (response.status === 200) {
+            this.year = response.data.year;
+            this.month = response.data.month;
+            this.date = response.data.date;
+            this.in = response.data.time_in;
+            this.as_obj = moment(response.data.time_in_datetime).subtract(
+              8,
+              "hours"
+            );
+            this.loaded = true;
+          }
+        }catch(error){
+          console.log(error)
         }
       }
     },
@@ -111,7 +115,7 @@ export const dtrStore = defineStore({
       this.dtr_logs = response.data.history;
     },
     async filterDTR(value: string) {
-      const all_months = [
+      const allMonths = [
         "January",
         "February",
         "March",
@@ -127,7 +131,7 @@ export const dtrStore = defineStore({
       ];
       const userstore = userStore();
       const year = value.split("-")[0];
-      const month = all_months[parseInt(value.split("-")[1], 10) - 1];
+      const month = allMonths[parseInt(value.split("-")[1], 10) - 1];
 
       const response = await axios.get(
         `/get_history/${userstore.user}/${year}/${month}/`
