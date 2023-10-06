@@ -30,7 +30,7 @@ const getPeople = async () => {
 onMounted(async () => {
   await getPeople();
 });
-const watchUpdate = setInterval(async () => await getPeople(), 1000);
+const watchUpdate = setInterval(async () => await getPeople(), 50000);
 onUnmounted(() => {
   clearInterval(watchUpdate);
 });
