@@ -46,6 +46,7 @@
 
     onUnmounted(() => {
         clearInterval(postedTimer)
+        console.log(props.activity)
     })
     
 </script>
