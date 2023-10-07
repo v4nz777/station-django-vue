@@ -52,38 +52,41 @@ export const dtrStore = defineStore({
         this.timed = true;
       }
     },
+    setPathForCurrent() {
+      const userstore = userStore();
+      const current = new Date();
+      const allMonths = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+      ];
+      const currentYear = current.getFullYear();
+      const currentMonth = allMonths[current.getMonth()];
+      const currentDate = ("0" + current.getDate()).slice(-2);
+      
+
+      if (localStorage.getItem("dtrCurrent")) {
+        this.pathForCurrent = localStorage.getItem("dtrCurrent") as string;
+      } else {
+        localStorage.setItem(
+          "dtrCurrent",
+          `/get_history/${userstore.user}/${currentYear}/${currentMonth}/${currentDate}/`
+        );
+        this.pathForCurrent = localStorage.getItem("dtrCurrent") as string;
+      }
+    },
     async loadDTR() {
       if (!this.loaded) {
-        const userstore = userStore();
-        const current = new Date();
-        const allMonths = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ];
-        const currentYear = current.getFullYear();
-        const currentMonth = allMonths[current.getMonth()];
-        const currentDate = ("0" + current.getDate()).slice(-2);
-        
-
-        if (localStorage.getItem("dtrCurrent")) {
-          this.pathForCurrent = localStorage.getItem("dtrCurrent") as string;
-        } else {
-          localStorage.setItem(
-            "dtrCurrent",
-            `/get_history/${userstore.user}/${currentYear}/${currentMonth}/${currentDate}/`
-          );
-          this.pathForCurrent = localStorage.getItem("dtrCurrent") as string;
-        }
+        this.setPathForCurrent()
         try{
           const response = await axios.get(this.pathForCurrent);
           if (response.status === 200) {
@@ -98,7 +101,8 @@ export const dtrStore = defineStore({
             this.loaded = true;
           }
         }catch(error){
-          console.log(error)
+          localStorage.removeItem("dtrCurrent")
+          this.pathForCurrent = ""
         }
       }
     },
