@@ -91,7 +91,6 @@ export const dtrStore = defineStore({
             this.month = response.data.month;
             this.date = response.data.date;
             this.in = response.data.time_in;
-            console.log(response.data.time_in_datetime)
             this.as_obj = moment(response.data.time_in_datetime)
             this.loaded = true;
           }

@@ -48,7 +48,6 @@ const loginToDTR = async () => {
       response = await axios.put("/dtr_in/", {
         username: userstore.user,
       });
-      console.log('pass')
       logged.value = response.data.is_logged;
       await dtrstore.loadDTR();
       dtrstore.watchTimer();
