@@ -34,7 +34,7 @@ export const activityStore = defineStore({
       this.filteredActivities = response.data;
     },
     humanizeDate(date: string) {
-      const humanized = moment(date).subtract(8, "hours").fromNow();
+      const humanized = moment(date).fromNow();
       return humanized;
     },
     humanizeUser(username: string) {

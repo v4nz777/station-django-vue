@@ -91,10 +91,7 @@ export const dtrStore = defineStore({
             this.month = response.data.month;
             this.date = response.data.date;
             this.in = response.data.time_in;
-            this.as_obj = moment(response.data.time_in_datetime).subtract(
-              8,
-              "hours"
-            );
+            this.as_obj = moment(response.data.time_in_datetime)
             this.loaded = true;
           }
         }catch(error){
