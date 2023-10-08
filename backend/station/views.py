@@ -5,6 +5,8 @@ from django.db import IntegrityError
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from django.conf import settings
+from zoneinfo import ZoneInfo
 
 from .dtr import generate_workbook
 from .models import User, History, Position, Station, Activity
@@ -74,7 +76,7 @@ def logInToDTR(request):
     if not user.is_logged:
         user.is_logged = True
         user.save()
-        now = datetime.now()
+        now = datetime.now(tz=ZoneInfo(settings.TIME_ZONE))
         history, created = History.objects.get_or_create(
             user=user, month=now.strftime("%B"), date=now.strftime("%d"), year=now.strftime("%Y"),
             defaults={"time_in_datetime": now, "time_out_datetime": None},
@@ -96,7 +98,8 @@ def logOutToDTR(request):
     if user.is_logged:
         user.is_logged = False
         user.save()
-        now = datetime.now()
+        now = datetime.now(tz=ZoneInfo(settings.TIME_ZONE))
+       
         instance = History.objects.get(user=user, month=month, date=date, year=year)
  
         instance.time_out_datetime = now
@@ -104,9 +107,9 @@ def logOutToDTR(request):
 
         user.last_login = now
         user.save()
-        return Response({"is_logged": user.is_logged})
-    else:
-        return Response({"is_logged": user.is_logged})
+        
+    return Response({"is_logged": user.is_logged})
+    
 
 @api_view(["GET"])
 def getAllUserHistory(request, username):
@@ -116,7 +119,6 @@ def getAllUserHistory(request, username):
     history_list = []
     for i in data:
         serializer = HistorySerializer(i)
-        print(serializer.data)
         if serializer.data["time_in_datetime"] and serializer.data["time_out_datetime"]:
             history_list.append(serializer.data)
         
@@ -149,6 +151,7 @@ def filterUserHistoryByDate(request, username, year, month, date):
     try:
         user = User.objects.get(username=username)
         data = History.objects.get(user=user, year=year, month=month, date=date)
+        
         serializer = HistorySerializer(data)
         return Response(serializer.data)
     except:

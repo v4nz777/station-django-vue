@@ -5,7 +5,18 @@ from django.dispatch import receiver
 from django.db.models.signals import m2m_changed, post_save, pre_save
 from datetime import timedelta, datetime
 from datetimerange import DateTimeRange
+from zoneinfo import ZoneInfo
+from django.conf import settings
 
+def humanize_time(total) -> tuple:
+    s = total.total_seconds()
+    hours, remainder = divmod(s, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    sfx_mn = "" if minutes <= 1 else "s"
+    sfx_hr = "" if hours <= 1 else "s"
+    total_in_string = (f"{int(hours)}hr{sfx_hr}, {int(minutes)}min{sfx_mn}")
+    return (int(hours),int(minutes),total_in_string)
 
 class Station(models.Model):
     station_name = models.CharField(max_length=256, null=True, blank=True)
@@ -64,7 +75,7 @@ class Activity(models.Model):
         return f"{self.user} {self.subject}"
     
     def new_activity(self, username, subject, **kwargs):
-        now = datetime.now().replace(tzinfo=None)
+        now = datetime.now(tz=ZoneInfo(settings.TIME_ZONE))
         self.created = now
         self.user = User.objects.get(username=username)
         self.subject = subject
@@ -112,40 +123,33 @@ class History(models.Model):
 
     completed = models.BooleanField(default=False)
     def save(self, *args, **kwargs):
-        
         if self.time_in_datetime and self.time_out_datetime:
+            
             self.completed = True
-            t_in = self.time_in_datetime.replace(tzinfo=None)
-            t_out = self.time_out_datetime.replace(tzinfo=None)
+            t_in = self.time_in_datetime
+            t_out = self.time_out_datetime
+
             self.month = t_in.strftime("%B")
             self.year = t_in.strftime("%Y")
             self.date = t_in.strftime("%d")
             self.time_in_day = t_in.strftime("%A")
             self.time_out_day = t_out.strftime("%A")
             total = t_out - t_in
-
-            # Convert to human readable
-            s = total.total_seconds()
-            hours, remainder = divmod(s, 3600)
-            minutes, seconds = divmod(remainder, 60)
-            self.total_in_hr = int(hours)
-            self.total_in_mn = int(minutes)
-
-            sfx_mn = "" if minutes <= 1 else "s"
-            sfx_hr = "" if hours <= 1 else "s"
-            self.total = (f"{int(hours)}hr{sfx_hr}, {int(minutes)}min{sfx_mn}")
-
-            self.in_as_twelve_hr_format(t_in)
+   
+            self.total_in_hr,self.total_in_mn,self.total = humanize_time(total)
+            
             self.out_as_twelve_hr_format(t_out)
             self.calculate_overtime(total)
             self.calculate_night_diff(t_in,t_out)
         else:
-            t_in = self.time_in_datetime.replace(tzinfo=None)
+            t_in = self.time_in_datetime
+            self.in_as_twelve_hr_format(t_in)
             self.month = t_in.strftime("%B")
             self.year = t_in.strftime("%Y")
             self.date = t_in.strftime("%d")
             self.time_in_day = t_in.strftime("%A")
         return super(History,self).save(*args, **kwargs)
+
 
     def in_as_twelve_hr_format(self, t_in):
         self.time_in = t_in.strftime('%I:%M %p')
@@ -161,16 +165,7 @@ class History(models.Model):
             eight_hours = timedelta(hours=t.hour, minutes=t.minute)
             overtime = total - eight_hours
 
-            # Convert to human readable
-            s = overtime.total_seconds()
-            hours, remainder = divmod(s, 3600)
-            minutes, seconds = divmod(remainder, 60)
-            self.ot_in_hr = int(hours)
-            self.ot_in_mn = int(minutes)
-
-            sfx_mn = "" if minutes <= 1 else "s"
-            sfx_hr = "" if hours <= 1 else "s"
-            self.overtime = (f"{int(hours)}hr{sfx_hr}, {int(minutes)}min{sfx_mn}")
+            self.ot_in_hr,self.ot_in_mn,self.overtime = humanize_time(overtime)
     
     def calculate_night_diff(self,t_in,t_out):
 
@@ -262,23 +257,17 @@ class History(models.Model):
 
 
         sum_of_night_shifts = sum([d["duration"] for d in valid_night_shifts],timedelta())
-        # Convert to human readable
-        # then save to database
-        s = sum_of_night_shifts.total_seconds()
-        hours, remainder = divmod(s, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        self.nd_in_hr = int(hours)
-        self.nd_in_mn = int(minutes)
 
-        sfx_mn = "" if minutes <= 1 else "s"
-        sfx_hr = "" if hours <= 1 else "s"
+        self.nd_in_hr,self.nd_in_mn,stringed_nd = humanize_time(sum_of_night_shifts)
+        s = sum_of_night_shifts.total_seconds()
+
         if int(s) > 60:
-            self.night_diff = (f"{int(hours)}hr{sfx_hr}, {int(minutes)}min{sfx_mn}")
+            self.night_diff = stringed_nd
         else:
             pass
 
     def __str__(self):
-        return f"{self.user.username} @ {self.time_in_datetime.hour}:{self.time_in_datetime.minute}//{self.month}-{self.date}-{self.year}"
+        return f"{self.user.username} @ {self.time_in}//{self.month}-{self.date}-{self.year}"
 
 class MonthlyDTR(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True)
