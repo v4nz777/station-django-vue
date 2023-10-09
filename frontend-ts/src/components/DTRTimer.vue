@@ -48,10 +48,11 @@ const loginToDTR = async () => {
       response = await axios.put("/dtr_in/", {
         username: userstore.user,
       });
-      logged.value = response.data.is_logged;
+      logged.value = await response.data.is_logged;
       await dtrstore.loadDTR();
       dtrstore.watchTimer();
       sendActivity(props.socket,"logged in!")
+      return;
     }
     catch(error){
       console.log('DTR Login Unsuccessful!')
@@ -63,16 +64,25 @@ const loginToDTR = async () => {
 
 const logoutToDTR = async () => {
   if (logged.value) {
-    const response = await axios.put("dtr_out/", {
-      username: userstore.user,
-      month: dtrstore.month,
-      date: dtrstore.date,
-      year: dtrstore.year,
-    });
-    const total = dtrstore.formatLogTimer
-    logged.value = response.data.is_logged;
-    dtrstore.clear();
-    sendActivity(props.socket,`logged out! (total: ${total})`)
+    let response;
+    try{
+        response = await axios.put("dtr_out/", {
+        username: userstore.user,
+        month: dtrstore.month,
+        date: dtrstore.date,
+        year: dtrstore.year,
+      });
+      
+      const total = dtrstore.formatLogTimer;
+      logged.value = await response.data.is_logged;
+      dtrstore.clear();
+      sendActivity(props.socket,`logged out! (total: ${total})`)
+      return;
+    }
+    catch(error){
+      console.log('DTR Logout Unsuccessful!')
+    }
+    
   }
 };
 
