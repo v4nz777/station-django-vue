@@ -24,9 +24,10 @@
             <span class="text-gray-900 text-sm font-light"
               >{{ titleCaseSentence(userstore.first_name+' '+userstore.last_name) }}</span
             >
-            <DTRTimer />
+            
           </div>
         </RouterLink>
+        <DTRTimer :socket="useActivity.activitySocket"/>
         <hr />
         <Logout />
       </div>
@@ -38,15 +39,25 @@ import { MenuIcon } from "@heroicons/vue/outline";
 import Logout from "@/components/LogOut.vue";
 import DTRTimer from "@/components/DTRTimer.vue";
 import { userStore } from "../stores/user";
-import { ref } from "vue";
+import { activityStore } from "@/stores/activity";
+import { ref, onMounted, onUnmounted } from "vue";
 import SideBar from "@/components/SideBar.vue";
 import { titleCaseSentence } from "@/composables/texts";
 
 const userstore = userStore();
+const useActivity = activityStore();
 const open = ref(false);
 
 const toggle = () => {
   // open if closed -> close if opened
   open.value ? (open.value = false) : (open.value = true);
 };
+
+onMounted(() => {
+  useActivity.connectToActivitySocket()
+})
+
+onUnmounted(() => {
+  useActivity.activitySocket?.close()
+})
 </script>

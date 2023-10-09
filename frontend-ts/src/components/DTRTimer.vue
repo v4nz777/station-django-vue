@@ -34,14 +34,18 @@ import { sendActivity } from '@/composables/activities'
 import axios from "axios";
 
 const props = defineProps({
-  socket:Object
+  socket:WebSocket|null|undefined
 })
+
+const emits = defineEmits(['reconnect'])
 
 const userstore = userStore();
 const dtrstore = dtrStore();
 const logged = ref(false);
 
+
 const loginToDTR = async () => {
+  console.log(props.socket.readyState)
   if (!logged.value) {
     let response;
     try{
@@ -89,6 +93,7 @@ const logoutToDTR = async () => {
 };
 
 
+
 const watchUser = async () => {
   const response = await axios.get(`user/${userstore.user}`);
   logged.value = response.data.is_logged;
@@ -100,6 +105,7 @@ onMounted(async () => {
     dtrstore.watchTimer();
   }
   await watchUser();
+  
 });
 
 </script>

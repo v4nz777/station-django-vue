@@ -2,13 +2,13 @@ import axios from "axios";
 import moment from "moment";
 
 export interface Position {
-  id:any|null;
+  id?:any|null|undefined;
   title: string;
-  salary_1?: number;
-  salary_2?: number;
-  salary_3?: number;
-  salary_4?: number;
-  salary_5?: number;
+  salary_1?: number|null|undefined;
+  salary_2?: number|null|undefined;
+  salary_3?: number|null|undefined;
+  salary_4?: number|null|undefined;
+  salary_5?: number|null|undefined;
 }
 
 export const getPosition = async (id: number | null) => {

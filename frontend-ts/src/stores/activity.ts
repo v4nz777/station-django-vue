@@ -4,6 +4,7 @@ import axios from "axios";
 import { userStore } from "./user";
 import moment from "moment";
 import staticAvatar from "@/assets/avatar.png";
+import { openActivitiesConnection } from "@/composables/activities";
 
 interface Activity {
   user: number;
@@ -22,8 +23,12 @@ export const activityStore = defineStore({
   state: () => ({
     userActivities: [],
     filteredActivities: [] as Array<Activity>,
+    activitySocket: undefined as WebSocket|undefined,
   }),
   actions: {
+    connectToActivitySocket(){
+      this.activitySocket = openActivitiesConnection()
+    },
     async getUserActivity() {
       const userstore = userStore();
       const response = await axios.get(`/activity/${userstore.user}`);
