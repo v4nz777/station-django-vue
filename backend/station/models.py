@@ -166,105 +166,42 @@ class History(models.Model):
             overtime = total - eight_hours
 
             self.ot_in_hr,self.ot_in_mn,self.overtime = humanize_time(overtime)
-    
-    def calculate_night_diff(self,t_in,t_out):
-
-        # if has worked between 10pm to 6am
-        # for night differential
-        night = [22,23,0,1,2,3,4,5,6]
-        valid_night_shifts = []
-        in_out_range = DateTimeRange(t_in, t_out).range(timedelta(hours=1))
-        for inx,i in enumerate(in_out_range):
-            if i.hour in night:
-                # 6am oclocks
-                if i.hour == 6:
-                    if i.hour == t_in.hour:
-                        valid_night_shifts.append({
-                            "datetime": i,
-                            "time": timedelta(hours=i.hour, minutes=0),
-                            "duration": timedelta(hours=0, minutes=0)
-                        })
-                    elif i.hour == t_out.hour:
-                        valid_night_shifts.append({
-                            "datetime": t_out,
-                            "time": timedelta(hours=t_out.hour, minutes=0),
-                            "duration": timedelta(hours=0, minutes=(60-t_in.minute))
-                        })
-                    else:
-                        valid_night_shifts.append({
-                            "datetime": i,
-                            "time": timedelta(hours=i.hour, minutes=0),
-                            "duration": timedelta(hours=0, minutes=(60-t_in.minute))
-                        })
-                # 10pm oclocks
-                elif i.hour == 22:
-                    if i.hour == t_in.hour:
-                        valid_night_shifts.append({
-                        "datetime": i,
-                        "time": timedelta(hours=i.hour, minutes=t_in.minute),
-                        "duration": timedelta(hours=0, minutes=t_in.minute)
-                        })
-                    elif i.hour == t_out.hour:
-                        valid_night_shifts.append({
-                        "datetime": i,
-                        "time": timedelta(hours=i.hour, minutes=t_out.minute),
-                        "duration": timedelta(hours=0, minutes=(t_out.minute-t_in.minute))
-                        })
-                    else:
-                        valid_night_shifts.append({
-                            "datetime": i,
-                            "time": timedelta(hours=i.hour, minutes=0),
-                            "duration": timedelta(hours=0, minutes=i.minute)
-                        })
-                
-                # other oclocks
-                else:
-                    if i.hour == t_in.hour:
-                            valid_night_shifts.append({
-                            "datetime": i,
-                            "time": timedelta(hours=i.hour, minutes=i.minute),
-                            "duration": timedelta(hours=0, minutes=0)
-                        })
-                    elif i.hour == t_out.hour:
-                        valid_night_shifts.append({
-                            "datetime": i,
-                            "time": timedelta(hours=t_out.hour, minutes=t_out.minute),
-                            "duration": timedelta(hours=1, minutes=(t_out.minute-t_in.minute))
-                        })
-                    else:
-                        valid_night_shifts.append({
-                            "datetime": i,
-                            "time": timedelta(hours=i.hour, minutes=i.minute),
-                            "duration": timedelta(hours=1, minutes=0)
-                        })
-
-        # Append the timeout time even if its less than an hour...
-        # Fix for datetimerange not included the tiemout if its less than 60 minutes.
-        if t_out.minute < t_in.minute:
-            if t_out.hour in night:
-                if t_out.hour == 6:
-                    valid_night_shifts.append({
-                        "datetime": t_out,
-                        "time": timedelta(hours=t_out.hour, minutes=0),
-                        "duration": timedelta(hours=0, minutes=(60-t_in.minute))
-                    })
-                else:
-                    valid_night_shifts.append({
-                        "datetime": t_out,
-                        "time": timedelta(hours=t_out.hour, minutes=t_out.minute),
-                        "duration": timedelta(hours=0, minutes=60-(t_in.minute-t_out.minute))
-                    })
 
 
-        sum_of_night_shifts = sum([d["duration"] for d in valid_night_shifts],timedelta())
+    def calculate_night_diff(self, t_in, t_out):
+        # Define the night hours (10 PM to 6 AM)
+        night_hours = set(range(22, 24)) | set(range(0, 6))
 
-        self.nd_in_hr,self.nd_in_mn,stringed_nd = humanize_time(sum_of_night_shifts)
-        s = sum_of_night_shifts.total_seconds()
+        # Initialize night duration
+        night_duration = timedelta()
 
-        if int(s) > 60:
-            self.night_diff = stringed_nd
-        else:
-            pass
+        current_time = t_in
+        current_date = t_in.date()
+
+        while current_time < t_out:
+            next_hour = current_time.replace(minute=0, second=0) + timedelta(hours=1)
+
+            if next_hour <= t_in:
+                current_time = next_hour
+                continue
+            elif next_hour > t_out:
+                next_hour = t_out
+
+            if current_time.hour in night_hours:
+                night_duration += next_hour - current_time
+
+            current_time = next_hour
+
+            # Check if we crossed into a new day
+            if current_time.date() != current_date:
+                current_date = current_time.date()
+
+        # Calculate the total night differential in hours and minutes
+        night_hours = night_duration.total_seconds() // 3600
+        night_minutes = (night_duration.total_seconds() % 3600) // 60
+
+        self.nd_in_hr, self.nd_in_mn, self.night_diff = night_hours, night_minutes, f"{int(night_hours)} hours {int(night_minutes)} minutes"
+
 
     def __str__(self):
         return f"{self.user.username} @ {self.time_in}//{self.month}-{self.date}-{self.year}"
