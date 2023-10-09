@@ -7,7 +7,7 @@
         <div
           class="w-20 h-20 bg-white overflow-hidden rounded-full shadow-lg border-2 border-primary"
         >
-          <img :src="useUser.avatar" class="object-cover w-fill h-full" />
+          <img :src="useUser.avatar" class="object-cover w-full h-full" />
         </div>
         <div class="">
           <p
@@ -67,6 +67,7 @@ const activitiesList = ref([] as Array<any>)
 onMounted(async () => {
   const getInitialList = await axios.get(`/activities/general`);
   activitiesList.value = getInitialList.data
+  
   activitiesConnection = openActivitiesConnection()
 
   userPosition.value = await getPosition(useUser.position);

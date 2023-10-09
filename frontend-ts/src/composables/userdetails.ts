@@ -31,7 +31,7 @@ export const useActivityStatus = (
 ) => {
   if (is_logged) return "Active now";
   else {
-    const out = moment(last_active).subtract(8, "hours").fromNow();
+    const out = moment(last_active).fromNow();
     return `Active ${out}`;
   }
 };

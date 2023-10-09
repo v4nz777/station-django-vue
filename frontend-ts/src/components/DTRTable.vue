@@ -195,7 +195,7 @@
 <script lang="ts" setup>
 import { dtrStore } from "@/stores/dtr";
 import { userStore } from "@/stores/user";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import moment from "moment";
 import Loader from "@/components/Loader.vue";
 import axios from "axios";
@@ -212,9 +212,11 @@ const file = ref(null);
 const fileName = ref(null);
 const dl_btn_hovered = ref(false);
 
-setInterval(() => {
+
+
+onMounted(() => {
   dtrstore.filterDTR(filterValue.value);
-}, 1000);
+})
 
 const loading = ref(false);
 

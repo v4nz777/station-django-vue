@@ -4,9 +4,20 @@ import axios from "axios";
 import moment from "moment";
 import { userStore } from "./user";
 
-interface Logs {
-  month?: string;
-}
+const ALL_MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+]
 
 export const dtrStore = defineStore({
   id: "dtrStore",
@@ -52,38 +63,27 @@ export const dtrStore = defineStore({
         this.timed = true;
       }
     },
+    setPathForCurrent() {
+      const userstore = userStore();
+      const current = new Date();
+      const currentYear = current.getFullYear();
+      const currentMonth = ALL_MONTHS[current.getMonth()];
+      const currentDate = ("0" + current.getDate()).slice(-2);
+      
+
+      if (localStorage.getItem("dtrCurrent")) {
+        this.pathForCurrent = localStorage.getItem("dtrCurrent") as string;
+      } else {
+        localStorage.setItem(
+          "dtrCurrent",
+          `/get_history/${userstore.user}/${currentYear}/${currentMonth}/${currentDate}/`
+        );
+        this.pathForCurrent = localStorage.getItem("dtrCurrent") as string;
+      }
+    },
     async loadDTR() {
       if (!this.loaded) {
-        const userstore = userStore();
-        const current = new Date();
-        const allMonths = [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-          "August",
-          "September",
-          "October",
-          "November",
-          "December",
-        ];
-        const currentYear = current.getFullYear();
-        const currentMonth = allMonths[current.getMonth()];
-        const currentDate = ("0" + current.getDate()).slice(-2);
-        
-
-        if (localStorage.getItem("dtrCurrent")) {
-          this.pathForCurrent = localStorage.getItem("dtrCurrent") as string;
-        } else {
-          localStorage.setItem(
-            "dtrCurrent",
-            `/get_history/${userstore.user}/${currentYear}/${currentMonth}/${currentDate}/`
-          );
-          this.pathForCurrent = localStorage.getItem("dtrCurrent") as string;
-        }
+        this.setPathForCurrent()
         try{
           const response = await axios.get(this.pathForCurrent);
           if (response.status === 200) {
@@ -91,14 +91,12 @@ export const dtrStore = defineStore({
             this.month = response.data.month;
             this.date = response.data.date;
             this.in = response.data.time_in;
-            this.as_obj = moment(response.data.time_in_datetime).subtract(
-              8,
-              "hours"
-            );
+            this.as_obj = moment(response.data.time_in_datetime)
             this.loaded = true;
           }
         }catch(error){
-          console.log(error)
+          localStorage.removeItem("dtrCurrent")
+          this.pathForCurrent = ""
         }
       }
     },
@@ -115,23 +113,9 @@ export const dtrStore = defineStore({
       this.dtr_logs = response.data.history;
     },
     async filterDTR(value: string) {
-      const allMonths = [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ];
       const userstore = userStore();
       const year = value.split("-")[0];
-      const month = allMonths[parseInt(value.split("-")[1], 10) - 1];
+      const month = ALL_MONTHS[parseInt(value.split("-")[1], 10) - 1];
 
       const response = await axios.get(
         `/get_history/${userstore.user}/${year}/${month}/`

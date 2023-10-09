@@ -5,7 +5,18 @@ from django.dispatch import receiver
 from django.db.models.signals import m2m_changed, post_save, pre_save
 from datetime import timedelta, datetime
 from datetimerange import DateTimeRange
+from zoneinfo import ZoneInfo
+from django.conf import settings
 
+def humanize_time(total) -> tuple:
+    s = total.total_seconds()
+    hours, remainder = divmod(s, 3600)
+    minutes, seconds = divmod(remainder, 60)
+
+    sfx_mn = "" if minutes <= 1 else "s"
+    sfx_hr = "" if hours <= 1 else "s"
+    total_in_string = (f"{int(hours)}hr{sfx_hr}, {int(minutes)}min{sfx_mn}")
+    return (int(hours),int(minutes),total_in_string)
 
 class Station(models.Model):
     station_name = models.CharField(max_length=256, null=True, blank=True)
@@ -64,7 +75,7 @@ class Activity(models.Model):
         return f"{self.user} {self.subject}"
     
     def new_activity(self, username, subject, **kwargs):
-        now = datetime.now().replace(tzinfo=None)
+        now = datetime.now(tz=ZoneInfo(settings.TIME_ZONE))
         self.created = now
         self.user = User.objects.get(username=username)
         self.subject = subject
@@ -112,40 +123,33 @@ class History(models.Model):
 
     completed = models.BooleanField(default=False)
     def save(self, *args, **kwargs):
-        
         if self.time_in_datetime and self.time_out_datetime:
+            
             self.completed = True
-            t_in = self.time_in_datetime.replace(tzinfo=None)
-            t_out = self.time_out_datetime.replace(tzinfo=None)
+            t_in = self.time_in_datetime
+            t_out = self.time_out_datetime
+
             self.month = t_in.strftime("%B")
             self.year = t_in.strftime("%Y")
             self.date = t_in.strftime("%d")
             self.time_in_day = t_in.strftime("%A")
             self.time_out_day = t_out.strftime("%A")
             total = t_out - t_in
-
-            # Convert to human readable
-            s = total.total_seconds()
-            hours, remainder = divmod(s, 3600)
-            minutes, seconds = divmod(remainder, 60)
-            self.total_in_hr = int(hours)
-            self.total_in_mn = int(minutes)
-
-            sfx_mn = "" if minutes <= 1 else "s"
-            sfx_hr = "" if hours <= 1 else "s"
-            self.total = (f"{int(hours)}hr{sfx_hr}, {int(minutes)}min{sfx_mn}")
-
-            self.in_as_twelve_hr_format(t_in)
+   
+            self.total_in_hr,self.total_in_mn,self.total = humanize_time(total)
+            
             self.out_as_twelve_hr_format(t_out)
             self.calculate_overtime(total)
             self.calculate_night_diff(t_in,t_out)
         else:
-            t_in = self.time_in_datetime.replace(tzinfo=None)
+            t_in = self.time_in_datetime
+            self.in_as_twelve_hr_format(t_in)
             self.month = t_in.strftime("%B")
             self.year = t_in.strftime("%Y")
             self.date = t_in.strftime("%d")
             self.time_in_day = t_in.strftime("%A")
         return super(History,self).save(*args, **kwargs)
+
 
     def in_as_twelve_hr_format(self, t_in):
         self.time_in = t_in.strftime('%I:%M %p')
@@ -161,124 +165,46 @@ class History(models.Model):
             eight_hours = timedelta(hours=t.hour, minutes=t.minute)
             overtime = total - eight_hours
 
-            # Convert to human readable
-            s = overtime.total_seconds()
-            hours, remainder = divmod(s, 3600)
-            minutes, seconds = divmod(remainder, 60)
-            self.ot_in_hr = int(hours)
-            self.ot_in_mn = int(minutes)
-
-            sfx_mn = "" if minutes <= 1 else "s"
-            sfx_hr = "" if hours <= 1 else "s"
-            self.overtime = (f"{int(hours)}hr{sfx_hr}, {int(minutes)}min{sfx_mn}")
-    
-    def calculate_night_diff(self,t_in,t_out):
-
-        # if has worked between 10pm to 6am
-        # for night differential
-        night = [22,23,0,1,2,3,4,5,6]
-        valid_night_shifts = []
-        in_out_range = DateTimeRange(t_in, t_out).range(timedelta(hours=1))
-        for inx,i in enumerate(in_out_range):
-            if i.hour in night:
-                # 6am oclocks
-                if i.hour == 6:
-                    if i.hour == t_in.hour:
-                        valid_night_shifts.append({
-                            "datetime": i,
-                            "time": timedelta(hours=i.hour, minutes=0),
-                            "duration": timedelta(hours=0, minutes=0)
-                        })
-                    elif i.hour == t_out.hour:
-                        valid_night_shifts.append({
-                            "datetime": t_out,
-                            "time": timedelta(hours=t_out.hour, minutes=0),
-                            "duration": timedelta(hours=0, minutes=(60-t_in.minute))
-                        })
-                    else:
-                        valid_night_shifts.append({
-                            "datetime": i,
-                            "time": timedelta(hours=i.hour, minutes=0),
-                            "duration": timedelta(hours=0, minutes=(60-t_in.minute))
-                        })
-                # 10pm oclocks
-                elif i.hour == 22:
-                    if i.hour == t_in.hour:
-                        valid_night_shifts.append({
-                        "datetime": i,
-                        "time": timedelta(hours=i.hour, minutes=t_in.minute),
-                        "duration": timedelta(hours=0, minutes=t_in.minute)
-                        })
-                    elif i.hour == t_out.hour:
-                        valid_night_shifts.append({
-                        "datetime": i,
-                        "time": timedelta(hours=i.hour, minutes=t_out.minute),
-                        "duration": timedelta(hours=0, minutes=(t_out.minute-t_in.minute))
-                        })
-                    else:
-                        valid_night_shifts.append({
-                            "datetime": i,
-                            "time": timedelta(hours=i.hour, minutes=0),
-                            "duration": timedelta(hours=0, minutes=i.minute)
-                        })
-                
-                # other oclocks
-                else:
-                    if i.hour == t_in.hour:
-                            valid_night_shifts.append({
-                            "datetime": i,
-                            "time": timedelta(hours=i.hour, minutes=i.minute),
-                            "duration": timedelta(hours=0, minutes=0)
-                        })
-                    elif i.hour == t_out.hour:
-                        valid_night_shifts.append({
-                            "datetime": i,
-                            "time": timedelta(hours=t_out.hour, minutes=t_out.minute),
-                            "duration": timedelta(hours=1, minutes=(t_out.minute-t_in.minute))
-                        })
-                    else:
-                        valid_night_shifts.append({
-                            "datetime": i,
-                            "time": timedelta(hours=i.hour, minutes=i.minute),
-                            "duration": timedelta(hours=1, minutes=0)
-                        })
-
-        # Append the timeout time even if its less than an hour...
-        # Fix for datetimerange not included the tiemout if its less than 60 minutes.
-        if t_out.minute < t_in.minute:
-            if t_out.hour in night:
-                if t_out.hour == 6:
-                    valid_night_shifts.append({
-                        "datetime": t_out,
-                        "time": timedelta(hours=t_out.hour, minutes=0),
-                        "duration": timedelta(hours=0, minutes=(60-t_in.minute))
-                    })
-                else:
-                    valid_night_shifts.append({
-                        "datetime": t_out,
-                        "time": timedelta(hours=t_out.hour, minutes=t_out.minute),
-                        "duration": timedelta(hours=0, minutes=60-(t_in.minute-t_out.minute))
-                    })
+            self.ot_in_hr,self.ot_in_mn,self.overtime = humanize_time(overtime)
 
 
-        sum_of_night_shifts = sum([d["duration"] for d in valid_night_shifts],timedelta())
-        # Convert to human readable
-        # then save to database
-        s = sum_of_night_shifts.total_seconds()
-        hours, remainder = divmod(s, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        self.nd_in_hr = int(hours)
-        self.nd_in_mn = int(minutes)
+    def calculate_night_diff(self, t_in, t_out):
+        # Define the night hours (10 PM to 6 AM)
+        night_hours = set(range(22, 24)) | set(range(0, 6))
 
-        sfx_mn = "" if minutes <= 1 else "s"
-        sfx_hr = "" if hours <= 1 else "s"
-        if int(s) > 60:
-            self.night_diff = (f"{int(hours)}hr{sfx_hr}, {int(minutes)}min{sfx_mn}")
-        else:
-            pass
+        # Initialize night duration
+        night_duration = timedelta()
+
+        current_time = t_in
+        current_date = t_in.date()
+
+        while current_time < t_out:
+            next_hour = current_time.replace(minute=0, second=0) + timedelta(hours=1)
+
+            if next_hour <= t_in:
+                current_time = next_hour
+                continue
+            elif next_hour > t_out:
+                next_hour = t_out
+
+            if current_time.hour in night_hours:
+                night_duration += next_hour - current_time
+
+            current_time = next_hour
+
+            # Check if we crossed into a new day
+            if current_time.date() != current_date:
+                current_date = current_time.date()
+
+        # Calculate the total night differential in hours and minutes
+        night_hours = night_duration.total_seconds() // 3600
+        night_minutes = (night_duration.total_seconds() % 3600) // 60
+
+        self.nd_in_hr, self.nd_in_mn, self.night_diff = night_hours, night_minutes, f"{int(night_hours)} hours {int(night_minutes)} minutes"
+
 
     def __str__(self):
-        return f"{self.user.username} @ {self.time_in_datetime.hour}:{self.time_in_datetime.minute}//{self.month}-{self.date}-{self.year}"
+        return f"{self.user.username} @ {self.time_in}//{self.month}-{self.date}-{self.year}"
 
 class MonthlyDTR(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True)

@@ -43,15 +43,24 @@ const logged = ref(false);
 
 const loginToDTR = async () => {
   if (!logged.value) {
-    const response = await axios.put("/dtr_in/", {
-      username: userstore.user,
-    });
-    logged.value = response.data.is_logged;
-    await dtrstore.loadDTR();
-    dtrstore.watchTimer();
-    sendActivity(props.socket,"logged in!")
+    let response;
+    try{
+      response = await axios.put("/dtr_in/", {
+        username: userstore.user,
+      });
+      logged.value = response.data.is_logged;
+      await dtrstore.loadDTR();
+      dtrstore.watchTimer();
+      sendActivity(props.socket,"logged in!")
+    }
+    catch(error){
+      console.log('DTR Login Unsuccessful!')
+    }
+    
   }
 };
+
+
 const logoutToDTR = async () => {
   if (logged.value) {
     const response = await axios.put("dtr_out/", {
@@ -67,17 +76,27 @@ const logoutToDTR = async () => {
   }
 };
 
+
 const watchUser = async () => {
   const response = await axios.get(`user/${userstore.user}`);
   logged.value = response.data.is_logged;
 };
 
 onMounted(async () => {
+  if(userstore.dtrIsLogged){
+    await dtrstore.loadDTR();
+    dtrstore.watchTimer();
+  }
   await watchUser();
-  await dtrstore.loadDTR();
-  dtrstore.watchTimer();
 });
+
 </script>
+
+
+
+
+
+
 <style>
 .v-enter-active,
 .v-leave-active {
