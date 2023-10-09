@@ -55,6 +55,7 @@ const loginToDTR = async () => {
       return;
     }
     catch(error){
+      alert('DTR Login Unsuccessful!')
       console.log('DTR Login Unsuccessful!')
     }
     
@@ -80,6 +81,7 @@ const logoutToDTR = async () => {
       return;
     }
     catch(error){
+      alert('DTR Logout Unsuccessful!')
       console.log('DTR Logout Unsuccessful!')
     }
     
