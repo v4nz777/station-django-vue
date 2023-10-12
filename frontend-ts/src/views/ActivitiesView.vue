@@ -30,7 +30,7 @@
       </div>
 
       <div class="flex flex-col items-center">
-        <DTRTimer :socket="activitiesConnection"/>
+        <DTRTimer :socket="useActivity.activitySocket"/>
       </div>
     </div>
     <div class="w-full mt-4 mb-14 flex flex-col px-4 md:mx-10">
@@ -49,18 +49,21 @@
 import DTRTimer from "@/components/DTRTimer.vue";
 import router from "../router";
 import { userStore } from "@/stores/user";
-import { onMounted, onUnmounted, ref, watch, onUpdated } from "vue";
+import { activityStore } from "@/stores/activity";
+import { onMounted, onUnmounted, ref, watch, onUpdated} from "vue";
 import { getPosition } from "@/composables/userdetails";
 import type { Position } from "@/composables/userdetails";
 import { titleCaseSentence } from "@/composables/texts";
 import { activityData, openActivitiesConnection, sendActivity } from '@/composables/activities'
 import axios from "axios";
 import ActivityItem from "@/components/activities/ActivityItem.vue";
+import type { Ref } from "vue";
 
-let activitiesConnection:WebSocket;
+
 
 const useUser = userStore();
-const userPosition = ref({ title: "unassigned" } as Position);
+const useActivity = activityStore();
+const userPosition:Ref<Position> = ref({title:'unnasigned'})
 const activitiesList = ref([] as Array<any>)
 
 
@@ -68,13 +71,18 @@ onMounted(async () => {
   const getInitialList = await axios.get(`/activities/general`);
   activitiesList.value = getInitialList.data
   
-  activitiesConnection = openActivitiesConnection()
+
+  useActivity.connectToActivitySocket();
 
   userPosition.value = await getPosition(useUser.position);
 });
+
+
 onUnmounted(() => {
-  activitiesConnection.close()
+  useActivity.activitySocket?.close()
 });
+
+
 watch(
   () => useUser.position,
   async (val: any) => {

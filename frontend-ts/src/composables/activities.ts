@@ -15,8 +15,10 @@ export const openActivitiesConnection = ()=> {
     return socket
 }
 
+
 /** Send data to the WebSocket channel */
 export const sendActivity = (socketInstance:WebSocket,subject:string)=> {
+    console.log('sent')
     const userstore = userStore()
     socketInstance.send(JSON.stringify({
         'user': userstore.user,

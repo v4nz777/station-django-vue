@@ -12,5 +12,5 @@ export const titleCaseSentence = (str:string)=> {
     for(let i=0;i < sentence.length;i++){
         sentence[i] = toTitleCase(sentence[i],false)
     }
-    return sentence.join(" ")
+    return sentence?.join(" ")
 }
