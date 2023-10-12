@@ -27,6 +27,7 @@ export const activityStore = defineStore({
   }),
   actions: {
     connectToActivitySocket(){
+      if(this.activitySocket&&this.activitySocket.readyState <= 1)return
       this.activitySocket = openActivitiesConnection()
     },
     async getUserActivity() {

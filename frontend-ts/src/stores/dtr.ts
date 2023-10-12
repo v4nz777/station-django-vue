@@ -56,11 +56,11 @@ export const dtrStore = defineStore({
   actions: {
     watchTimer() {
       if (!this.timed && this.as_obj) {
+     
         setInterval(() => {
           const now = moment();
           this.timer_ms = now.diff(this.as_obj);
         }, 1000);
-        this.timed = true;
       }
     },
     setPathForCurrent() {

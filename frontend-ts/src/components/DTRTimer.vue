@@ -2,7 +2,7 @@
   <Transition>
     <button
       @click="logoutToDTR"
-      v-if="logged"
+      v-if="dtrstore.timed"
       class="bg-red-500 text-white font-bold text-sm px-2 py-1 rounded-full"
     >
       Time Out
@@ -11,7 +11,7 @@
   <div
     class="flex bg-white rounded-2xl b-border shadow-md justify-center items-center px-2 h-9"
   >
-    <p class="justify-self-start py-2" v-if="logged">
+    <p class="justify-self-start py-2" v-if="dtrstore.timed">
       ⏱️<span class="text-red-500 text-sm font-normal">{{
         dtrstore.formatLogTimer
       }}</span>
@@ -37,24 +37,24 @@ const props = defineProps({
   socket:WebSocket|null|undefined
 })
 
-const emits = defineEmits(['reconnect'])
 
 const userstore = userStore();
 const dtrstore = dtrStore();
-const logged = ref(false);
+
 
 
 const loginToDTR = async () => {
   console.log(props.socket.readyState)
-  if (!logged.value) {
+  if (!dtrstore.timed) {
     let response;
     try{
       response = await axios.put("/dtr_in/", {
         username: userstore.user,
       });
-      logged.value = await response.data.is_logged;
+      
       await dtrstore.loadDTR();
       dtrstore.watchTimer();
+      dtrstore.timed = await response.data.is_logged;
       sendActivity(props.socket,"logged in!")
       return;
     }
@@ -68,7 +68,7 @@ const loginToDTR = async () => {
 
 
 const logoutToDTR = async () => {
-  if (logged.value) {
+  if (dtrstore.timed) {
     let response;
     try{
         response = await axios.put("dtr_out/", {
@@ -79,8 +79,8 @@ const logoutToDTR = async () => {
       });
       
       const total = dtrstore.formatLogTimer;
-      logged.value = await response.data.is_logged;
-      dtrstore.clear();
+      dtrstore.timed = await response.data.is_logged;
+      // dtrstore.clear();
       sendActivity(props.socket,`logged out! (total: ${total})`)
       return;
     }
@@ -96,7 +96,7 @@ const logoutToDTR = async () => {
 
 const watchUser = async () => {
   const response = await axios.get(`user/${userstore.user}`);
-  logged.value = response.data.is_logged;
+  dtrstore.timed = response.data.is_logged;
 };
 
 onMounted(async () => {

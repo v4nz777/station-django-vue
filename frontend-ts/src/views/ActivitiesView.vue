@@ -61,7 +61,6 @@ import type { Ref } from "vue";
 
 
 
-const activitiesConnection:Ref<WebSocket|null|undefined> = ref(null)
 const useUser = userStore();
 const useActivity = activityStore();
 const userPosition:Ref<Position> = ref({title:'unnasigned'})
