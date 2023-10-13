@@ -1,0 +1,13 @@
+__pycache__
+migrations
+frontend
+uploads/*
+!uploads/.gitkeep
+Todo
+env/
+db.sqlite3
+dump.rdb
+dtr/output/*
+!dtr/output/.gitkeep
+technical/inventory/generated/*
+!technical/inventory/generated/.gitkeep
