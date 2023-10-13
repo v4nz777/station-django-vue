@@ -34,7 +34,7 @@ SECRET_KEY = config.SECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [IPV4_ADDRESS, HOST_NAME, "localhost", "yes.local", '127.0.0.1']
+ALLOWED_HOSTS = [IPV4_ADDRESS, HOST_NAME, "localhost", "yes.local", '127.0.0.1'] + config.ALLOWED_HOSTS
 
 
 # Application definition
@@ -86,8 +86,36 @@ CORS_ORIGIN_WHITELIST = [
     'http://' + HOST_NAME + ':8000',
     'http://' + HOST_NAME + ':3000',
     'http://' + HOST_NAME,
-]
+] + config.CORS_ORIGIN_WHITELIST
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost',
+    'http://127.0.0.1',
+
+]+config.CORS_ALLOWED_ORIGINS
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOWED_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with'
+]+config.CORS_ALLOWED_HEADERS
+
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]+config.CORS_ALLOW_METHODS
 
 ROOT_URLCONF = 'backend.urls'
 
