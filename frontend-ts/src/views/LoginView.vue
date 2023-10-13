@@ -81,14 +81,20 @@ const store = userStore();
 // Login -> collect access token and save to local storage
 // Axios -> used post method to send API request
 const logUser = async () => {
-  const response = await axios.post("/login/", {
-    username: username.value,
-    password: password.value,
-  });
-  localStorage.setItem("accessToken", response.data.access);
-  localStorage.setItem("user", username.value);
-
-  store.initUser();
-  router.push("/");
+  let response;
+  try{
+    response = await axios.post("/login/", {
+      username: username.value,
+      password: password.value,
+    });
+    localStorage.setItem("accessToken", response.data.access);
+    localStorage.setItem("user", username.value);
+    store.initUser();
+    router.push("/");
+  }
+  catch(error){
+    alert("Failed to login")
+  }
+  
 };
 </script>
