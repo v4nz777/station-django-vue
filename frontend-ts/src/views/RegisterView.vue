@@ -39,6 +39,7 @@
       router.push("login/");
     } catch (error:any) {
       message.value = error.message;
+      alert(message.value)
     }
   }
 </script>
