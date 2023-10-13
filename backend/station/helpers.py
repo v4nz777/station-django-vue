@@ -2,8 +2,8 @@ from .models import User
 
 def create_new_user(data):
     user = User.objects.create_user(
-        username=data["username"],
-        email=data["email"],
+        username=data["username"].lower(),
+        email=data["email"].lower(),
         password=data["password"],
         first_name=data.get("firstName", ""),
         last_name=data.get("lastName", ""),

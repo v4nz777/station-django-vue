@@ -57,6 +57,7 @@ def getListofUsers(request):
 
 @api_view(["GET"])
 def getCurrentUser(request, username):
+    username = username.lower()
     try:
         data = User.objects.get(username=username)
     except User.DoesNotExist:
