@@ -82,6 +82,7 @@ const store = userStore();
 // Axios -> used post method to send API request
 const logUser = async () => {
   let response;
+  username.value = username.value.toLowerCase()
   try{
     response = await axios.post("/login/", {
       username: username.value,
