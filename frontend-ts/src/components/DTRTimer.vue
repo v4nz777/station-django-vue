@@ -44,7 +44,7 @@ const dtrstore = dtrStore();
 
 
 const loginToDTR = async () => {
-  console.log(props.socket.readyState)
+ 
   if (!dtrstore.timed) {
     let response;
     try{
@@ -52,11 +52,20 @@ const loginToDTR = async () => {
         username: userstore.user,
       });
       
-      await dtrstore.loadDTR();
-      dtrstore.watchTimer();
-      dtrstore.timed = await response.data.is_logged;
-      sendActivity(props.socket,"logged in!")
-      return;
+      await dtrstore.loadDTR()
+      .then(()=>{
+        dtrstore.watchTimer();
+      })
+      .then(async()=>{
+        dtrstore.timed = await response.data.is_logged;
+      })
+      .then(()=>{
+        sendActivity(props.socket,"logged in!")
+        return;
+      })
+      
+      
+      
     }
     catch(error){
       alert('DTR Login Unsuccessful!')
@@ -80,7 +89,6 @@ const logoutToDTR = async () => {
       
       const total = dtrstore.formatLogTimer;
       dtrstore.timed = await response.data.is_logged;
-      // dtrstore.clear();
       sendActivity(props.socket,`logged out! (total: ${total})`)
       return;
     }
@@ -100,12 +108,15 @@ const watchUser = async () => {
 };
 
 onMounted(async () => {
-  if(userstore.dtrIsLogged){
-    await dtrstore.loadDTR();
-    dtrstore.watchTimer();
-  }
+    await dtrstore.loadDTR()
+    .then(()=>{
+      dtrstore.watchTimer();
+    })
+
   await watchUser();
-  
+
+
+
 });
 
 </script>
