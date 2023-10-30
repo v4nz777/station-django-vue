@@ -1,5 +1,7 @@
 # station-django-vue
 
+by: v4nz777
+
 A web-based general application built using Django and Vue.js
 to help and automate most task in radio station
 
