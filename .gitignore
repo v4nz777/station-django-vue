@@ -12,6 +12,8 @@ backend/station/__pycache__/
 backend/station/migrations/
 backend/technical/__pycache__/
 backend/technical/migrations/
+backend/transmitter/__pycache__/
+backend/transmitter/migrations/
 backend/Todo
 backend/db.sqlite3
 frontend/.vscode/
