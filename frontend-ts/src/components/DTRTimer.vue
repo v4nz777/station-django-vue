@@ -90,6 +90,7 @@ const logoutToDTR = async () => {
       const total = dtrstore.formatLogTimer;
       dtrstore.timed = await response.data.is_logged;
       sendActivity(props.socket,`logged out! (total: ${total})`)
+      dtrstore.clear()
       return;
     }
     catch(error){

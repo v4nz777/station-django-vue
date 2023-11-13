@@ -7,7 +7,7 @@ export const activityData = ref(null)
 
 /** Open WebSocket Connection for `sockets/activities` */
 export const openActivitiesConnection = ()=> {
-    const socket = new WebSocket(`ws://${location.hostname}:8000/sockets/activities`)
+    const socket = new WebSocket(`wss://${location.hostname}:8443/sockets/activities`)
     socket.addEventListener('message',(e)=> {
         const response = JSON.parse(e.data)
         activityData.value = response.message

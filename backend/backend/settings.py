@@ -19,7 +19,7 @@ from . import config # This module must be added manually. ( Ignored by git )
 
 HOST_NAME = socket.gethostname().lower()
 IPV4_ADDRESS = socket.gethostbyname(HOST_NAME)
-
+ROOT_URLCONF = 'backend.urls'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,12 +29,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config.SECRET_KEY
+SECRET_KEY = os.environ.get("SECRET_KEY") if os.environ.get("SECRET_KEY") else config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [IPV4_ADDRESS, HOST_NAME, "localhost", "yes.local", '127.0.0.1'] + config.ALLOWED_HOSTS
+ALLOWED_HOSTS = [IPV4_ADDRESS, HOST_NAME, "localhost", "yes.local", '127.0.0.1', 'webAPI'] + config.ALLOWED_HOSTS
 
 
 # Application definition
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'office',
     'technical',
     'transmitter'
+    
 ]
 
 MIDDLEWARE = [
@@ -66,31 +67,50 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 CORS_ORIGIN_WHITELIST = [
+
+    'https://localhost',
+    'https://localhost:3000',
+    'https://127.0.0.1:3000',
+    'https://localhost:5173',
+    'https://127.0.0.1:5173',
+
+    'https://' + IPV4_ADDRESS + ':5173',
+    'https://' + IPV4_ADDRESS + ':3000',
+    'https://' + IPV4_ADDRESS,
+
+    'https://' + HOST_NAME + ':5173',
+    'https://' + HOST_NAME + ':3000',
+    'https://' + HOST_NAME,
+
     'http://localhost',
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-    'http://localhost:8000',
-    'http://127.0.0.1:8000',
     'http://localhost:5173',
     'http://127.0.0.1:5173',
 
     'http://' + IPV4_ADDRESS + ':5173',
-    'http://' + IPV4_ADDRESS + ':8000',
     'http://' + IPV4_ADDRESS + ':3000',
     'http://' + IPV4_ADDRESS,
 
     'http://' + HOST_NAME + ':5173',
-    'http://' + HOST_NAME + ':8000',
     'http://' + HOST_NAME + ':3000',
     'http://' + HOST_NAME,
+
+
 ] + config.CORS_ORIGIN_WHITELIST
 
 CORS_ALLOWED_ORIGINS = [
     'http://localhost',
     'http://127.0.0.1',
+    'https://localhost',
+    'https://127.0.0.1',
+    'http://localhost:5173',
+    'https://localhost:5173'
+
 
 ]+config.CORS_ALLOWED_ORIGINS
 
@@ -106,7 +126,9 @@ CORS_ALLOWED_HEADERS = [
     'user-agent',
     'x-csrftoken',
     'x-requested-with'
-]+config.CORS_ALLOWED_HEADERS
+]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ALLOW_METHODS = [
     'DELETE',
@@ -115,9 +137,9 @@ CORS_ALLOW_METHODS = [
     'PATCH',
     'POST',
     'PUT',
-]+config.CORS_ALLOW_METHODS
+]
 
-ROOT_URLCONF = 'backend.urls'
+
 
 TEMPLATES = [
     {
