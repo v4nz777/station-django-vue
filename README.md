@@ -27,7 +27,7 @@ to help and automate most task in radio station
 ## Getting Started
 
 1. Clone the repository:
-`git clone https://github.com/v4nz777/station-django-vue.git`
+```git clone https://github.com/v4nz777/station-django-vue.git```
 
 2. SSL Certificates are made for IP address `192.168.1.77` so make sure that your machine are using IPV4 192.168.1.77 . 
 
@@ -36,9 +36,9 @@ to help and automate most task in radio station
     - navigate to folder `ssl`
     - Install openSSL in your machine: [How to install openSSL](https://www.ibm.com/docs/en/ts4500-tape-library?topic=openssl-installing)
     - Modify the `ssl.conf` file, set to your own IP address
-    - Create new key and root certificate in terminal: `openssl req -x509 -newkey rsa:4096 -keyout rootCA.key -out rootCA.crt -days 99999 -config ssl.conf -nodes`
-    - Create server certificate: `openssl req -newkey rsa:4096 -keyout server.key -out server.csr -subj "/CN=192.168.1.77" -nodes` change the `/CN=192.168.1.77` with your own IP.
-    - Sign the certificate: `openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out server.crt -days 99999 -extfile ssl.conf -extensions req_ext`
+    - Create new key and root certificate in terminal: ```openssl req -x509 -newkey rsa:4096 -keyout rootCA.key -out rootCA.crt -days 99999 -config ssl.conf -nodes```
+    - Create server certificate: ```openssl req -newkey rsa:4096 -keyout server.key -out server.csr -subj "/CN=192.168.1.77" -nodes``` change the `/CN=192.168.1.77` with your own IP.
+    - Sign the certificate: ```openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out server.crt -days 99999 -extfile ssl.conf -extensions req_ext```
     - You can see generated files crt,key etc.
     - Copy the `server.crt` and `server.key` inside `backend` folder
 4. Install the certificate to your device and to your clients' device the file `rootCA.crt`
@@ -51,14 +51,14 @@ to help and automate most task in radio station
     - `SERVE_AT` default is `192.168.1.77`
       
 7. Build using Docker:
-   `docker-compose build`
+   ```docker-compose build```
 
 8. Run.
-   `docker-compose up`
+   ```docker-compose up```
 
 
 
 
 
-The application should now be running at `https://192.168.1.77`
+The application should now be running at ```https://192.168.1.77```
 
