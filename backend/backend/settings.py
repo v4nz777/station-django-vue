@@ -19,7 +19,7 @@ from . import config # This module must be added manually. ( Ignored by git )
 
 HOST_NAME = socket.gethostname().lower()
 IPV4_ADDRESS = socket.gethostbyname(HOST_NAME)
-
+ROOT_URLCONF = 'backend.urls'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,12 +29,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY") if os.environ["SECRET_KEY"] else config.SECRET_KEY
+SECRET_KEY = os.environ.get("SECRET_KEY") if os.environ.get("SECRET_KEY") else config.SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [IPV4_ADDRESS, HOST_NAME, "localhost", "yes.local", '127.0.0.1'] + config.ALLOWED_HOSTS
+ALLOWED_HOSTS = [IPV4_ADDRESS, HOST_NAME, "localhost", "yes.local", '127.0.0.1', 'webAPI'] + config.ALLOWED_HOSTS
 
 
 # Application definition
@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'office',
     'technical',
     'transmitter'
+    
 ]
 
 MIDDLEWARE = [
@@ -66,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 CORS_ORIGIN_WHITELIST = [
@@ -106,7 +108,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://127.0.0.1',
     'https://localhost',
     'https://127.0.0.1',
-    'http://localhost:5173'
+    'http://localhost:5173',
     'https://localhost:5173'
 
 
@@ -126,6 +128,8 @@ CORS_ALLOWED_HEADERS = [
     'x-requested-with'
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 CORS_ALLOW_METHODS = [
     'DELETE',
     'GET',
@@ -135,7 +139,7 @@ CORS_ALLOW_METHODS = [
     'PUT',
 ]
 
-ROOT_URLCONF = 'backend.urls'
+
 
 TEMPLATES = [
     {

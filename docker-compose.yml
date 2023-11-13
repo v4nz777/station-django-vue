@@ -10,13 +10,14 @@ services:
       - dtr:/backend/dtr
       - office-invoice:/backend/office/invoice
       - tech-inventory:/backend/technical/inventory
-    ports:
-      - "8000:8000"
     environment:
       - DJANGO_DB_HOST=db
+      - DJANGO_SETTINGS_MODULE=backend.settings
     depends_on:
       - db
-    command: python manage.py runserver 0.0.0.0:8000
+    command: daphne -e ssl:8443:privateKey=server.key:certKey=server.crt backend.asgi:application
+    ports:
+      - "8443:8443"
 
   frontend:
     container_name: UI
@@ -24,7 +25,7 @@ services:
       context: ./frontend-ts
       dockerfile: Dockerfile
     volumes:
-      - static-v2:/usr/share/nginx/html
+      - static-v4:/usr/share/nginx/html
     ports:
       - "8080:8080"
 
@@ -46,19 +47,20 @@ services:
     ports:
       - "6379:6379"
 
-  nginx:
+  frontend-proxy:
     image: "nginx"
     volumes:
-      - ./nginx-docker/nginx.conf:/etc/nginx/nginx.conf  # Mount nginx.conf
-      - static-v2:/usr/share/nginx/html
+      - ./frontend-nginx/nginx.conf:/etc/nginx/nginx.conf  # Mount nginx.conf
+      - static-v4:/usr/share/nginx/html
+      - ./ssl:/etc/ssl
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - frontend
-      - backend
+
 volumes:
-  static-v2:
+  static-v4:
     driver: local
   db-data:
   uploads:

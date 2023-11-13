@@ -1,11 +1,13 @@
-from .models import Activity
-from .serializers import ActivitySerializer
+
 import json
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
 
 
 def add_activities_db(data):
+    from .models import Activity
+    from .serializers import ActivitySerializer
+    
     activity = Activity()
     activity.new_activity(data["user"],data["subject"])
     serializer = ActivitySerializer(activity)

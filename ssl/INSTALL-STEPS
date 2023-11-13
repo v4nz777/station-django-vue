@@ -1,0 +1,6 @@
+openssl req -x509 -newkey rsa:4096 -keyout rootCA.key -out rootCA.crt -days 99999 -config ssl.conf -nodes
+
+openssl req -newkey rsa:4096 -keyout server.key -out server.csr -subj "/CN=192.168.1.77" -nodes
+
+openssl x509 -req -in server.csr -CA rootCA.crt -CAkey rootCA.key -CAcreateserial -out server.crt -days 99999 -extfile ssl.conf -extensions req_ext
+

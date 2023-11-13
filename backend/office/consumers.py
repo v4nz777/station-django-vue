@@ -1,14 +1,13 @@
-from .helpers import writeAdtoDatabase
 import json
 from channels.generic.websocket import WebsocketConsumer
 from asgiref.sync import async_to_sync
-import requests
-from django.urls import reverse
-from .models import Ad
-from .serializers import AdSerializer
+
 
 
 def get_latest_ad(data):
+    from .models import Ad
+    from .serializers import AdSerializer
+
     latest = Ad.objects.get(id=int(data["item"]))
     return AdSerializer(latest).data
 
