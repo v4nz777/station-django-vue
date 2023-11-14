@@ -12,13 +12,13 @@ to help and automate most task in radio station
 - Includes functionality for user authentication and authorization using JWT tokens
 - Using websocket to update see activites and updates in real time.
 
-## Frontend (DEPLOYMENT)
+## Frontend (PRODUCTION)
 
 - Deployed with NGINX
 - SSL/TLS Enabled at `192.168.1.77:443` using https for secure connection.
   
 
-## Frontend (PRODUCTION)
+## Frontend (DEVELOPMENT)
 
 - Built using Vue.js and the Pinia library for state management
 - Communicates with the backend API to retrieve and manipulate data
