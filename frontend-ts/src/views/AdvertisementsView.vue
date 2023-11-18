@@ -71,7 +71,7 @@ const appendToAdsList = (data:any)=> {
 onMounted(async () => {
   await getAds(filter.value)
   await dtrstore.loadDTR();
-  adSocket = new WebSocket(`ws://${location.hostname}:8000/sockets/ads`)
+  adSocket = new WebSocket(`${import.meta.env.VITE_DJANGO_SERVER_WEBSOCKET_URL}/sockets/ads`)
   adSocket.addEventListener('message', (e)=> {
     const response = JSON.parse(e.data)
     if(response.author !== userstore.user)adsList.value = [response.message,...adsList.value]

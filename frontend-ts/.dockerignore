@@ -4,3 +4,4 @@ dist
 .idea/
 *.swp
 *.swo
+*.local
