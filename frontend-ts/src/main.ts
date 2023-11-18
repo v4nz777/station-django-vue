@@ -15,9 +15,8 @@ import Camera from 'simple-vue-camera';
 
 
 const app = createApp(App);
-const baseURL = location.protocol + "//" + location.hostname + ":8443";
-
-axios.defaults.baseURL = baseURL;
+console.log(import.meta.env)
+axios.defaults.baseURL = import.meta.env.VITE_DJANGO_SERVER_HTTP_URL??location.protocol + "//" + location.hostname + ":8443";
 app.component("camera",Camera)
 app.use(createPinia());
 app.use(router, axios);

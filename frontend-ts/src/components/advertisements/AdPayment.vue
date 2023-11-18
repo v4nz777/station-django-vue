@@ -76,7 +76,7 @@ const chackValidity = setInterval(() => {
   if (receivedAmount.value && orNumber.value && orDate.value) {
     isValid.value = true;
   } else {
-    isValid.value.false = true;
+    isValid.value = true;
   }
 }, 1000);
 const submitPayment = async () => {

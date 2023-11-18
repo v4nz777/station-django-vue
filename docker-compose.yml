@@ -25,7 +25,7 @@ services:
       context: ./frontend-ts
       dockerfile: Dockerfile
     volumes:
-      - static-v6:/usr/share/nginx/html
+      - static-v7:/usr/share/nginx/html
     ports:
       - "8080:8080"
 
@@ -51,7 +51,7 @@ services:
     image: "nginx"
     volumes:
       - ./frontend-nginx/nginx.conf:/etc/nginx/nginx.conf  # Mount nginx.conf
-      - static-v6:/usr/share/nginx/html
+      - static-v7:/usr/share/nginx/html
       - ./ssl:/etc/ssl
     ports:
       - "80:80"
@@ -60,7 +60,7 @@ services:
       - frontend
 
 volumes:
-  static-v6:
+  static-v7:
     driver: local
   db-data:
   uploads:

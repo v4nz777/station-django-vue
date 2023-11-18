@@ -7,7 +7,7 @@ export const activityData = ref(null)
 
 /** Open WebSocket Connection for `sockets/activities` */
 export const openActivitiesConnection = ()=> {
-    const socket = new WebSocket(`wss://${location.hostname}:8443/sockets/activities`)
+    const socket = new WebSocket(`${import.meta.env.VITE_DJANGO_SERVER_WEBSOCKET_URL}/sockets/activities`)
     socket.addEventListener('message',(e)=> {
         const response = JSON.parse(e.data)
         activityData.value = response.message
